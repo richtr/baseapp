@@ -97,7 +97,7 @@ Note: Both `dev` and `prod` modes require a configured backend DB. See [app.conf
 
 If you find any bugs or issues please report them on the [BaseApp Issue Tracker](https://github.com/richtr/baseapp/issues).
 
-If you would like to contribute to this project please consider [forking this repo](https://github.com/richtr/baseapp/fork_select), making your changes and then creating a new [Pull Request](https://github.com/richtr/baseapp/pulls) back to the main code repository.
+If you would like to contribute to this project please consider [forking this repo](https://github.com/richtr/baseapp/fork), making your changes and then creating a new [Pull Request](https://github.com/richtr/baseapp/pulls) back to the main code repository.
 
 ### License ###
 
