@@ -12,6 +12,7 @@ BaseApp is a Revel web application that provides a baseline web application star
 * Account log in
 * Public user profiles (with Gravatar integration for profile photos and profile edit functionality)
 * Public user posts (with full Markdown support and edit + delete functionality)
+* Auto-configuring backend data store (SQLite3, MySQL, PostgreSQL)
 * Full form validation
 * Full non-interactive and interactive testing framework (Test-driven development process)
 
