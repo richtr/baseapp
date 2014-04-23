@@ -1,0 +1,5 @@
+Hello {{.user.Name}},
+
+Please click the link below to confirm your email address:
+
+{{.Link}}

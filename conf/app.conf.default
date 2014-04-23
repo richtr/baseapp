@@ -1,0 +1,93 @@
+### Application
+app.name              = BaseApp
+app.secret            = <app_secret_please_change_me>
+
+### Server
+http.host             = http://localhost:9000
+http.addr             = localhost
+http.port             = 9000
+http.ssl              = false
+http.sslcert          =
+http.sslkey           =
+
+### Cookies
+cookie.prefix         = REVEL
+
+### Email
+mailer.server         = smtp.example.org
+mailer.port           = 25
+mailer.username       = <username>
+mailer.password       = <password>
+mailer.fromaddress    = no-reply@example.org
+mailer.replyaddress   = support@example.org
+
+### Logging
+log.trace.output      = stderr
+log.info.output       = stderr
+log.warn.output       = stderr
+log.error.output      = stderr
+
+log.trace.prefix      = "TRACE "
+log.info.prefix       = "INFO  "
+log.warn.prefix       = "WARN  "
+log.error.prefix      = "ERROR "
+
+### i18n
+i18n.cookie           = %(cookie.prefix)s_LANG
+i18n.default_language = en
+
+### Build Tags
+build.tags            = gorp
+
+### Additional app paths
+module.jobs           = github.com/revel/revel/modules/jobs
+module.static         = github.com/revel/revel/modules/static
+
+# TEST mode
+# `$> revel [run|test] baseapp/ test`
+[test]
+mode.dev              = true
+watch                 = true
+# Testing enabled in testing mode (only!).
+module.testrunner     = github.com/revel/revel/modules/testrunner
+
+# Use in-memory SQLITE 3 DB
+# Available drivers: sqlite3, mysql, postgres
+db.driver             = sqlite3
+db.import             = github.com/mattn/go-sqlite3
+db.spec               = :memory:
+
+# DEV mode
+# `$> revel run baseapp`
+[dev]
+mode.dev              = true
+watch                 = true
+# Testing not enabled in development mode.
+# Instead run `$> revel [run|test] baseapp/ test`
+module.testrunner     =
+
+# Use development MySQL DB
+# Available drivers: sqlite3, mysql, postgres
+db.driver             = mysql
+db.import             = github.com/go-sql-driver/mysql
+db.spec               = user:pass@tcp(localhost:3306)/baseapp_dev?charset=utf8
+
+# PROD mode
+# `$> revel run baseapp/ prod`
+[prod]
+mode.dev              = false
+watch                 = false
+# Testing not enabled in production mode.
+# Instead run `$> revel [run|test] baseapp test`
+module.testrunner     =
+
+# Use production MySQL DB
+# Available drivers: sqlite3, mysql, postgres
+db.driver             = mysql
+db.import             = github.com/go-sql-driver/mysql
+db.spec               = user:pass@tcp(localhost:3306)/baseapp?charset=utf8
+
+log.trace.output      = off
+log.info.output       = off
+log.warn.output       = stderr
+log.error.output      = stderr

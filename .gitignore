@@ -1,0 +1,5 @@
+tmp/
+routes/
+test-results/
+revel/revel
+conf/app.conf

@@ -1,0 +1,35 @@
+{{set . "title" .post.Title}}
+{{template "header.html" .}}
+
+<h2>{{.post.Title}}</h2>
+
+<a href="{{url "Profile.Show" .profile.ProfileId}}">
+  <div class="media">
+    <span class="pull-left">
+      <img class="img-responsive img-rounded" src="{{.profile.PhotoUrl}}" alt="Profile Photo" width="20" height="20" style="border: 1px solid #666">
+    </span>
+    <div class="media-body">
+      <span class="media-heading" style="padding-top:4px">{{.profile.Name}}</span>
+    </div>
+  </div>
+</a>
+
+<div style="padding: 30px 0">
+  {{.postContentHTML}}
+</div>
+
+<hr>
+
+{{if .isOwner}}
+
+<p>
+  <a href="{{url "Post.Edit" .post.PostId}}">Edit this post</a>
+</p>
+
+<p>
+  <a href="{{url "Post.Remove" .post.PostId}}">Delete this post</a>
+</p>
+
+{{end}}
+
+{{template "footer.html" .}}

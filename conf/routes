@@ -1,0 +1,45 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+module:testrunner
+module:jobs
+
+GET     /                                       Application.Index
+GET     /about                                  Application.About
+GET     /contact                                Application.Contact
+
+GET     /account                                Account.Index
+GET     /account/register                       Account.Register
+POST    /account/register                       Account.SaveUser
+GET     /account/confirm/:token                 Account.ConfirmEmail
+GET     /account/login                          Account.Login
+POST    /account/login                          Account.LoginAccount
+GET     /account/recover                        Account.Recover
+POST    /account/recover                        Account.RetrieveAccount
+GET     /account/reset/:token                   Account.PasswordReset
+GET     /account/logout                         Account.Logout
+
+GET     /profile                                Profile.Index
+GET     /profile/:id                            Profile.Show
+GET     /profile/:id/edit                       Profile.Settings
+POST    /profile/:id/edit                       Profile.UpdateSettings
+GET     /profile/:id/edit/password              Profile.Password
+POST    /profile/:id/edit/password              Profile.UpdatePassword
+
+GET     /post/add                               Post.Create
+POST    /post/add                               Post.Save
+GET     /post/:id                               Post.Show
+GET     /post/:id/edit                          Post.Edit
+POST    /post/:id/edit                          Post.Update
+GET     /post/:id/remove                        Post.Remove
+POST    /post/:id/remove                        Post.Delete
+
+
+
+# Map static resources from the /app/public folder to the /public path
+GET     /public/*filepath                       Static.Serve("public")
+GET     /favicon.ico                            Static.Serve("public/images","favicon.png")
+
+# Catch all
+*       /:controller/:action                    :controller.:action

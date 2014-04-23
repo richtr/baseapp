@@ -1,0 +1,29 @@
+{{set . "title" "Forgotton Password"}}
+{{template "header.html" .}}
+
+<h2>Reset your Password</h2>
+
+<hr>
+
+<form action="{{url "Account.RetrieveAccount"}}" method="POST" class="form-horizontal" role="form">
+  {{with $field := field "email" .}}
+  <div class="form-group{{if $field.Error}} has-error{{end}}">
+    <label for="{{$field.Name}}" class="col-sm-2 control-label">Email Address</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="{{$field.Name}}" name="{{$field.Name}}" placeholder="Email Address" value="{{$field.Flash}}">
+      {{if $field.Error}}
+      <label class="control-label" for="{{$field.Name}}">{{$field.Error}}</label>
+      {{end}}
+    </div>
+  </div>
+  {{end}}
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <input type="submit" class="btn btn-primary" value="Reset Password by Email">
+      <a href="{{url "Account.Login"}}" type="submit" class="btn btn-default">Cancel</a>
+    </div>
+  </div>
+</form>
+
+{{template "footer.html" .}}
