@@ -1,7 +1,7 @@
 BaseApp
 =======
 
-#### A starter application built in [Go](http://golang.org) on top of the [Revel Web Framework](https://revel.github.io) ####
+#### A starter web application built in [Go](http://golang.org) on top of the [Revel Web Framework](https://revel.github.io) ####
 
 BaseApp is a Revel web application that provides a baseline web application starter kit with the following features:
 
