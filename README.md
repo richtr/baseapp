@@ -33,7 +33,7 @@ This command does a couple things:
 
 #### Running BaseApp ####
 
-Before you can start using BaseApp you will need to add your own `app.conf` file in your `conf/` directory. You can copy and use the <a href="https;//github.com/richtr/baseapp/blob/master/conf/app.conf.default">default configuration file</a> with
+Before you can start using BaseApp you will need to add your own `app.conf` file in your `conf/` directory. You can copy and use the <a href="https://github.com/richtr/baseapp/blob/master/conf/app.conf.default">default configuration file</a> with
 
     cp ./github.com/richtr/baseapp/conf/app.conf.default ./github.com/richtr/baseapp/conf/app.conf
 
@@ -75,7 +75,7 @@ BaseApp can be run in three different modes that are each useful for different s
 
         $> revel run baseapp/ prod
 
-Note: Both `dev` and `prod` modes require a configured backend DB. See [app.conf.default](https;//github.com/richtr/baseapp/blob/master/conf/app.conf.default). The `test` mode creates an in-memory database representation that dies when the app dies)
+Note: Both `dev` and `prod` modes require a configured backend DB. See [app.conf.default](https://github.com/richtr/baseapp/blob/master/conf/app.conf.default). The `test` mode creates an in-memory database representation that dies when the app dies)
 
 ### Feedback ###
 
