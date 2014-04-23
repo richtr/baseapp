@@ -9,14 +9,13 @@ import (
 type Profile struct {
 	ProfileId          int
 	UserId             int
-  Name               string
+	Name               string
 	Summary            string
 	Description        string
 	PhotoUrl           string
 
 	// Transient
 	User               *User
-  //Posts              []*Post
 }
 
 func (p *Profile) String() string {
@@ -25,61 +24,53 @@ func (p *Profile) String() string {
 
 func (profile *Profile) Validate(v *revel.Validation) {
 	ValidateProfileName(v, profile.Name)
-  ValidateProfileSummary(v, profile.Summary)
-  ValidateProfileDescription(v, profile.Description)
-  ValidateProfilePhotoUrl(v, profile.PhotoUrl)
+	ValidateProfileSummary(v, profile.Summary)
+	ValidateProfileDescription(v, profile.Description)
+	ValidateProfilePhotoUrl(v, profile.PhotoUrl)
 }
 
 func ValidateProfileName(v *revel.Validation, name string) *revel.ValidationResult {
+	result := v.Required(name).Message("Name required")
+	if !result.Ok {
+		return result
+	}
 
-  result := v.Required(name).Message("Name required")
-  if !result.Ok {
-    return result
-  }
+	result = v.MinSize(name, 6).Message("Name must be at least 6 characters")
+	if !result.Ok {
+		return result
+	}
 
-  result = v.MinSize(name, 6).Message("Name must be at least 6 characters")
-  if !result.Ok {
-    return result
-  }
+	result = v.MaxSize(name, 100).Message("Name must be at most 100 characters")
 
-  result = v.MaxSize(name, 100).Message("Name must be at most 100 characters")
-
-  return result
-
+	return result
 }
 
 func ValidateProfileSummary(v *revel.Validation, summary string) *revel.ValidationResult {
+	result := v.Required(summary).Message("Profile summary is required")
+	if !result.Ok {
+		return result
+	}
 
-  result := v.Required(summary).Message("Profile summary is required")
-  if !result.Ok {
-    return result
-  }
+	result = v.MinSize(summary, 3).Message("Profile summary must exceed 2 characters")
+	if !result.Ok {
+		return result
+	}
 
-  result = v.MinSize(summary, 3).Message("Profile summary must exceed 2 characters")
-  if !result.Ok {
-    return result
-  }
+	result = v.MaxSize(summary, 140).Message("Profile summary cannot exceed 140 characters")
 
-  result = v.MaxSize(summary, 140).Message("Profile summary cannot exceed 140 characters")
-
-  return result
-
+	return result
 }
 
 func ValidateProfileDescription(v *revel.Validation, description string) *revel.ValidationResult {
+	result := v.MaxSize(description, 400).Message("Profile description cannot exceed 400 characters")
 
-  result := v.MaxSize(description, 400).Message("Profile description cannot exceed 400 characters")
-
-  return result
-
+	return result
 }
 
 func ValidateProfilePhotoUrl(v *revel.Validation, photoUrl string) *revel.ValidationResult {
+	result := v.MaxSize(photoUrl, 200).Message("Photo URL cannot exceed 200 characters")
 
-  result := v.MaxSize(photoUrl, 200).Message("Photo URL cannot exceed 200 characters")
-
-  return result
-
+	return result
 }
 
 func (p *Profile) PostGet(exe gorp.SqlExecutor) error {

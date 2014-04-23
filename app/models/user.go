@@ -33,49 +33,45 @@ func (u *User) String() string {
 var EmailRegex = regexp.MustCompile("^[a-z0-9!#$\\%&'*+\\/=?^_`{|}~.-]+@[a-z0-9-]+(\\.[a-z0-9-]+)*$")
 
 func (user *User) Validate(v *revel.Validation) {
-  ValidateUserEmail(v, user.Email)
+	ValidateUserEmail(v, user.Email)
 	ValidateUserPassword(v, user.Password)
 }
 
 func ValidateUserEmail(v *revel.Validation, email string) *revel.ValidationResult {
+	result := v.Required(email).Message("Email address required")
+	if !result.Ok {
+		return result
+	}
 
-  result := v.Required(email).Message("Email address required")
-  if !result.Ok {
-    return result
-  }
+	result = v.MinSize(email, 6).Message("Email address can not be less than 6 characters")
+	if !result.Ok {
+		return result
+	}
 
-  result = v.MinSize(email, 6).Message("Email address can not be less than 6 characters")
-  if !result.Ok {
-    return result
-  }
+	result = v.MaxSize(email, 200).Message("Email address can not exceed 200 characters")
+	if !result.Ok {
+		return result
+	}
 
-  result = v.MaxSize(email, 200).Message("Email address can not exceed 200 characters")
-  if !result.Ok {
-    return result
-  }
+	result = v.Match(email, EmailRegex).Message("You must provide a valid email address")
 
-  result = v.Match(email, EmailRegex).Message("You must provide a valid email address")
-
-  return result
-
+	return result
 }
 
 func ValidateUserPassword(v *revel.Validation, password string) *revel.ValidationResult {
+	result := v.Required(password).Message("Password required")
+	if !result.Ok {
+		return result
+	}
 
-  result := v.Required(password).Message("Password required")
-  if !result.Ok {
-    return result
-  }
+	result = v.MinSize(password, 6).Message("Password must be at least 6 characters")
+	if !result.Ok {
+		return result
+	}
 
-  result = v.MinSize(password, 6).Message("Password must be at least 6 characters")
-  if !result.Ok {
-    return result
-  }
+	result = v.MaxSize(password, 15).Message("Password must be at most 15 characters")
 
-  result = v.MaxSize(password, 15).Message("Password must be at most 15 characters")
-
-  return result
-
+	return result
 }
 
 // These hooks work around two things:

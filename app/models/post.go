@@ -12,34 +12,32 @@ type Post struct {
 	ProfileId       int
 	Title           string
 	Content         []byte // mediumblob
-  Status          string
-  Date            string
+	Status          string
+	Date            string
 
-  // Transient
-  ContentStr      string
-  DateObj         time.Time
+	// Transient
+	ContentStr      string
+	DateObj         time.Time
 }
 
 func (post *Post) Validate(v *revel.Validation) {
-  ValidatePostTitle(v, post.Title)
+	ValidatePostTitle(v, post.Title)
 }
 
 func ValidatePostTitle(v *revel.Validation, title string) *revel.ValidationResult {
+	result := v.Required(title).Message("A post must have a title")
+	if !result.Ok {
+		return result
+	}
 
-  result := v.Required(title).Message("A post must have a title")
-  if !result.Ok {
-    return result
-  }
+	result = v.MinSize(title, 3).Message("Post title must exceed 2 characters")
+	if !result.Ok {
+		return result
+	}
 
-  result = v.MinSize(title, 3).Message("Post title must exceed 2 characters")
-  if !result.Ok {
-    return result
-  }
+	result = v.MaxSize(title, 200).Message("Post title cannot exceed 200 characters")
 
-  result = v.MaxSize(title, 200).Message("Post title cannot exceed 200 characters")
-
-  return result
-
+	return result
 }
 
 // These hooks work around two things:
@@ -48,12 +46,12 @@ func ValidatePostTitle(v *revel.Validation, title string) *revel.ValidationResul
 
 func (post *Post) PreInsert(_ gorp.SqlExecutor) error {
 	post.Date = post.DateObj.Format(SQL_DATE_FORMAT)
-  post.Content = []byte(post.ContentStr);
+	post.Content = []byte(post.ContentStr);
 	return nil
 }
 
 func (post *Post) PreUpdate(_ gorp.SqlExecutor) error {
-  post.Content = []byte(post.ContentStr);
+	post.Content = []byte(post.ContentStr);
 	return nil
 }
 
@@ -66,7 +64,7 @@ func (post *Post) PostGet(_ gorp.SqlExecutor) error {
 		return fmt.Errorf("Error parsing post created date '%s':", post.DateObj, err)
 	}
 
-  post.ContentStr = string(post.Content);
+	post.ContentStr = string(post.Content);
 
 	return nil
 }

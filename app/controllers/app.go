@@ -6,7 +6,7 @@ import (
 
 type Application struct {
 	*r.Controller
-  Account
+	Account
 }
 
 func (c Application) Index() r.Result {

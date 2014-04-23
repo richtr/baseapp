@@ -50,7 +50,6 @@ func InitDB() {
 
 	t = Dbm.AddTable(models.Profile{}).SetKeys(true, "ProfileId")
 	t.ColMap("User").Transient = true
-//	t.ColMap("Posts").Transient = true
 	setColumnSizes(t, map[string]int{
 		"Name":        100,
 		"Summary":     140,
@@ -60,7 +59,7 @@ func InitDB() {
 
 	t = Dbm.AddTable(models.Post{}).SetKeys(true, "PostId")
 	t.ColMap("DateObj").Transient = true
-  t.ColMap("ContentStr").Transient = true
+	t.ColMap("ContentStr").Transient = true
 	setColumnSizes(t, map[string]int{
 		"Title":       400,
 		"Content":     16777212, // mediumblob storage capacity
@@ -71,43 +70,43 @@ func InitDB() {
 	// Create tables in datastore if they don't already exist
 	Dbm.CreateTablesIfNotExists()
 
-  // Set up database test data in 'test' run mode
-  // e.g. `$> revel run baseapp test`
-  if r.RunMode == "test" {
+	// Set up database test data in 'test' run mode
+	// e.g. `$> revel run baseapp test`
+	if r.RunMode == "test" {
 
-  	bcryptPassword, _ := bcrypt.GenerateFromPassword(
-  		[]byte("demouser"), bcrypt.DefaultCost)
-  	demoUser := &models.User{
-      Email: "demo@demo.com",
-      HashedPassword: bcryptPassword,
-      Confirmed: false,
-    }
-    if err := Dbm.Insert(demoUser); err != nil {
-  		panic(err)
-  	}
+		bcryptPassword, _ := bcrypt.GenerateFromPassword(
+			[]byte("demouser"), bcrypt.DefaultCost)
+		demoUser := &models.User{
+			Email: "demo@demo.com",
+			HashedPassword: bcryptPassword,
+			Confirmed: false,
+		}
+		if err := Dbm.Insert(demoUser); err != nil {
+			panic(err)
+		}
 
-  	demoProfile := &models.Profile{
-      UserId: demoUser.UserId,
-      Name: "Demo User",
-      Summary: "Just a regular guy",
-      Description: "...",
-      PhotoUrl: "http://www.gravatar.com/avatar/53444f91e698c0c7caa2dbc3bdbf93fc?s=128&d=identicon",
-      User: demoUser,
-    }
-  	if err := Dbm.Insert(demoProfile); err != nil {
-  		panic(err)
-  	}
+		demoProfile := &models.Profile{
+			UserId: demoUser.UserId,
+			Name: "Demo User",
+			Summary: "Just a regular guy",
+			Description: "...",
+			PhotoUrl: "http://www.gravatar.com/avatar/53444f91e698c0c7caa2dbc3bdbf93fc?s=128&d=identicon",
+			User: demoUser,
+		}
+		if err := Dbm.Insert(demoProfile); err != nil {
+			panic(err)
+		}
 
-  	demoPost := &models.Post{
-      ProfileId: demoProfile.ProfileId,
-      Title: "Hello World",
-      ContentStr: "Full markdown support with things like [links](http://example.org)!",
-      Status: "public",
-      DateObj: time.Now(),
-    }
-  	if err := Dbm.Insert(demoPost); err != nil {
-  		panic(err)
-  	}
+		demoPost := &models.Post{
+			ProfileId: demoProfile.ProfileId,
+			Title: "Hello World",
+			ContentStr: "Full markdown support with things like [links](http://example.org)!",
+			Status: "public",
+			DateObj: time.Now(),
+		}
+		if err := Dbm.Insert(demoPost); err != nil {
+			panic(err)
+		}
 
   }
 
