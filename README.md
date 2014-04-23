@@ -38,7 +38,7 @@ You will need a [functioning Revel installation](https://revel.github.io/tutoria
 
 #### Installing BaseApp ####
 
-To get [https;//github.com/richtr/baseapp](BaseApp), run
+To get [BaseApp](https://github.com/richtr/baseapp), run
 
     go get github.com/richtr/baseapp
 
