@@ -362,7 +362,6 @@ func (e Account) sendEmail(user *models.User, verifyType string, subject string)
 
 	args["Link"] = callbackHost + "/account/" + verifyType + "/" + string(verifyEmailToken)
 
-	//message := &Message{To: []string{user.Email}, Subject: "Welcome to 360.io"}
 	message := &m.Message{To: []string{user.Email}, Subject: subject}
 
 	rErr := message.RenderTemplate("email/" + verifyType, args)
