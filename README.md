@@ -3,7 +3,7 @@ BaseApp
 
 #### A starter application built in [Go](http://golang.org) on top of the [Revel Web Framework](https://revel.github.io) ####
 
-BaseApp is a Revel web application that provides a starter application with the following features:
+BaseApp is a Revel web application that provides a baseline web application starter kit with the following features:
 
 * Basic pages (Home, About Us, Contact Us, etc)
 * Account registration (including safe storage of passwords with [bcrypt](https://en.wikipedia.org/wiki/Bcrypt))
