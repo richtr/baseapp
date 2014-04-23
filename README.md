@@ -39,7 +39,7 @@ Before you can start using BaseApp you will need to add your own `app.conf` file
 
 Note: It is highly recommended that you review the configuration options available in `app.conf.default` before you run your project for the first time!
 
-Once you have setup an `app.conf` file you can start BaseApp _in test mode_, with
+Once you have setup an `app.conf` file you can start BaseApp [_in test mode_](#baseapp-run-modes), with
 
     revel run github.com/richtr/baseapp test
 
@@ -76,6 +76,22 @@ BaseApp can be run in three different modes that are each useful for different s
         $> revel run baseapp/ prod
 
 Note: Both `dev` and `prod` modes require a configured backend DB. See [app.conf.default](https://github.com/richtr/baseapp/blob/master/conf/app.conf.default). The `test` mode creates an in-memory database representation that dies when the app dies)
+
+### Screenshots ###
+
+<img src="https://github.com/richtr/baseapp/raw/master/screenshots/01.HomePage.png" style="max-width: 100%"/>
+
+<img src="https://github.com/richtr/baseapp/raw/master/screenshots/02.Register.png" style="max-width: 100%"/>
+
+<img src="https://github.com/richtr/baseapp/raw/master/screenshots/03.Login.png" style="max-width: 100%"/>
+
+<img src="https://github.com/richtr/baseapp/raw/master/screenshots/04.Profile.png" style="max-width: 100%"/>
+
+<img src="https://github.com/richtr/baseapp/raw/master/screenshots/05.EditProfile.png" style="max-width: 100%"/>
+
+<img src="https://github.com/richtr/baseapp/raw/master/screenshots/06.NewPost.png" style="max-width: 100%"/>
+
+<img src="https://github.com/richtr/baseapp/raw/master/screenshots/07.ResetPwd.png" style="max-width: 100%"/>
 
 ### Feedback ###
 
