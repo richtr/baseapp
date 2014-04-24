@@ -18,19 +18,39 @@ BaseApp is a Revel web application that provides a baseline web application star
 
 ### Screenshots ###
 
+Example Home Page:
+
 <img src="https://github.com/richtr/baseapp/raw/master/screenshots/01.HomePage.png" style="max-width: 100%"/>
+
+User Registration Form:
 
 <img src="https://github.com/richtr/baseapp/raw/master/screenshots/02.Register.png" style="max-width: 100%"/>
 
+User Registration Form - Form Validation Failed:
+
+<img src="https://github.com/richtr/baseapp/raw/master/screenshots/09.Register_Fail.png" style="max-width: 100%"/>
+
+User Login Form:
+
 <img src="https://github.com/richtr/baseapp/raw/master/screenshots/03.Login.png" style="max-width: 100%"/>
+
+Display User Profile:
 
 <img src="https://github.com/richtr/baseapp/raw/master/screenshots/04.Profile.png" style="max-width: 100%"/>
 
+Edit User Profile Form:
+
 <img src="https://github.com/richtr/baseapp/raw/master/screenshots/05.EditProfile.png" style="max-width: 100%"/>
+
+New Post Form:
 
 <img src="https://github.com/richtr/baseapp/raw/master/screenshots/06.NewPost.png" style="max-width: 100%"/>
 
+Reset Password Form (if email settings are provided in `conf/app.conf`):
+
 <img src="https://github.com/richtr/baseapp/raw/master/screenshots/07.ResetPwd.png" style="max-width: 100%"/>
+
+Interactive Test Suite (at `http://localhost:9000/@tests`)
 
 <img src="https://github.com/richtr/baseapp/raw/master/screenshots/08.TestRunner.png" style="max-width: 100%"/>
 
