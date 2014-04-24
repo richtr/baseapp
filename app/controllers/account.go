@@ -270,7 +270,11 @@ func (c Account) Logout() r.Result {
 	for k := range c.Session {
 		delete(c.Session, k)
 	}
-	c.Flash.Success("You have been successfully logged out")
+	if c.Flash.Data["error"] == "" {
+		c.Flash.Success("You have been successfully logged out")
+	} else {
+		c.Flash.Error(c.Flash.Data["error"]) // propagate error
+	}
 	return c.Redirect(routes.Account.Login())
 }
 
