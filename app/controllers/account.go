@@ -25,6 +25,12 @@ func (c Account) AddUser() r.Result {
 	return nil
 }
 
+// Add .AppName to RenderArgs
+func (c Account) AddAppName() r.Result {
+	c.RenderArgs["AppName"] = r.Config.StringDefault("app.name", "BaseApp")
+	return nil
+}
+
 func (c Account) connected() *models.Profile {
 	if c.RenderArgs["user"] != nil {
 		return c.RenderArgs["user"].(*models.Profile)
