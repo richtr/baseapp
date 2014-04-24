@@ -81,7 +81,12 @@ func InitDB() {
 			HashedPassword: bcryptPassword,
 			Confirmed: false,
 		}
-		if err := Dbm.Insert(demoUser); err != nil {
+		otherUser := &models.User{
+			Email: "demo1@demo1.com",
+			HashedPassword: bcryptPassword,
+			Confirmed: false,
+		}
+		if err := Dbm.Insert(demoUser, otherUser); err != nil {
 			panic(err)
 		}
 
@@ -93,7 +98,15 @@ func InitDB() {
 			PhotoUrl: "http://www.gravatar.com/avatar/53444f91e698c0c7caa2dbc3bdbf93fc?s=128&d=identicon",
 			User: demoUser,
 		}
-		if err := Dbm.Insert(demoProfile); err != nil {
+		otherProfile := &models.Profile{
+			UserId: otherUser.UserId,
+			Name: "Other User",
+			Summary: "Just another regular guy",
+			Description: "...",
+			PhotoUrl: "http://www.gravatar.com/avatar/53444f91e698c0c7caa2dbc3bdbf93fc?s=128&d=identicon",
+			User: otherUser,
+		}
+		if err := Dbm.Insert(demoProfile, otherProfile); err != nil {
 			panic(err)
 		}
 
@@ -104,7 +117,14 @@ func InitDB() {
 			Status: "public",
 			DateObj: time.Now(),
 		}
-		if err := Dbm.Insert(demoPost); err != nil {
+		otherPost := &models.Post{
+			ProfileId: otherProfile.ProfileId,
+			Title: "Hello World 1",
+			ContentStr: "This post does not belong to demo@demo.com account",
+			Status: "public",
+			DateObj: time.Now(),
+		}
+		if err := Dbm.Insert(demoPost, otherPost); err != nil {
 			panic(err)
 		}
 
