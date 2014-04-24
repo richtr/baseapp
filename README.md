@@ -71,27 +71,27 @@ BaseApp can be run in three different modes that are each useful for different s
 
     You can run BaseApp in `test` mode as follows:
 
-        $> revel run baseapp/ test
+        $> revel run github.com/richtr/baseapp/ test
 
     Or to run the non-interactive command-line test suite use:
 
-        $> revel test baseapp/ test
+        $> revel test github.com/richtr/baseapp/ test
 
 2. `dev` mode [default mode]: Uses a blank sqlite3/mysql/postgres datastore that is created if it does not already exist at your chosen location and persists whenever your application is restarted. Outputs detailed error messages if something goes wrong in your application.
 
     You can run BaseApp in `dev` mode as follows:
 
-        $> revel run baseapp/ dev
+        $> revel run github.com/richtr/baseapp/ dev
 
     Or, simply:
 
-        $> revel run baseapp/
+        $> revel run github.com/richtr/baseapp/
 
 3. `prod` mode: Uses a blank sqlite3/mysql/postgres datastore that is created if it does not already exist at your chosen location and persists whenever your application is restarted. Outputs user-friendly error messages if something goes wrong in your application.
 
     You can run BaseApp in `prod` mode as follows:
 
-        $> revel run baseapp/ prod
+        $> revel run github.com/richtr/baseapp/ prod
 
 Note: Both `dev` and `prod` modes require a configured backend DB. See [app.conf.default](https://github.com/richtr/baseapp/blob/master/conf/app.conf.default). The `test` mode creates an in-memory database representation that dies when the app dies)
 
