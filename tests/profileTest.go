@@ -53,13 +53,13 @@ func (t *ProfileTest) DoLogout() {
 
 func (t *ProfileTest) DoUpdateSettings(profileId int, profile models.Profile, verifyPassword string) {
 	urlValues := url.Values{}
-  urlValues.Add("user.Name", profile.Name)
-	urlValues.Add("user.User.Email", profile.User.Email)
-	urlValues.Add("user.User.Password", profile.User.Password)
+  urlValues.Add("profile.Name", profile.Name)
+	urlValues.Add("profile.User.Email", profile.User.Email)
+	urlValues.Add("profile.User.Password", profile.User.Password)
 	urlValues.Add("verifyPassword", verifyPassword)
-	urlValues.Add("user.Summary", profile.Summary)
-	urlValues.Add("user.Description", profile.Description)
-	urlValues.Add("user.PhotoUrl", profile.PhotoUrl)
+	urlValues.Add("profile.Summary", profile.Summary)
+	urlValues.Add("profile.Description", profile.Description)
+	urlValues.Add("profile.PhotoUrl", profile.PhotoUrl)
 
 	postUrl := fmt.Sprintf("/profile/%d/edit", profileId)
 

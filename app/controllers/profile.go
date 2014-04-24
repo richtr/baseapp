@@ -60,38 +60,38 @@ func (c Profile) Settings(id int) r.Result {
 		return c.Redirect(routes.Account.Logout())
 	}
 
-	return c.Render()
+	return c.Render(profile)
 }
 
-func (c Profile) UpdateSettings(id int, user *models.Profile, verifyPassword string) r.Result {
-	profile := c.connected();
-	if profile == nil || profile.UserId != id {
+func (c Profile) UpdateSettings(id int, profile *models.Profile, verifyPassword string) r.Result {
+	existingProfile := c.connected();
+	if existingProfile == nil || existingProfile.UserId != id {
 		c.Flash.Error("You must log in to access your account");
 		return c.Redirect(routes.Account.Logout())
 	}
 
-	email := user.User.Email
+	email := profile.User.Email
 
 	// Step 1: Validate data
 
-	if email != profile.User.Email {
+	if email != existingProfile.User.Email {
 		// Validate email
-		models.ValidateUserEmail(c.Validation, user.User.Email).Key("user.User.Email")
+		models.ValidateUserEmail(c.Validation, profile.User.Email).Key("profile.User.Email")
 	}
 
-	if user.User.Password != "" || verifyPassword != "" {
-		models.ValidateUserPassword(c.Validation, user.User.Password).Key("user.User.Password")
+	if profile.User.Password != "" || verifyPassword != "" {
+		models.ValidateUserPassword(c.Validation, profile.User.Password).Key("profile.User.Password")
 
 		// Additional password verification
-		c.Validation.Required(user.User.Password != user.User.Email).Message("Password cannot be the same as your email address").Key("user.User.Password")
+		c.Validation.Required(profile.User.Password != profile.User.Email).Message("Password cannot be the same as your email address").Key("profile.User.Password")
 		c.Validation.Required(verifyPassword).Message("Password verification required").Key("verifyPassword")
-		c.Validation.Required(verifyPassword == user.User.Password).Message("Provided passwords do not match").Key("verifyPassword")
+		c.Validation.Required(verifyPassword == profile.User.Password).Message("Provided passwords do not match").Key("verifyPassword")
 	}
 
 	// Validate profile components
-	models.ValidateProfileName(c.Validation, user.Name).Key("user.Name")
-	models.ValidateProfileSummary(c.Validation, user.Summary).Key("user.Summary")
-	models.ValidateProfileDescription(c.Validation, user.Description).Key("user.Description")
+	models.ValidateProfileName(c.Validation, profile.Name).Key("profile.Name")
+	models.ValidateProfileSummary(c.Validation, profile.Summary).Key("profile.Summary")
+	models.ValidateProfileDescription(c.Validation, profile.Description).Key("profile.Description")
 
 	if c.Validation.HasErrors() {
 		c.Validation.Keep()
@@ -102,7 +102,7 @@ func (c Profile) UpdateSettings(id int, user *models.Profile, verifyPassword str
 
 	// Step 2: Commit data
 
-	if email != profile.User.Email {
+	if email != existingProfile.User.Email {
 		userExists := c.getProfile(email)
 
 		if userExists != nil {
@@ -111,12 +111,12 @@ func (c Profile) UpdateSettings(id int, user *models.Profile, verifyPassword str
 		}
 
 		// Re-send email confirmation
-		profile.User.Email = email
-		profile.User.Confirmed = false
+		existingProfile.User.Email = email
+		existingProfile.User.Confirmed = false
 
 		// FIXME
 		/*// Send out confirmation email
-		eErr := c.sendAccountConfirmEmail(profile.User)
+		eErr := c.sendAccountConfirmEmail(existingProfile.User)
 
 		if eErr != nil {
 			c.Flash.Error("Could not send confirmation email")
@@ -124,7 +124,7 @@ func (c Profile) UpdateSettings(id int, user *models.Profile, verifyPassword str
 
 			// Update email address in database
 			_, err := c.Txn.Exec("update User set Email = ?, Confirmed = ? where UserId = ?",
-			  email, 0, profile.User.UserId)
+			  email, 0, existingProfile.User.UserId)
 			if err != nil {
 			  panic(err)
 			}
@@ -137,17 +137,17 @@ func (c Profile) UpdateSettings(id int, user *models.Profile, verifyPassword str
 	}
 
 	// Update password?
-	if user.User.Password != "" || verifyPassword != "" {
-		c.CommitPassword(profile.User, user.User.Password)
+	if profile.User.Password != "" || verifyPassword != "" {
+		c.CommitPassword(existingProfile.User, profile.User.Password)
 	}
 
 	// Update profile components
-	profile.UserId = id
-	profile.Name = user.Name
-	profile.Summary = user.Summary
-	profile.Description = user.Description
+	existingProfile.UserId = id
+	existingProfile.Name = profile.Name
+	existingProfile.Summary = profile.Summary
+	existingProfile.Description = profile.Description
 
-	_, err := c.Txn.Update(profile)
+	_, err := c.Txn.Update(existingProfile)
 	if err != nil {
 		c.Flash.Error("Profile could not be updated");
 		return c.Redirect(routes.Profile.Settings(id));

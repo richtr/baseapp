@@ -5,8 +5,8 @@
 
 <hr>
 
-<form action="{{url "Profile.UpdateSettings" .user.ProfileId}}" method="POST" class="form-horizontal" role="form">
-  {{with $field := field "user.Name" .}}
+<form action="{{url "Profile.UpdateSettings" .profile.ProfileId}}" method="POST" class="form-horizontal" role="form">
+  {{with $field := field "profile.Name" .}}
   <div class="form-group{{if $field.Error}} has-error{{end}}">
     <label for="{{$field.Name}}" class="col-sm-2 control-label">Full Name</label>
     <div class="col-sm-10">
@@ -18,7 +18,7 @@
   </div>
   {{end}}
 
-  {{with $field := field "user.User.Email" .}}
+  {{with $field := field "profile.User.Email" .}}
   <div class="form-group{{if $field.Error}} has-error{{end}}">
     <label for="{{$field.Name}}" class="col-sm-2 control-label">Email Address</label>
     <div class="col-sm-10">
@@ -30,7 +30,7 @@
   </div>
   {{end}}
 
-  {{with $field := field "user.User.Password" .}}
+  {{with $field := field "profile.User.Password" .}}
   <div class="form-group{{if $field.Error}} has-error{{end}}">
     <label for="{{$field.Name}}" class="col-sm-2 control-label">Password</label>
     <div class="col-sm-10">
@@ -56,7 +56,7 @@
 
   <hr>
 
-  {{with $field := field "user.Summary" .}}
+  {{with $field := field "profile.Summary" .}}
   <div class="form-group{{if $field.Error}} has-error{{end}}">
     <label for="{{$field.Name}}" class="col-sm-2 control-label">Summary</label>
     <div class="col-sm-10">
@@ -68,7 +68,7 @@
   </div>
   {{end}}
 
-  {{with $field := field "user.Description" .}}
+  {{with $field := field "profile.Description" .}}
   <div class="form-group{{if $field.Error}} has-error{{end}}">
     <label for="{{$field.Name}}" class="col-sm-2 control-label">Description</label>
     <div class="col-sm-10">
@@ -83,7 +83,7 @@
   <div class="form-group">
     <label for="photo" class="col-sm-2 control-label">Photo</label>
     <div class="col-sm-10">
-      <img src="{{.user.PhotoUrl}}" class="img-responsive img-rounded" width="128" height="128" alt="Profile photo for {{.user.Name}}">
+      <img src="{{.profile.PhotoUrl}}" class="img-responsive img-rounded" width="128" height="128" alt="Profile photo for {{.profile.Name}}">
       <div>
         <a href="http://www.gravatar.com" target="_blank">Update your profile photo at Gravatar.com</a>
       </div>
@@ -93,7 +93,7 @@
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
       <input type="submit" class="btn btn-primary" value="Update Profile">
-      <a href="{{url "Profile.Show" .user.ProfileId}}" type="submit" class="btn btn-default">Cancel</a>
+      <a href="{{url "Profile.Show" .profile.ProfileId}}" type="submit" class="btn btn-default">Cancel</a>
     </div>
   </div>
 </form>
