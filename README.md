@@ -32,6 +32,8 @@ BaseApp is a Revel web application that provides a baseline web application star
 
 <img src="https://github.com/richtr/baseapp/raw/master/screenshots/07.ResetPwd.png" style="max-width: 100%"/>
 
+<img src="https://github.com/richtr/baseapp/raw/master/screenshots/08.TestRunner.png" style="max-width: 100%"/>
+
 ### Quick Start ####
 
 #### Prerequisites ####
