@@ -1,7 +1,7 @@
 package tests
 
 import (
-  "github.com/revel/revel"
+	"github.com/revel/revel"
 )
 
 type ApplicationTest struct {
@@ -9,15 +9,15 @@ type ApplicationTest struct {
 }
 
 func (t *ApplicationTest) Before() {
-  // Runs before each test below is executed
+	// Runs before each test below is executed
 }
 
 func (t *ApplicationTest) After() {
-  // Runs after each test below is executed
+	// Runs after each test below is executed
 }
 
 func (t *ApplicationTest) TestIndex() {
-  t.Get("/")
-  t.AssertOk()
-  t.AssertContentType("text/html; charset=utf-8")
+	t.Get("/")
+	t.AssertOk()
+	t.AssertContentType("text/html; charset=utf-8")
 }

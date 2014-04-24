@@ -40,9 +40,9 @@ var demoProfile = models.Profile{
 
 func (t *ProfileTest) DoLogin(user models.User) {
 	urlValues := url.Values{}
-  urlValues.Add("email", user.Email)
-  urlValues.Add("password", user.Password)
-  urlValues.Add("remember", "0")
+	urlValues.Add("email", user.Email)
+	urlValues.Add("password", user.Password)
+	urlValues.Add("remember", "0")
 
 	t.PostForm("/account/login", urlValues)
 }
@@ -53,7 +53,7 @@ func (t *ProfileTest) DoLogout() {
 
 func (t *ProfileTest) DoUpdateSettings(profileId int, profile models.Profile, verifyPassword string) {
 	urlValues := url.Values{}
-  urlValues.Add("profile.Name", profile.Name)
+	urlValues.Add("profile.Name", profile.Name)
 	urlValues.Add("profile.User.Email", profile.User.Email)
 	urlValues.Add("profile.User.Password", profile.User.Password)
 	urlValues.Add("verifyPassword", verifyPassword)
