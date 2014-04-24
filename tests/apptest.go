@@ -21,3 +21,15 @@ func (t *ApplicationTest) TestIndex() {
 	t.AssertOk()
 	t.AssertContentType("text/html; charset=utf-8")
 }
+
+func (t *ApplicationTest) TestAbout() {
+	t.Get("/about")
+	t.AssertOk()
+	t.AssertContentType("text/html; charset=utf-8")
+}
+
+func (t *ApplicationTest) TestContact() {
+	t.Get("/contact")
+	t.AssertOk()
+	t.AssertContentType("text/html; charset=utf-8")
+}
