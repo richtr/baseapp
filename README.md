@@ -1,9 +1,9 @@
 BaseApp
 =======
 
-#### A starter web application built in [Go](http://golang.org) on top of the [Revel Web Framework](https://revel.github.io) ####
+#### A bootstrap web application built in [Go](http://golang.org) on top of the [Revel Web Framework](https://revel.github.io) ####
 
-BaseApp is a Revel web application that provides a baseline web application starter kit with the following features:
+BaseApp is a bootstrap Revel web application that provides a baseline web application starter kit with the following features:
 
 * Basic pages (Home, About Us, Contact Us, etc)
 * Account registration (including safe storage of passwords with [bcrypt](https://en.wikipedia.org/wiki/Bcrypt))
@@ -12,7 +12,8 @@ BaseApp is a Revel web application that provides a baseline web application star
 * Account log in
 * Public user profiles (with Gravatar integration for profile photos and profile edit functionality)
 * Public user posts (with full Markdown support and edit + delete functionality)
-* Auto-configuring backend data store (SQLite3, MySQL, PostgreSQL)
+* Social Features (Profile Follower and Following Counts and Post Likes)
+* Auto-provisioned backend data store (SQLite3, MySQL, PostgreSQL)
 * Full form validation
 * Full non-interactive and interactive testing framework (Test-driven development process)
 
@@ -38,6 +39,14 @@ Display User Profile:
 
 <img src="https://github.com/richtr/baseapp/raw/master/screenshots/04.Profile.png" style="max-width: 100%"/>
 
+Followers Display:
+
+<img src="https://github.com/richtr/baseapp/raw/master/screenshots/11.Followers.png" style="max-width: 100%"/>
+
+Following Display:
+
+<img src="https://github.com/richtr/baseapp/raw/master/screenshots/11.Following.png" style="max-width: 100%"/>
+
 Edit User Profile Form:
 
 <img src="https://github.com/richtr/baseapp/raw/master/screenshots/05.EditProfile.png" style="max-width: 100%"/>
@@ -45,6 +54,10 @@ Edit User Profile Form:
 New Post Form:
 
 <img src="https://github.com/richtr/baseapp/raw/master/screenshots/06.NewPost.png" style="max-width: 100%"/>
+
+Post Display:
+
+<img src="https://github.com/richtr/baseapp/raw/master/screenshots/10.Post.png" style="max-width: 100%"/>
 
 Reset Password Form (if email settings are provided in `conf/app.conf`):
 
