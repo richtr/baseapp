@@ -65,6 +65,10 @@ func InitDB() {
 		"Content":     16777212, // mediumblob storage capacity
 	})
 
+	// Social components
+	Dbm.AddTable(models.Like{}).SetKeys(true, "LikeId")
+	Dbm.AddTable(models.Follower{}).SetKeys(true, "FollowerId")
+
 	Dbm.TraceOn("[gorp]", r.INFO)
 
 	// Create tables in datastore if they don't already exist
@@ -97,14 +101,16 @@ func InitDB() {
 			Description: "...",
 			PhotoUrl: "http://www.gravatar.com/avatar/53444f91e698c0c7caa2dbc3bdbf93fc?s=128&d=identicon",
 			User: demoUser,
+			AggregateFollowing: 1,
 		}
 		otherProfile := &models.Profile{
 			UserId: otherUser.UserId,
 			Name: "Other User",
 			Summary: "Just another regular guy",
 			Description: "...",
-			PhotoUrl: "http://www.gravatar.com/avatar/53444f91e698c0c7caa2dbc3bdbf93fc?s=128&d=identicon",
+			PhotoUrl: "http://www.gravatar.com/avatar/740fcda1a2304bd073b46f405b3622ce?s=128&d=identicon",
 			User: otherUser,
+			AggregateFollowers: 1,
 		}
 		if err := Dbm.Insert(demoProfile, otherProfile); err != nil {
 			panic(err)
@@ -123,8 +129,17 @@ func InitDB() {
 			ContentStr: "This post does not belong to demo@demo.com account",
 			Status: "public",
 			DateObj: time.Now(),
+			AggregateLikes: 8,
 		}
 		if err := Dbm.Insert(demoPost, otherPost); err != nil {
+			panic(err)
+		}
+
+		demoFollow := &models.Follower{
+			UserId: demoUser.UserId,
+			FollowUserId: otherUser.UserId,
+		}
+		if err := Dbm.Insert(demoFollow); err != nil {
 			panic(err)
 		}
 

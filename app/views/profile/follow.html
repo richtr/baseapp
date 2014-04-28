@@ -1,0 +1,13 @@
+	<div class="media well well-sm">
+	  <span class="pull-left">
+	    <img class="img-responsive img-rounded" src="{{.PhotoUrl}}" alt="Profile Photo" width="64" height="64" style="border: 1px solid #666">
+	  </span>
+	  <div class="media-body">
+	    <h3 class="media-heading" style="padding-top:4px">
+				<a href="{{url "Profile.Show" .ProfileId}}" style="color:#333;">
+					{{.Name}}
+				</a>
+			</h3>
+			<p>{{.Summary}}</p>
+	  </div>
+	</div>

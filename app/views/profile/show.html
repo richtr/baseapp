@@ -1,21 +1,6 @@
 {{template "header.html" .}}
 
-{{$isOwner := .isOwner}}
-
-<div class="media well well-sm">
-
-  <span class="pull-left">
-    <img class="img-responsive img-rounded" src="{{.profile.PhotoUrl}}" alt="Profile Photo" width="128" height="128" style="border: 1px solid #666">
-  </span>
-  <div class="media-body">
-    <h2 class="media-heading" style="padding-top:4px">{{.profile.Name}}</h2>
-    {{if $isOwner}}
-    <p><a href="{{url "Profile.Settings" .user.ProfileId}}">Edit Profile</a></p>
-    {{end}}
-    <p>{{.profile.Summary}}</p>
-  </div>
-
-</div>
+{{template "profile/header.html" .}}
 
 {{if .profile.Description }}
 
@@ -29,29 +14,31 @@
 
 <h3>Posts</h3>
 
+{{$isOwner := .isOwner}}
+
 {{ if .posts }}
 
-<ul class="posts">
-  {{range .posts}}
-  <li class="post">
-    <a href="{{url "Post.Show" .PostId}}">{{.Title}}</a>
+	<ul class="posts">
+	  {{range .posts}}
+	  <li class="post">
+	    <a href="{{url "Post.Show" .PostId}}">{{.Title}}</a>
 
-    {{if $isOwner}}
+	    {{if $isOwner}}
 
-      [
-      <a href="{{url "Post.Edit" .PostId}}">Edit</a>
-      |
-      <a href="{{url "Post.Remove" .PostId}}">Delete</a>
-      ]
+	      [
+	      <a href="{{url "Post.Edit" .PostId}}">Edit</a>
+	      |
+	      <a href="{{url "Post.Remove" .PostId}}">Delete</a>
+	      ]
 
-    {{end}}
-  </li>
-  {{end}}
-</ul>
+	    {{end}}
+	  </li>
+	  {{end}}
+	</ul>
 
 {{ else }}
 
-<p><em>No posts</em></p>
+	<p><em>No posts</em></p>
 
 {{ end }}
 

@@ -18,6 +18,14 @@
   {{.postContentHTML}}
 </div>
 
+<div>
+	<button type="button" data-href="{{url "Post.Like" .post.PostId}}" class="btn btn-link like">
+		<b class="glyphicon glyphicon-heart{{ if eq .post.AggregateLikes 0 }}-empty{{end}}"></b>
+		<span class="text"></span>
+		<span class="badge">{{.post.AggregateLikes}}</span>
+	</button>
+</div>
+
 <hr>
 
 {{if .isOwner}}

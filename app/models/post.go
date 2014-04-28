@@ -14,6 +14,7 @@ type Post struct {
 	Content         []byte // mediumblob
 	Status          string
 	Date            string
+	AggregateLikes  int // to keep things quick in our app
 
 	// Transient
 	ContentStr      string

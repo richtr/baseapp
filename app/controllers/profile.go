@@ -25,20 +25,40 @@ func (c Profile) loadProfileById(id int) *models.Profile {
 	return p.(*models.Profile)
 }
 
-func (c Profile) Show(id int) r.Result {
+func (c Profile) getProfileShowParams(id int) (profiles *models.Profile, owner, following bool) {
+
 	profile := c.loadProfileById(id)
 
 	if profile == nil {
-		return c.NotFound("Profile does not exist")
+		return nil, false, false
 	}
 
-	appName := r.Config.StringDefault("app.name", "BaseApp")
-
-	title := profile.Name + " on " + appName
+	user := c.connected()
 
 	isOwner := false
-	if user := c.connected(); user != nil && user.UserId == profile.User.UserId {
-		isOwner = true
+	isFollowing := false
+	if user != nil {
+		if user.UserId == profile.User.UserId { // Check if logged in user owns the current profile
+				isOwner = true
+		} else { // Check if logged in user is following the current profile
+			fErr := c.Txn.SelectOne(&models.Follower{}, `select * from Follower where UserId = ? and FollowUserId = ?`, user.UserId, profile.User.UserId)
+			if fErr == nil {
+				isFollowing = true
+			}
+		}
+	}
+
+	return profile, isOwner, isFollowing
+
+
+}
+
+
+func (c Profile) Show(id int) r.Result {
+	profile, isOwner, isFollowing := c.getProfileShowParams(id)
+
+	if profile == nil {
+		return c.NotFound("Profile does not exist")
 	}
 
 	// Retrieve all posts for profile
@@ -50,7 +70,11 @@ func (c Profile) Show(id int) r.Result {
 		}
 	}
 
-	return c.Render(title, profile, posts, isOwner)
+	appName := r.Config.StringDefault("app.name", "BaseApp")
+
+	title := profile.Name + " on " + appName
+
+	return c.Render(title, profile, posts, isOwner, isFollowing)
 }
 
 func (c Profile) Settings(id int) r.Result {
@@ -210,4 +234,155 @@ func (c Profile) UpdatePassword(id int, password, verifyPassword string) r.Resul
 
 	c.Flash.Success("Account settings updated")
 	return c.Redirect(routes.Profile.Show(id))
+}
+
+func (c Profile) FollowUser(id int) r.Result {
+	followResponse := models.SimpleJSONResponse{"fail", ""}
+
+	profile := c.connected();
+	if profile == nil {
+		followResponse.Message = "You must log in to follow another user"
+		return c.RenderJson(followResponse)
+	}
+
+	if profile.User.UserId == id {
+		followResponse.Message = "You cannot follow yourself"
+		return c.Render(followResponse)
+	}
+
+	// Get followed user profile
+	followProfile := c.getProfileByUserId(id)
+	if followProfile == nil {
+		followResponse.Message = "User with that id not found"
+		return c.RenderJson(followResponse)
+	}
+
+	var followerObj models.Follower
+	err := c.Txn.SelectOne(&followerObj, `select * from Follower where UserId = ? and FollowUserId = ?`, profile.User.UserId, followProfile.User.UserId)
+
+	if err != nil {
+
+		// Add new follower
+
+		followerObj = models.Follower{
+			UserId: profile.User.UserId,
+			FollowUserId: followProfile.User.UserId,
+		}
+
+		lErr := c.Txn.Insert(&followerObj)
+		if lErr != nil {
+			panic(lErr)
+		}
+
+		// Update aggregate follower count on Followed Profile
+		followProfile.AggregateFollowers += 1
+
+		_, pErr := c.Txn.Update(followProfile)
+		if pErr != nil {
+			panic(pErr)
+		}
+
+		// Update aggregate following count on Current User Profile
+		profile.AggregateFollowing += 1
+
+		_, p2Err := c.Txn.Update(profile)
+		if p2Err != nil {
+			panic(p2Err)
+		}
+
+		followResponse.Message = "You are now following this user"
+		followResponse.Status = "success"
+
+	} else {
+
+		// Remove existing follower
+
+		_, dErr := c.Txn.Delete(&followerObj)
+		if dErr != nil {
+			panic(dErr)
+		}
+
+		// Update aggregate follower count on Followed Profile
+		followProfile.AggregateFollowers -= 1
+
+		_, pErr := c.Txn.Update(followProfile)
+		if pErr != nil {
+			panic(pErr)
+		}
+
+		// Update aggregate following count on Current User Profile
+		profile.AggregateFollowing -= 1
+
+		_, p2Err := c.Txn.Update(profile)
+		if p2Err != nil {
+			panic(p2Err)
+		}
+
+		followResponse.Message = "You are no longer following this user"
+		followResponse.Status = "success"
+
+	}
+
+	return c.RenderJson(followResponse)
+
+}
+
+func (c Profile) Followers(id, page int) r.Result {
+
+	profile, isOwner, isFollowing := c.getProfileShowParams(id)
+
+	if profile == nil {
+		return c.NotFound("Profile does not exist")
+	}
+
+	if page == 0 {
+		page = 1
+	}
+	nextPage := page + 1
+	size := 50; // results per page
+
+	// Retrieve all profiles of followers
+	var followerProfiles []*models.Profile
+	results, err := c.Txn.Select(models.Profile{}, `select * from Profile where UserId in (select UserId from Follower where FollowUserId = ?) limit ?, ?`, id, (page-1)*size, size)
+	if err == nil {
+		for _, r := range results {
+			followerProfiles = append(followerProfiles, r.(*models.Profile))
+		}
+	}
+
+	if len(followerProfiles) == 0 && page != 1 {
+		return c.Redirect(routes.Profile.Followers(id, 1))
+	}
+
+	return c.Render(profile, isOwner, isFollowing, followerProfiles, page, nextPage)
+}
+
+func (c Profile) Following(id, page int) r.Result {
+
+	profile, isOwner, isFollowing := c.getProfileShowParams(id)
+
+	if profile == nil {
+		return c.NotFound("Profile does not exist")
+	}
+
+	if page == 0 {
+		page = 1
+	}
+	nextPage := page + 1
+	size := 50; // results per page
+
+	// Retrieve all profiles of followers
+	var followingProfiles []*models.Profile
+	results, err := c.Txn.Select(models.Profile{}, `select * from Profile where UserId in (select FollowUserId from Follower where UserId = ?) limit ?, ?`, id, (page-1)*size, size)
+	if err == nil {
+		for _, r := range results {
+			followingProfiles = append(followingProfiles, r.(*models.Profile))
+		}
+	}
+
+	if len(followingProfiles) == 0 && page != 1 {
+		return c.Redirect(routes.Profile.Following(id, 1))
+	}
+
+	return c.Render(profile, isOwner, isFollowing, followingProfiles, page, nextPage)
 }

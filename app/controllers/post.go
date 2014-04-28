@@ -198,3 +198,55 @@ func (c Post) Delete(id int) r.Result {
 	c.Flash.Success("Post removed")
 	return c.Redirect(routes.Profile.Show(profile.ProfileId))
 }
+
+func (c Post) Like(id int) r.Result {
+	likeResponse := models.SimpleJSONResponse{"fail", ""}
+
+	profile := c.connected();
+	if profile == nil {
+		likeResponse.Message = "You must log in to like a post"
+		return c.RenderJson(likeResponse)
+	}
+
+  post := c.loadPostById(id)
+	if post == nil {
+		likeResponse.Message = "Post does not exist"
+		return c.Render(likeResponse)
+	}
+
+	existingLike := &models.Like{}
+	err := c.Txn.SelectOne(existingLike, `select LikeId from Like where UserId = ? and PostId = ?`, profile.User.UserId, post.PostId)
+
+	if err == nil {
+
+		likeResponse.Message = "You have already liked this post"
+
+	} else {
+		// Add like
+
+		existingLike.LikeId = 0
+		existingLike.UserId = profile.User.UserId
+		existingLike.PostId = post.PostId
+
+		lErr := c.Txn.Insert(existingLike)
+		if lErr != nil {
+			panic(lErr)
+		}
+
+		// Update like increment count on Post
+		post.AggregateLikes += 1
+
+		_, pErr := c.Txn.Update(post)
+		if pErr != nil {
+			panic(pErr)
+		}
+
+		likeResponse.Message = "You have now liked this post"
+		likeResponse.Status = "success"
+	}
+
+	println(likeResponse.Message)
+
+	return c.RenderJson(likeResponse)
+
+}

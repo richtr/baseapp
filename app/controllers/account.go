@@ -49,9 +49,15 @@ func (c Account) getProfile(email string) *models.Profile {
 		return nil
 	}
 
+	profile := c.getProfileByUserId(user.UserId)
+
+	return profile
+}
+
+func (c Account) getProfileByUserId(userId int) *models.Profile {
 	// Bind associated user profile for admin purposes
 	profile := &models.Profile{}
-	err = c.Txn.SelectOne(profile, `select * from Profile where UserId = ?`, user.UserId)
+	err := c.Txn.SelectOne(profile, `select * from Profile where UserId = ?`, userId)
 	if err != nil || profile == nil {
 		return nil
 	}
@@ -113,7 +119,7 @@ func (c Account) SaveUser(user models.User, name, verifyPassword string) r.Resul
 	}
 
 	// Create profile (and assign correct UserId)
-	profile := &models.Profile{0, user.UserId, name, "", "", "", &user}
+	profile := &models.Profile{0, user.UserId, name, "", "", "", 0, 0, &user}
 
 	// Get Gravatar Icon
 	emailHash := gr.EmailHash(user.Email)

@@ -13,6 +13,8 @@ type Profile struct {
 	Summary            string
 	Description        string
 	PhotoUrl           string
+	AggregateFollowers int
+	AggregateFollowing int
 
 	// Transient
 	User               *User

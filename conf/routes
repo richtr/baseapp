@@ -26,6 +26,11 @@ GET     /profile/:id/edit                       Profile.Settings
 POST    /profile/:id/edit                       Profile.UpdateSettings
 GET     /profile/:id/edit/password              Profile.Password
 POST    /profile/:id/edit/password              Profile.UpdatePassword
+GET     /profile/:id/follow                     Profile.FollowUser
+GET     /profile/:id/followers                  Profile.Followers
+GET     /profile/:id/followers/:page            Profile.Followers
+GET     /profile/:id/following                  Profile.Following
+GET     /profile/:id/following/:page            Profile.Following
 
 GET     /post/add                               Post.Create
 POST    /post/add                               Post.Save
@@ -34,6 +39,7 @@ GET     /post/:id/edit                          Post.Edit
 POST    /post/:id/edit                          Post.Update
 GET     /post/:id/remove                        Post.Remove
 POST    /post/:id/remove                        Post.Delete
+GET     /post/:id/like                          Post.Like
 
 
 
