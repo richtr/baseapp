@@ -45,7 +45,7 @@ Followers Display:
 
 Following Display:
 
-<img src="https://github.com/richtr/baseapp/raw/master/screenshots/11.Following.png" style="max-width: 100%"/>
+<img src="https://github.com/richtr/baseapp/raw/master/screenshots/12.Following.png" style="max-width: 100%"/>
 
 Edit User Profile Form:
 
