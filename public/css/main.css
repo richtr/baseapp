@@ -16,8 +16,3 @@ body {
   background-color: #666;
   padding: 20px;
 }
-
-.like, .like:hover, .like:active, .like:visited {
-	text-decoration: none;
-	color: #000;
-}
