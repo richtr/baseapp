@@ -10,7 +10,7 @@
   <div class="form-group{{if $field.Error}} has-error{{end}}">
     <label for="{{$field.Name}}" class="col-sm-2 control-label">Email Address</label>
     <div class="col-sm-10">
-      <input type="text" class="form-control" id="{{$field.Name}}" name="{{$field.Name}}" placeholder="Email Address" value="{{$field.Flash}}">
+      <input type="text" class="form-control" id="{{$field.Name}}" name="{{$field.Name}}" placeholder="Email Address" value="{{$field.Flash}}" autofocus>
       {{if $field.Error}}
       <label class="control-label" for="{{$field.Name}}">{{$field.Error}}</label>
       {{end}}
