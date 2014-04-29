@@ -10,8 +10,8 @@
     <p>{{.profile.Summary}}</p>
 
 		<ul class="nav nav-pills">
-		  <li><a href="{{url "Profile.Followers" .profile.ProfileId}}">Followers <span id="followers" class="badge">{{.profile.AggregateFollowers}}</span></a></li>
-		  <li><a href="{{url "Profile.Following" .profile.ProfileId}}">Following <span id="following" class="badge">{{.profile.AggregateFollowing}}</span></a></li>
+		  <li{{if eq .action "followers"}} class="active"{{end}}><a href="{{url "Profile.Followers" .profile.ProfileId}}">Followers <span id="followers" class="badge">{{.profile.AggregateFollowers}}</span></a></li>
+		  <li{{if eq .action "following"}} class="active"{{end}}><a href="{{url "Profile.Following" .profile.ProfileId}}">Following <span id="following" class="badge">{{.profile.AggregateFollowing}}</span></a></li>
 			{{if and (not .isOwner) .user}}
 			<li class="pull-right">
 				<button type="button" data-href="{{url "Profile.FollowUser" .profile.ProfileId}}" class="btn {{if .isFollowing}}btn-danger{{else}}btn-primary{{end}} follow">
