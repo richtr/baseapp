@@ -5,8 +5,8 @@
 
 <hr>
 
-<form action="{{url "Post.Delete" .post.PostId}}" method="POST" class="form-horizontal" role="form">
-  <div class="form-group col-sm-12">
+<div class="form-group col-sm-12">
+  <form action="{{url "Post.Delete" .post.PostId}}" method="POST" class="form-horizontal" role="form">
     <p>Are you sure you want to remove this post?</p>
 
     <div class="alert alert-danger">
@@ -21,8 +21,8 @@
         </div>
       </div>
     </div>
-  </div>
-</form>
+  </form>
+</div>
 
 <hr>
 
