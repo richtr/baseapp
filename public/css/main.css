@@ -1,18 +1,25 @@
+html {
+  position: relative;
+  min-height: 100%;
+}
+
 body {
   padding-top: 50px;
-  padding-bottom: 100px;
+  /* Margin bottom by footer height * 2 */
+  margin-bottom: 120px;
 }
 
 #content {
-  padding-top: 15px;
+  margin-top: 15px;
 }
 
 #footer {
-  position: fixed;
+  position: absolute;
   bottom: 0;
   width: 100%;
+  /* Set the fixed height of the footer here */
   height: 60px;
-  color: #FFFFFF;
   background-color: #666;
-  padding: 20px;
+	color: #FFF;
+	padding: 20px 0;
 }

@@ -22,11 +22,15 @@
 		<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 			<div class="container">
 				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-						<span class="sr-only">Toggle navigation</span>
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#header-pages-content">
+						<span class="sr-only">Pages</span>
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
+					</button>
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#header-user-content" style="height: 34px;">
+						<span class="sr-only">Social</span>
+						<span class="glyphicon glyphicon-user" style="color: #eeeeee;"></span>
 					</button>
 					<a class="navbar-brand" href="/">
 						{{.AppName}}
@@ -37,12 +41,14 @@
 						{{end}}
 					</a>
 				</div>
-				<div class="collapse navbar-collapse">
+				<div class="collapse navbar-collapse pull-left" id="header-pages-content">
 					<ul class="nav navbar-nav">
 						<li{{if eq .action "home"}} class="active"{{end}}><a href="/">Home</a></li>
 						<li{{if eq .action "about"}} class="active"{{end}}><a href="/about">About</a></li>
 						<li{{if eq .action "contact"}} class="active"{{end}}><a href="/contact">Contact</a></li>
 					</ul>
+				</div>
+				<div class="collapse navbar-collapse" id="header-user-content">
 					<ul class="nav navbar-nav navbar-right">
 					{{if .user}}
 						<li class="active" class="dropdown">
@@ -76,15 +82,4 @@
 
 		<div class="container" id="content">
 
-			{{if .flash.error}}
-				<div class="alert alert-danger alert-dismissable">
-					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-					{{.flash.error}}
-				</div>
-			{{end}}
-			{{if .flash.success}}
-				<div class="alert alert-success alert-dismissable">
-					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-					{{.flash.success}}
-				</div>
-			{{end}}
+			{{template "flash.html" .}}
