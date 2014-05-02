@@ -36,13 +36,6 @@ ADD ./docker/nginx_baseapp.vhost /etc/nginx/sites-available/default
 ENV BASEAPP_PATH github.com/richtr/baseapp
 ADD . $GOPATH/src/$BASEAPP_PATH
 
-# Build BaseApp
-#RUN revel build $BASEAPP_PATH /usr/share/nginx/www/baseapp/release
-
-# Deploy BaseApp
-#RUN ln -s /usr/share/nginx/www/baseapp/release /usr/share/nginx/www/baseapp/current
-#RUN chmod 755 /usr/share/nginx/www/baseapp/current/run.sh
-
 # Setup Nginx
 RUN sed -i -e"s/keepalive_timeout\s*65/keepalive_timeout 2/" /etc/nginx/nginx.conf
 RUN sed -i -e"s/keepalive_timeout 2/keepalive_timeout 2;\n\tclient_max_body_size 100m/" /etc/nginx/nginx.conf
