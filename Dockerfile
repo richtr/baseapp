@@ -41,10 +41,6 @@ RUN sed -i -e"s/keepalive_timeout\s*65/keepalive_timeout 2/" /etc/nginx/nginx.co
 RUN sed -i -e"s/keepalive_timeout 2/keepalive_timeout 2;\n\tclient_max_body_size 100m/" /etc/nginx/nginx.conf
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 
-# Run BaseApp environment setup (MySQL + app.conf setup)
-RUN chmod 755 $GOPATH/src/$BASEAPP_PATH/docker/baseapp_setup.sh
-RUN /bin/bash $GOPATH/src/$BASEAPP_PATH/docker/baseapp_setup.sh
-
 # Setup Supervisord
 RUN cp $GOPATH/src/$BASEAPP_PATH/docker/supervisord.conf /etc/supervisord.conf
 
