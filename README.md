@@ -17,6 +17,15 @@ BaseApp is a bootstrap Revel web application that provides a baseline web applic
 * Full form validation
 * Full non-interactive and interactive testing framework (Test-driven development process)
 
+### Contents ###
+
+* [Screenshots](#screenshots)
+* [Quick Start](#quick-start)
+* [BaseApp Run Modes](#baseapp-run-modes)
+* [Docker Usage](#docker-usage)
+* [Feedback](#feedback)
+* [License](#license)
+
 ### Screenshots ###
 
 Example Home Page:
@@ -133,6 +142,49 @@ BaseApp can be run in three different modes that are each useful for different s
         $> revel run github.com/richtr/baseapp/ prod
 
 Note: Both `dev` and `prod` modes require a configured backend DB. See [app.conf.default](https://github.com/richtr/baseapp/blob/master/conf/app.conf.default). The `test` mode creates an in-memory database representation that dies when the app dies.
+
+### Docker Usage ###
+
+This project comes with its own `Dockerfile` for building your own LXC container via [Docker](http://www.docker.io) to host BaseApp.
+
+You will need a [functioning Docker installation](http://docs.docker.io/installation/) for build and use BaseApp as an LXC container.
+
+To build your own BaseApp LXC container via Docker is easy:
+
+```
+$ git clone https://github.com/richtr/baseapp.git
+$ cd baseapp
+$ sudo docker build -t="richtr/baseapp" .
+```
+
+To spawn a new instance of BaseApp:
+
+```bash
+$ sudo docker run -p 80 -d richtr/baseapp
+```
+
+You'll see an ID output like:
+```
+d404cc2fa27b
+```
+
+Use this ID to check the port BaseApp is mapped to:
+
+```bash
+$ sudo docker port d404cc2fa27b 80 # Make sure to change the ID to yours!
+```
+
+This command returns the container ID, which you can use to find the external port you can use to access BaseApp from your host machine:
+
+```
+$ docker port <container-id> 80
+```
+
+You can the visit the following URL in a browser on your host machine to get started:
+
+```
+http://127.0.0.1:<port>
+```
 
 ### Feedback ###
 
