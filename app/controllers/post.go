@@ -114,7 +114,7 @@ func (c Post) Save(post models.Post) r.Result {
 }
 
 func (c Post) Edit(id int) r.Result {
-  post := c.loadPostById(id)
+	post := c.loadPostById(id)
 	if post == nil {
 		return c.NotFound("Post does not exist")
 	}
@@ -244,8 +244,6 @@ func (c Post) Like(id int) r.Result {
 		likeResponse.Message = "You have now liked this post"
 		likeResponse.Status = "success"
 	}
-
-	println(likeResponse.Message)
 
 	return c.RenderJson(likeResponse)
 
