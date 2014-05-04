@@ -11,10 +11,6 @@ type Profile struct {
 	Account
 }
 
-func (c Profile) Index() r.Result {
-	return c.NotFound("Profile does not exist", 404)
-}
-
 func (c Profile) loadProfileById(id int) *models.Profile {
 	p, err := c.Txn.Get(models.Profile{}, id)
 

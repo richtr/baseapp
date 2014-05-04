@@ -20,7 +20,6 @@ POST    /account/recover                        Account.RetrieveAccount
 GET     /account/reset/:token                   Account.PasswordReset
 GET     /account/logout                         Account.Logout
 
-GET     /profile                                Profile.Index
 GET     /profile/:id                            Profile.Show
 GET     /profile/:id/edit                       Profile.Settings
 POST    /profile/:id/edit                       Profile.UpdateSettings

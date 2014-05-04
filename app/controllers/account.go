@@ -346,7 +346,7 @@ func (e Account) sendAccountConfirmEmail(user *models.User) error {
 	return e.sendEmail(user, "confirm", "Welcome to " + host)
 }
 
-func (e Account) sendEmail(user *models.User, verifyType string, subject string) error {
+func (e Account) sendEmail(user *models.User, verifyType, subject string) error {
 
 	var (
 		mailerServer    = r.Config.StringDefault("mailer.server", "smtp.example.org")
