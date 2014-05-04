@@ -48,17 +48,7 @@ func ValidateProfileName(v *revel.Validation, name string) *revel.ValidationResu
 }
 
 func ValidateProfileSummary(v *revel.Validation, summary string) *revel.ValidationResult {
-	result := v.Required(summary).Message("Profile summary is required")
-	if !result.Ok {
-		return result
-	}
-
-	result = v.MinSize(summary, 3).Message("Profile summary must exceed 2 characters")
-	if !result.Ok {
-		return result
-	}
-
-	result = v.MaxSize(summary, 140).Message("Profile summary cannot exceed 140 characters")
+	result := v.MaxSize(summary, 140).Message("Profile summary cannot exceed 140 characters")
 
 	return result
 }
