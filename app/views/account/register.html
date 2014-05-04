@@ -6,11 +6,11 @@
 <hr>
 
 <form action="{{url "Account.SaveUser"}}" method="POST" class="form-horizontal" role="form">
-  {{with $field := field "user.Email" .}}
+  {{with $field := field "username" .}}
   <div class="form-group{{if $field.Error}} has-error{{end}}">
-    <label for="{{$field.Name}}" class="col-sm-2 control-label">Email Address</label>
+    <label for="{{$field.Name}}" class="col-sm-2 control-label">User name</label>
     <div class="col-sm-10">
-      <input type="text" class="form-control" id="{{$field.Name}}" name="{{$field.Name}}" placeholder="Email Address" value="{{$field.Flash}}" autofocus>
+      <input type="text" class="form-control" id="{{$field.Name}}" name="{{$field.Name}}" placeholder="User name" value="{{$field.Flash}}" autofocus>
       {{if $field.Error}}
       <label class="control-label" for="{{$field.Name}}">{{$field.Error}}</label>
       {{end}}
@@ -20,9 +20,21 @@
 
   {{with $field := field "name" .}}
   <div class="form-group{{if $field.Error}} has-error{{end}}">
-    <label for="{{$field.Name}}" class="col-sm-2 control-label">Full Name</label>
+    <label for="{{$field.Name}}" class="col-sm-2 control-label">Full name</label>
     <div class="col-sm-10">
-      <input type="text" class="form-control" id="{{$field.Name}}" name="{{$field.Name}}" placeholder="Full Name" value="{{$field.Flash}}">
+      <input type="text" class="form-control" id="{{$field.Name}}" name="{{$field.Name}}" placeholder="Full name" value="{{$field.Flash}}">
+      {{if $field.Error}}
+      <label class="control-label" for="{{$field.Name}}">{{$field.Error}}</label>
+      {{end}}
+    </div>
+  </div>
+  {{end}}
+
+  {{with $field := field "user.Email" .}}
+  <div class="form-group{{if $field.Error}} has-error{{end}}">
+    <label for="{{$field.Name}}" class="col-sm-2 control-label">Email address</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="{{$field.Name}}" name="{{$field.Name}}" placeholder="Email address" value="{{$field.Flash}}" autofocus>
       {{if $field.Error}}
       <label class="control-label" for="{{$field.Name}}">{{$field.Error}}</label>
       {{end}}

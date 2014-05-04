@@ -20,16 +20,16 @@ POST    /account/recover                        Account.RetrieveAccount
 GET     /account/reset/:token                   Account.PasswordReset
 GET     /account/logout                         Account.Logout
 
-GET     /profile/:id                            Profile.Show
-GET     /profile/:id/edit                       Profile.Settings
-POST    /profile/:id/edit                       Profile.UpdateSettings
-GET     /profile/:id/edit/password              Profile.Password
-POST    /profile/:id/edit/password              Profile.UpdatePassword
-GET     /profile/:id/follow                     Profile.FollowUser
-GET     /profile/:id/followers                  Profile.Followers
-GET     /profile/:id/followers/:page            Profile.Followers
-GET     /profile/:id/following                  Profile.Following
-GET     /profile/:id/following/:page            Profile.Following
+GET     /:username                              Profile.Show
+GET     /:username/edit                         Profile.Settings
+POST    /:username/edit                         Profile.UpdateSettings
+GET     /:username/edit/password                Profile.Password
+POST    /:username/edit/password                Profile.UpdatePassword
+GET     /:username/follow                       Profile.FollowUser
+GET     /:username/followers                    Profile.Followers
+GET     /:username/followers/:page              Profile.Followers
+GET     /:username/following                    Profile.Following
+GET     /:username/following/:page              Profile.Following
 
 GET     /post/add                               Post.Create
 POST    /post/add                               Post.Save
@@ -40,11 +40,9 @@ GET     /post/:id/remove                        Post.Remove
 POST    /post/:id/remove                        Post.Delete
 GET     /post/:id/like                          Post.Like
 
-
-
 # Map static resources from the /app/public folder to the /public path
 GET     /public/*filepath                       Static.Serve("public")
 GET     /favicon.ico                            Static.Serve("public/images","favicon.png")
 
 # Catch all
-*       /:controller/:action                    :controller.:action
+#*       /:controller/:action                    :controller.:action

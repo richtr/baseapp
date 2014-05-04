@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"crypto/rand"
 	"time"
+	"strings"
 )
 
 type Account struct {
@@ -36,13 +37,13 @@ func (c Account) connected() *models.Profile {
 		return c.RenderArgs["user"].(*models.Profile)
 	}
 	if email, ok := c.Session["userEmail"]; ok {
-		profile := c.getProfile(email)
+		profile := c.getProfileByEmailAddress(email)
 		return profile
 	}
 	return nil
 }
 
-func (c Account) getProfile(email string) *models.Profile {
+func (c Account) getProfileByEmailAddress(email string) *models.Profile {
 	user := &models.User{}
 	err := c.Txn.SelectOne(user, `select * from User where Email = ?`, email)
 	if err != nil || user == nil {
@@ -51,6 +52,15 @@ func (c Account) getProfile(email string) *models.Profile {
 
 	profile := c.getProfileByUserId(user.UserId)
 
+	return profile
+}
+
+func (c Account) getProfileByUserName(username string) *models.Profile {
+	profile := &models.Profile{}
+	err := c.Txn.SelectOne(profile, `select * from Profile where UserName = ?`, username)
+	if err != nil || profile == nil {
+		return nil
+	}
 	return profile
 }
 
@@ -72,14 +82,14 @@ func (c Account) Index() r.Result {
 		return c.Redirect(routes.Account.Logout())
 	}
 
-	return c.Redirect(routes.Profile.Show(profile.ProfileId))
+	return c.Redirect(routes.Profile.Show(profile.UserName))
 }
 
 func (c Account) Register() r.Result {
 	return c.Render()
 }
 
-func (c Account) SaveUser(user models.User, name, verifyPassword string) r.Result {
+func (c Account) SaveUser(user models.User, username, name, verifyPassword string) r.Result {
 
 	// Validate User components
 	models.ValidateUserEmail(c.Validation, user.Email).Key("user.Email")
@@ -91,6 +101,8 @@ func (c Account) SaveUser(user models.User, name, verifyPassword string) r.Resul
 	c.Validation.Required(verifyPassword == user.Password).Message("Provided passwords do not match").Key("verifyPassword")
 
 	// Validate Profile components
+	username = strings.ToLower(username)
+	models.ValidateProfileUserName(c.Validation, username).Key("username")
 	models.ValidateProfileName(c.Validation, name).Key("name")
 
 	if c.Validation.HasErrors() {
@@ -100,10 +112,21 @@ func (c Account) SaveUser(user models.User, name, verifyPassword string) r.Resul
 		return c.Redirect(routes.Account.Register())
 	}
 
-	userExists := c.getProfile(user.Email)
+	userExists := c.getProfileByEmailAddress(user.Email)
 
 	if userExists != nil {
-		c.Flash.Error("Email '" + user.Email + "' is already taken.")
+		c.Validation.Keep()
+		c.FlashParams()
+		c.Flash.Error("Email '" + user.Email + "' is already registered.")
+		return c.Redirect(routes.Account.Register())
+	}
+
+	userExists = c.getProfileByUserName(username)
+
+	if userExists != nil {
+		c.Validation.Keep()
+		c.FlashParams()
+		c.Flash.Error("User name '" + username + "' is already taken.")
 		return c.Redirect(routes.Account.Register())
 	}
 
@@ -119,7 +142,7 @@ func (c Account) SaveUser(user models.User, name, verifyPassword string) r.Resul
 	}
 
 	// Create profile (and assign correct UserId)
-	profile := &models.Profile{0, user.UserId, name, "", "", "", 0, 0, &user}
+	profile := &models.Profile{0, user.UserId, username, name, "", "", "", 0, 0, &user}
 
 	// Get Gravatar Icon
 	emailHash := gr.EmailHash(user.Email)
@@ -144,7 +167,7 @@ func (c Account) SaveUser(user models.User, name, verifyPassword string) r.Resul
 
 	c.Session["userEmail"] = string(user.Email)
 	c.Flash.Success("Welcome, " + profile.Name)
-	return c.Redirect(routes.Profile.Show(profile.ProfileId))
+	return c.Redirect(routes.Profile.Show(profile.UserName))
 }
 
 func (c Account) Login() r.Result {
@@ -166,19 +189,30 @@ func (c Account) DoLogin(user *models.User, remember bool) {
 	}
 }
 
-func (c Account) LoginAccount(email, password string, remember bool) r.Result {
-	profile := c.getProfile(email)
+func (c Account) LoginAccount(account, password string, remember bool) r.Result {
+
+	var profile *models.Profile
+
+	// If account is a valid email address, retrieve account by email
+	// otherwise, retrieve account by username
+	models.ValidateUserEmail(c.Validation, account).Key("account")
+
+	if c.Validation.HasErrors() {
+		c.Validation.Clear()
+		profile = c.getProfileByUserName(account)
+	} else {
+		profile = c.getProfileByEmailAddress(account)
+	}
 
 	if profile != nil {
 		err := bcrypt.CompareHashAndPassword(profile.User.HashedPassword, []byte(password))
 		if err == nil {
 			c.DoLogin(profile.User, remember)
 			c.Flash.Success("Welcome back, " + profile.Name)
-			return c.Redirect(routes.Profile.Show(profile.ProfileId))
+			return c.Redirect(routes.Profile.Show(profile.UserName))
 		}
 	}
 
-	c.Flash.Out["email"] = email
 	c.Flash.Error("Sign In failed.")
 	return c.Redirect(routes.Account.Login())
 }
@@ -204,7 +238,7 @@ func (c Account) RetrieveAccount(email string) r.Result {
 		return c.Redirect(routes.Account.Recover())
 	}
 
-	profile := c.getProfile(email)
+	profile := c.getProfileByEmailAddress(email)
 
 	if profile == nil {
 		// Return a false positive response to requestors at this point
@@ -232,7 +266,7 @@ func (c Account) ConfirmEmail(token string) r.Result {
 		return c.Redirect(routes.Application.Index())
 	}
 
-	existingProfile := c.getProfile(existingToken.Email)
+	existingProfile := c.getProfileByEmailAddress(existingToken.Email)
 
 	if existingProfile == nil {
 		c.Flash.Error("Token invalid or used");
@@ -262,7 +296,7 @@ func (c Account) PasswordReset(token string) r.Result {
 		return c.Redirect(routes.Application.Index())
 	}
 
-	existingProfile := c.getProfile(existingToken.Email)
+	existingProfile := c.getProfileByEmailAddress(existingToken.Email)
 
 	if existingProfile == nil {
 		c.Flash.Error("Token invalid or used");
@@ -275,7 +309,7 @@ func (c Account) PasswordReset(token string) r.Result {
 	// Log user in, flash message and redirect to change password page
 	c.DoLogin(existingProfile.User, false)
 	c.Flash.Success("Please now enter a new password")
-	return c.Redirect(routes.Profile.Password(existingProfile.User.UserId))
+	return c.Redirect(routes.Profile.Password(existingProfile.UserName))
 }
 
 func (c Account) Logout() r.Result {

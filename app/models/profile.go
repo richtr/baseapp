@@ -4,11 +4,14 @@ import (
 	"fmt"
 	"github.com/coopernurse/gorp"
 	"github.com/revel/revel"
+	"strings"
+	"regexp"
 )
 
 type Profile struct {
 	ProfileId          int
 	UserId             int
+	UserName           string
 	Name               string
 	Summary            string
 	Description        string
@@ -20,6 +23,8 @@ type Profile struct {
 	User               *User
 }
 
+var UserNameRegex = regexp.MustCompile("^[a-zA-Z0-9]+$")
+
 func (p *Profile) String() string {
 	return fmt.Sprintf("Profile(%s)", p.Summary)
 }
@@ -29,6 +34,22 @@ func (profile *Profile) Validate(v *revel.Validation) {
 	ValidateProfileSummary(v, profile.Summary)
 	ValidateProfileDescription(v, profile.Description)
 	ValidateProfilePhotoUrl(v, profile.PhotoUrl)
+}
+
+func ValidateProfileUserName(v *revel.Validation, username string) *revel.ValidationResult {
+	result := v.Required(username).Message("User name required")
+	if !result.Ok {
+		return result
+	}
+
+	result = v.MaxSize(username, 64).Message("User name can not exceed 64 characters")
+	if !result.Ok {
+		return result
+	}
+
+	result = v.Match(username, UserNameRegex).Message("Invalid User name. Alphanumerics allowed only")
+
+	return result
 }
 
 func ValidateProfileName(v *revel.Validation, name string) *revel.ValidationResult {
@@ -63,6 +84,16 @@ func ValidateProfilePhotoUrl(v *revel.Validation, photoUrl string) *revel.Valida
 	result := v.MaxSize(photoUrl, 200).Message("Photo URL cannot exceed 200 characters")
 
 	return result
+}
+
+func (p *Profile) PreInsert(_ gorp.SqlExecutor) error {
+	p.UserName = strings.ToLower(p.UserName)
+	return nil
+}
+
+func (p *Profile) PreUpdate(_ gorp.SqlExecutor) error {
+	p.UserName = strings.ToLower(p.UserName)
+	return nil
 }
 
 func (p *Profile) PostGet(exe gorp.SqlExecutor) error {

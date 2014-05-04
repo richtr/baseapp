@@ -31,6 +31,7 @@ var demoUser = models.User{
 var demoProfile = models.Profile{
 	ProfileId: 1,
 	UserId: demoUser.UserId,
+	UserName: "demouser",
 	Name: "Demo User",
 	Summary: "Just a regular guy",
 	Description: "...",
@@ -40,7 +41,7 @@ var demoProfile = models.Profile{
 
 func (t *ProfileTest) DoLogin(user models.User) {
 	urlValues := url.Values{}
-	urlValues.Add("email", user.Email)
+	urlValues.Add("account", user.Email)
 	urlValues.Add("password", user.Password)
 	urlValues.Add("remember", "0")
 
@@ -51,23 +52,24 @@ func (t *ProfileTest) DoLogout() {
 	t.Get(routes.Account.Logout())
 }
 
-func (t *ProfileTest) DoUpdateSettings(profileId int, profile models.Profile, verifyPassword string) {
+func (t *ProfileTest) DoUpdateSettings(profileUserName string, profile models.Profile, verifyPassword string) {
 	urlValues := url.Values{}
 	urlValues.Add("profile.Name", profile.Name)
 	urlValues.Add("profile.User.Email", profile.User.Email)
 	urlValues.Add("profile.User.Password", profile.User.Password)
 	urlValues.Add("verifyPassword", verifyPassword)
+	urlValues.Add("profile.UserName", profile.UserName)
 	urlValues.Add("profile.Summary", profile.Summary)
 	urlValues.Add("profile.Description", profile.Description)
 	urlValues.Add("profile.PhotoUrl", profile.PhotoUrl)
 
-	postUrl := fmt.Sprintf("/profile/%d/edit", profileId)
+	postUrl := fmt.Sprintf("/%s/edit", profileUserName)
 
 	t.PostForm(postUrl, urlValues)
 }
 
 func (t *ProfileTest) TestProfileDisplayPage_Own() {
-	t.Get(routes.Profile.Show(demoProfile.ProfileId))
+	t.Get(routes.Profile.Show(demoProfile.UserName))
 
 	t.AssertOk()
 	t.AssertContains("Just a regular guy") // Part of demo user profile
@@ -77,14 +79,14 @@ func (t *ProfileTest) TestProfileDisplayPage_Own() {
 }
 
 func (t *ProfileTest) TestProfileDisplayPage_Other() {
-	t.Get(routes.Profile.Show(2)) // access other user's profile by their profile id
+	t.Get(routes.Profile.Show("otheruser")) // access other user's profile by their profile id
 
 	t.AssertOk()
 	t.AssertContains("Just another regular guy") // Part of 'demo user 1' profile
 }
 
 func (t *ProfileTest) TestProfileSettings_Access_Success() {
-	t.Get(routes.Profile.Settings(demoProfile.ProfileId))
+	t.Get(routes.Profile.Settings(demoProfile.UserName))
 
 	t.AssertOk()
 	t.AssertContains("Edit Profile</h2>")
@@ -95,14 +97,14 @@ func (t *ProfileTest) TestProfileSettings_Access_Error() {
 	// No log in
 	t.DoLogout()
 
-	t.Get(routes.Profile.Settings(demoProfile.ProfileId))
+	t.Get(routes.Profile.Settings(demoProfile.UserName))
 
 	t.AssertOk()
 	t.AssertContains("You must log in to access your account")
 }
 
 func (t *ProfileTest) TestOtherProfileSettings_Access_Denied() {
-	t.Get(routes.Profile.Settings(2)) // try to access edit page of other user's profile
+	t.Get(routes.Profile.Settings("otheruser")) // try to access edit page of other user's profile
 
 	t.AssertOk()
 	t.AssertContains("You must log in to access your account")
@@ -114,7 +116,7 @@ func (t *ProfileTest) TestProfileSettings_EmptyEmail() {
 	user.Email = ""
 	demoProfileUpdate.User = &user
 
-	t.DoUpdateSettings(demoProfile.ProfileId, demoProfileUpdate, demoUser.Password)
+	t.DoUpdateSettings(demoProfile.UserName, demoProfileUpdate, demoUser.Password)
 
 	t.AssertOk()
 	t.AssertContains("Email address required")
@@ -126,7 +128,7 @@ func (t *ProfileTest) TestProfileSettings_EmptyPasswordAndVerifyPassword() {
 	user.Password = ""
 	demoProfileUpdate.User = &user
 
-	t.DoUpdateSettings(demoProfile.ProfileId, demoProfileUpdate, "")
+	t.DoUpdateSettings(demoProfile.UserName, demoProfileUpdate, "")
 
 	t.AssertOk()
 	t.AssertContains("Profile has been updated") // though no changes have been made!
@@ -138,7 +140,7 @@ func (t *ProfileTest) TestProfileSettings_InvalidEmail() {
 	user.Email = "myemailaddress"
 	demoProfileUpdate.User = &user
 
-	t.DoUpdateSettings(demoProfile.ProfileId, demoProfileUpdate, demoUser.Password)
+	t.DoUpdateSettings(demoProfile.UserName, demoProfileUpdate, demoUser.Password)
 
 	t.AssertOk()
 	t.AssertContains("You must provide a valid email address")
@@ -150,7 +152,7 @@ func (t *ProfileTest) TestProfileSettings_TooShortEmail() {
 	user.Email = "a@b.c"
 	demoProfileUpdate.User = &user
 
-	t.DoUpdateSettings(demoProfile.ProfileId, demoProfileUpdate, demoUser.Password)
+	t.DoUpdateSettings(demoProfile.UserName, demoProfileUpdate, demoUser.Password)
 
 	t.AssertOk()
 	t.AssertContains("Email address can not be less than 6 characters")
@@ -162,7 +164,7 @@ func (t *ProfileTest) TestProfileSettings_TooLongEmail() {
 	user.Email = "myemailaddress_myemailaddress_myemailaddress_myemailaddress_myemailaddress_myemailaddress_myemailaddress_myemailaddress_myemailaddress_myemailaddress_myemailaddress_myemailaddress_myemailaddress@gmail.com"
 	demoProfileUpdate.User = &user
 
-	t.DoUpdateSettings(demoProfile.ProfileId, demoProfileUpdate, demoUser.Password)
+	t.DoUpdateSettings(demoProfile.UserName, demoProfileUpdate, demoUser.Password)
 
 	t.AssertOk()
 	t.AssertContains("Email address can not exceed 200 characters")
@@ -172,7 +174,7 @@ func (t *ProfileTest) TestProfileSettings_EmptyName() {
 	demoProfileUpdate := demoProfile
 	demoProfileUpdate.Name = ""
 
-	t.DoUpdateSettings(demoProfile.ProfileId, demoProfileUpdate, demoUser.Password)
+	t.DoUpdateSettings(demoProfile.UserName, demoProfileUpdate, demoUser.Password)
 
 	t.AssertOk()
 	t.AssertContains("Name required")
@@ -182,7 +184,7 @@ func (t *ProfileTest) TestProfileSettings_TooShortName() {
 	demoProfileUpdate := demoProfile
 	demoProfileUpdate.Name = "User1"
 
-	t.DoUpdateSettings(demoProfile.ProfileId, demoProfileUpdate, demoUser.Password)
+	t.DoUpdateSettings(demoProfile.UserName, demoProfileUpdate, demoUser.Password)
 
 	t.AssertOk()
 	t.AssertContains("Name must be at least 6 characters")
@@ -193,7 +195,7 @@ func (t *ProfileTest) TestProfileSettings_TooLongName() {
 	demoProfileUpdate := demoProfile
 	demoProfileUpdate.Name = "Test User 1 Test User 1 Test User 1 Test User 1 Test User 1 Test User 1 Test User 1 Test User 1 Test User 1"
 
-	t.DoUpdateSettings(demoProfile.ProfileId, demoProfileUpdate, demoUser.Password)
+	t.DoUpdateSettings(demoProfile.UserName, demoProfileUpdate, demoUser.Password)
 
 	t.AssertOk()
 	t.AssertContains("Name must be at most 100 characters")
@@ -206,7 +208,7 @@ func (t *ProfileTest) TestProfileSettings_EmptyPassword() {
 	user.Password = ""
 	demoProfileUpdate.User = &user
 
-	t.DoUpdateSettings(demoProfile.ProfileId, demoProfileUpdate, verifyPassword)
+	t.DoUpdateSettings(demoProfile.UserName, demoProfileUpdate, verifyPassword)
 
 	t.AssertOk()
 	t.AssertContains("Password required")
@@ -217,7 +219,7 @@ func (t *ProfileTest) TestProfileSettings_EmptyVerifyPassword() {
 	user := *demoProfileUpdate.User
 	demoProfileUpdate.User = &user
 
-	t.DoUpdateSettings(demoProfile.ProfileId, demoProfileUpdate, "")
+	t.DoUpdateSettings(demoProfile.UserName, demoProfileUpdate, "")
 
 	t.AssertOk()
 	t.AssertContains("Password verification required")
@@ -229,7 +231,7 @@ func (t *ProfileTest) TestProfileSettings_TooShortPassword() {
 	user.Password = "pw1"
 	demoProfileUpdate.User = &user
 
-	t.DoUpdateSettings(demoProfile.ProfileId, demoProfileUpdate, user.Password)
+	t.DoUpdateSettings(demoProfile.UserName, demoProfileUpdate, user.Password)
 
 	t.AssertOk()
 	t.AssertContains("Password must be at least 6 characters")
@@ -241,7 +243,7 @@ func (t *ProfileTest) TestProfileSettings_TooLongPassword() {
 	user.Password = "testuser1testuser1testuser1testuser1"
 	demoProfileUpdate.User = &user
 
-	t.DoUpdateSettings(demoProfile.ProfileId, demoProfileUpdate, user.Password)
+	t.DoUpdateSettings(demoProfile.UserName, demoProfileUpdate, user.Password)
 
 	t.AssertOk()
 	t.AssertContains("Password must be at most 15 characters")
@@ -253,7 +255,7 @@ func (t *ProfileTest) TestProfileSettings_PasswordMismatch() {
 	user.Password = "testuser1"
 	demoProfileUpdate.User = &user
 
-	t.DoUpdateSettings(demoProfile.ProfileId, demoProfileUpdate, "testuser2")
+	t.DoUpdateSettings(demoProfile.UserName, demoProfileUpdate, "testuser2")
 
 	t.AssertOk()
 	t.AssertContains("Provided passwords do not match")
@@ -265,7 +267,7 @@ func (t *ProfileTest) TestProfileSettings_PasswordSameAsEmail() {
 	user.Password = user.Email
 	demoProfileUpdate.User = &user
 
-	t.DoUpdateSettings(demoProfile.ProfileId, demoProfileUpdate, user.Password)
+	t.DoUpdateSettings(demoProfile.UserName, demoProfileUpdate, user.Password)
 
 	t.AssertOk()
 	t.AssertContains("Password cannot be the same as your email address")

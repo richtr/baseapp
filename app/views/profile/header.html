@@ -1,26 +1,26 @@
 <div class="media well well-sm">
 
   <span class="pull-left">
-		<a href="{{url "Profile.Show" .profile.ProfileId}}">
+		<a href="{{url "Profile.Show" .profile.UserName}}">
     	<img class="img-responsive img-rounded" src="{{.profile.PhotoUrl}}" alt="Profile Photo" width="128" height="128" border="0" style="border: 1px solid #666">
 		</a>
   </span>
   <div class="media-body">
-    <h2 class="media-heading" style="padding-top:4px"><a href="{{url "Profile.Show" .profile.ProfileId}}" style="color:#333;">{{.profile.Name}}</a></h2>
+    <h2 class="media-heading" style="padding-top:4px"><a href="{{url "Profile.Show" .profile.UserName}}" style="color:#333;">{{.profile.Name}}</a></h2>
     <p>{{.profile.Summary}}</p>
 
 		<ul class="nav nav-pills">
-		  <li{{if eq .action "followers"}} class="active"{{end}}><a href="{{url "Profile.Followers" .profile.ProfileId}}">Followers <span id="followers" class="badge">{{.profile.AggregateFollowers}}</span></a></li>
-		  <li{{if eq .action "following"}} class="active"{{end}}><a href="{{url "Profile.Following" .profile.ProfileId}}">Following <span id="following" class="badge">{{.profile.AggregateFollowing}}</span></a></li>
+		  <li{{if eq .action "followers"}} class="active"{{end}}><a href="{{url "Profile.Followers" .profile.UserName}}">Followers <span id="followers" class="badge">{{.profile.AggregateFollowers}}</span></a></li>
+		  <li{{if eq .action "following"}} class="active"{{end}}><a href="{{url "Profile.Following" .profile.UserName}}">Following <span id="following" class="badge">{{.profile.AggregateFollowing}}</span></a></li>
 			{{if and (not .isOwner) .user}}
 			<li class="pull-right">
-				<button type="button" data-href="{{url "Profile.FollowUser" .profile.ProfileId}}" class="btn {{if .isFollowing}}btn-danger{{else}}btn-primary{{end}} follow">
+				<button type="button" data-href="{{url "Profile.FollowUser" .profile.UserName}}" class="btn {{if .isFollowing}}btn-danger{{else}}btn-primary{{end}} follow">
 					<b class="glyphicon glyphicon-user"></b> <span class="text">{{if .isFollowing}}Unfollow{{else}}Follow{{end}}</span>
 				</button>
 			</li>
 			{{else if .user}}
 			<li class="pull-right">
-				<form method="GET" action="{{url "Profile.Settings" .profile.ProfileId}}">
+				<form method="GET" action="{{url "Profile.Settings" .profile.UserName}}">
 					<button type="submit" class="btn btn-default">
 						<b class="glyphicon glyphicon-cog"></b> <span class="text">Edit Profile</span>
 					</button>

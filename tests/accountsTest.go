@@ -19,9 +19,25 @@ func (t *AccountsTest) After() {
 	t.Get(routes.Account.Logout())
 }
 
-func (t *AccountsTest) TestLoginSuccess() {
+func (t *AccountsTest) TestLoginSuccess_ByEmail() {
 	loginData := url.Values{}
-	loginData.Add("email", "demo@demo.com")
+	loginData.Add("account", "demo@demo.com")
+	loginData.Add("password", "demouser")
+	loginData.Add("remember", "0")
+
+	t.PostForm("/account/login", loginData)
+
+	// Part of login information (after redirect to profile page)
+	t.AssertOk()
+	t.AssertContains("Welcome back, Demo User")
+
+	// Do Logout
+	t.Get(routes.Account.Logout())
+}
+
+func (t *AccountsTest) TestLoginSuccess_ByUsername() {
+	loginData := url.Values{}
+	loginData.Add("account", "demouser")
 	loginData.Add("password", "demouser")
 	loginData.Add("remember", "0")
 
@@ -38,7 +54,7 @@ func (t *AccountsTest) TestLoginSuccess() {
 func (t *AccountsTest) TestLogoutSuccess() {
 	// Log in
 	loginData := url.Values{}
-	loginData.Add("email", "demo@demo.com")
+	loginData.Add("account", "demo@demo.com")
 	loginData.Add("password", "demouser")
 	loginData.Add("remember", "0")
 
@@ -53,7 +69,7 @@ func (t *AccountsTest) TestLogoutSuccess() {
 
 func (t *AccountsTest) TestLoginFail_EmptyEmail() {
 	loginData := url.Values{}
-	loginData.Add("email", "")
+	loginData.Add("account", "")
 	loginData.Add("password", "demouser")
 	loginData.Add("remember", "0")
 
@@ -65,7 +81,7 @@ func (t *AccountsTest) TestLoginFail_EmptyEmail() {
 
 func (t *AccountsTest) TestLoginFail_EmptyPassword() {
 	loginData := url.Values{}
-	loginData.Add("email", "demo@demo.com")
+	loginData.Add("account", "demo@demo.com")
 	loginData.Add("password", "")
 	loginData.Add("remember", "0")
 
@@ -78,6 +94,7 @@ func (t *AccountsTest) TestLoginFail_EmptyPassword() {
 func (t *AccountsTest) TestSignupFail_EmptyEmail() {
 	registerData := url.Values{}
 	registerData.Add("user.Email", "")
+	registerData.Add("username", "testuser1")
 	registerData.Add("name", "Test User 1")
 	registerData.Add("user.Password", "testuser1")
 	registerData.Add("verifyPassword", "testuser1")
@@ -91,6 +108,7 @@ func (t *AccountsTest) TestSignupFail_EmptyEmail() {
 func (t *AccountsTest) TestSignupFail_InvalidEmail() {
 	registerData := url.Values{}
 	registerData.Add("user.Email", "myemailaddress")
+	registerData.Add("username", "testuser1")
 	registerData.Add("name", "Test User 1")
 	registerData.Add("user.Password", "testuser1")
 	registerData.Add("verifyPassword", "testuser1")
@@ -104,6 +122,7 @@ func (t *AccountsTest) TestSignupFail_InvalidEmail() {
 func (t *AccountsTest) TestSignupFail_TooShortEmail() {
 	registerData := url.Values{}
 	registerData.Add("user.Email", "a@b.c")
+	registerData.Add("username", "testuser1")
 	registerData.Add("name", "Test User 1")
 	registerData.Add("user.Password", "testuser1")
 	registerData.Add("verifyPassword", "testuser1")
@@ -117,6 +136,7 @@ func (t *AccountsTest) TestSignupFail_TooShortEmail() {
 func (t *AccountsTest) TestSignupFail_TooLongEmail() {
 	registerData := url.Values{}
 	registerData.Add("user.Email", "myemailaddress_myemailaddress_myemailaddress_myemailaddress_myemailaddress_myemailaddress_myemailaddress_myemailaddress_myemailaddress_myemailaddress_myemailaddress_myemailaddress_myemailaddress@gmail.com")
+	registerData.Add("username", "testuser1")
 	registerData.Add("name", "Test User 1")
 	registerData.Add("user.Password", "testuser1")
 	registerData.Add("verifyPassword", "testuser1")
@@ -127,9 +147,66 @@ func (t *AccountsTest) TestSignupFail_TooLongEmail() {
 	t.AssertContains("Email address can not exceed 200 characters")
 }
 
+func (t *AccountsTest) TestSignupFail_EmptyUsername() {
+	registerData := url.Values{}
+	registerData.Add("user.Email", "testuser@example.com")
+	registerData.Add("username", "")
+	registerData.Add("name", "Test User 1")
+	registerData.Add("user.Password", "testuser1")
+	registerData.Add("verifyPassword", "testuser1")
+
+	t.PostForm("/account/register", registerData)
+
+	t.AssertOk()
+	t.AssertContains("User name required")
+}
+
+func (t *AccountsTest) TestSignupFail_InvalidUsername1() {
+	registerData := url.Values{}
+	registerData.Add("user.Email", "testuser@example.com")
+	registerData.Add("username", "@")
+	registerData.Add("name", "Test User 1")
+	registerData.Add("user.Password", "testuser1")
+	registerData.Add("verifyPassword", "testuser1")
+
+	t.PostForm("/account/register", registerData)
+
+	t.AssertOk()
+	t.AssertContains("Invalid User name. Alphanumerics allowed only")
+}
+
+func (t *AccountsTest) TestSignupFail_InvalidUsername2() {
+	registerData := url.Values{}
+	registerData.Add("user.Email", "testuser@example.com")
+	registerData.Add("username", "test_user-1")
+	registerData.Add("name", "Test User 1")
+	registerData.Add("user.Password", "testuser1")
+	registerData.Add("verifyPassword", "testuser1")
+
+	t.PostForm("/account/register", registerData)
+
+	t.AssertOk()
+	t.AssertContains("Invalid User name. Alphanumerics allowed only")
+}
+
+func (t *AccountsTest) TestSignupFail_TooLongUsername() {
+	registerData := url.Values{}
+	registerData.Add("user.Email", "testuser@example.com")
+	registerData.Add("username", "testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1")
+	registerData.Add("name", "Test User 1")
+	registerData.Add("user.Password", "testuser1")
+	registerData.Add("verifyPassword", "testuser1")
+
+	t.PostForm("/account/register", registerData)
+
+	t.AssertOk()
+	t.AssertContains("User name can not exceed 64 characters")
+}
+
 func (t *AccountsTest) TestSignupFail_EmptyName() {
 	registerData := url.Values{}
 	registerData.Add("user.Email", "testuser@example.com")
+	registerData.Add("username", "testuser1")
 	registerData.Add("name", "")
 	registerData.Add("user.Password", "testuser1")
 	registerData.Add("verifyPassword", "testuser1")
@@ -143,6 +220,7 @@ func (t *AccountsTest) TestSignupFail_EmptyName() {
 func (t *AccountsTest) TestSignupFail_TooShortName() {
 	registerData := url.Values{}
 	registerData.Add("user.Email", "testuser@example.com")
+	registerData.Add("username", "testuser1")
 	registerData.Add("name", "User1")
 	registerData.Add("user.Password", "testuser1")
 	registerData.Add("verifyPassword", "testuser1")
@@ -157,6 +235,7 @@ func (t *AccountsTest) TestSignupFail_TooShortName() {
 func (t *AccountsTest) TestSignupFail_TooLongName() {
 	registerData := url.Values{}
 	registerData.Add("user.Email", "testuser@example.com")
+	registerData.Add("username", "testuser1")
 	registerData.Add("name", "Test User 1 Test User 1 Test User 1 Test User 1 Test User 1 Test User 1 Test User 1 Test User 1 Test User 1")
 	registerData.Add("user.Password", "testuser1")
 	registerData.Add("verifyPassword", "testuser1")
@@ -170,6 +249,7 @@ func (t *AccountsTest) TestSignupFail_TooLongName() {
 func (t *AccountsTest) TestSignupFail_EmptyPassword() {
 	registerData := url.Values{}
 	registerData.Add("user.Email", "testuser@example.com")
+	registerData.Add("username", "testuser1")
 	registerData.Add("name", "Test User 1")
 	registerData.Add("user.Password", "")
 	registerData.Add("verifyPassword", "testuser1")
@@ -183,6 +263,7 @@ func (t *AccountsTest) TestSignupFail_EmptyPassword() {
 func (t *AccountsTest) TestSignupFail_EmptyVerifyPassword() {
 	registerData := url.Values{}
 	registerData.Add("user.Email", "testuser@example.com")
+	registerData.Add("username", "testuser1")
 	registerData.Add("name", "Test User 1")
 	registerData.Add("user.Password", "testuser1")
 	registerData.Add("verifyPassword", "")
@@ -196,6 +277,7 @@ func (t *AccountsTest) TestSignupFail_EmptyVerifyPassword() {
 func (t *AccountsTest) TestSignupFail_TooShortPassword() {
 	registerData := url.Values{}
 	registerData.Add("user.Email", "testuser@example.com")
+	registerData.Add("username", "testuser1")
 	registerData.Add("name", "Test User 1")
 	registerData.Add("user.Password", "pw1")
 	registerData.Add("verifyPassword", "pw1")
@@ -209,6 +291,7 @@ func (t *AccountsTest) TestSignupFail_TooShortPassword() {
 func (t *AccountsTest) TestSignupFail_TooLongPassword() {
 	registerData := url.Values{}
 	registerData.Add("user.Email", "testuser@example.com")
+	registerData.Add("username", "testuser1")
 	registerData.Add("name", "Test User 1")
 	registerData.Add("user.Password", "testuser1testuser1testuser1testuser1")
 	registerData.Add("verifyPassword", "testuser1testuser1testuser1testuser1")
@@ -222,6 +305,7 @@ func (t *AccountsTest) TestSignupFail_TooLongPassword() {
 func (t *AccountsTest) TestSignupFail_PasswordMismatch() {
 	registerData := url.Values{}
 	registerData.Add("user.Email", "testuser@example.com")
+	registerData.Add("username", "testuser1")
 	registerData.Add("name", "Test User 1")
 	registerData.Add("user.Password", "testuser1")
 	registerData.Add("verifyPassword", "testuser2")
@@ -235,6 +319,7 @@ func (t *AccountsTest) TestSignupFail_PasswordMismatch() {
 func (t *AccountsTest) TestSignupFail_PasswordSameAsEmail() {
 	registerData := url.Values{}
 	registerData.Add("user.Email", "test@foo.com")
+	registerData.Add("username", "testuser1")
 	registerData.Add("name", "Test User 1")
 	registerData.Add("user.Password", "test@foo.com")
 	registerData.Add("verifyPassword", "test@foo.com")
@@ -248,6 +333,7 @@ func (t *AccountsTest) TestSignupFail_PasswordSameAsEmail() {
 func (t *AccountsTest) TestSignupSuccess() {
 	registerData := url.Values{}
 	registerData.Add("user.Email", "testuser@example.com")
+	registerData.Add("username", "testuser1")
 	registerData.Add("name", "Test User 1")
 	registerData.Add("user.Password", "testuser1")
 	registerData.Add("verifyPassword", "testuser1")

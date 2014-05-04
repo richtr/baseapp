@@ -17,7 +17,7 @@
 	{{if eq (len .followingProfiles) 50}}
 
 	<p>
-	  <a id="nextPage" href="{{url "Profile.Following" .profile.ProfileId .nextPage}}">Next Page &raquo;</a>
+	  <a id="nextPage" href="{{url "Profile.Following" .profile.UserName .nextPage}}">Next Page &raquo;</a>
 	</p>
 
 	{{end}}

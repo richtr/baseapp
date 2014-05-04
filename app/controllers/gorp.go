@@ -51,6 +51,7 @@ func InitDB() {
 	t = Dbm.AddTable(models.Profile{}).SetKeys(true, "ProfileId")
 	t.ColMap("User").Transient = true
 	setColumnSizes(t, map[string]int{
+		"UserName":     64,
 		"Name":        100,
 		"Summary":     140,
 		"Description": 400,
@@ -96,6 +97,7 @@ func InitDB() {
 
 		demoProfile := &models.Profile{
 			UserId: demoUser.UserId,
+			UserName: "demouser",
 			Name: "Demo User",
 			Summary: "Just a regular guy",
 			Description: "...",
@@ -105,6 +107,7 @@ func InitDB() {
 		}
 		otherProfile := &models.Profile{
 			UserId: otherUser.UserId,
+			UserName: "otheruser",
 			Name: "Other User",
 			Summary: "Just another regular guy",
 			Description: "...",

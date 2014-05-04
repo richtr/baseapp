@@ -5,25 +5,26 @@ import (
 	r "github.com/revel/revel"
 	"github.com/richtr/baseapp/app/routes"
 	"github.com/richtr/baseapp/app/models"
+	"strings"
 )
 
 type Profile struct {
 	Account
 }
 
-func (c Profile) loadProfileById(id int) *models.Profile {
-	p, err := c.Txn.Get(models.Profile{}, id)
-
-	if err != nil || p == nil {
+func (c Profile) loadProfileByUserName(username string) *models.Profile {
+	var profile models.Profile
+	err := c.Txn.SelectOne(&profile, "select * from Profile where UserName=?", username)
+	if err != nil {
 		return nil
 	}
 
-	return p.(*models.Profile)
+	return &profile
 }
 
-func (c Profile) getProfileShowParams(id int) (profiles *models.Profile, owner, following bool) {
+func (c Profile) getProfileShowParams(username string) (profiles *models.Profile, owner, following bool) {
 
-	profile := c.loadProfileById(id)
+	profile := c.loadProfileByUserName(username)
 
 	if profile == nil {
 		return nil, false, false
@@ -50,8 +51,8 @@ func (c Profile) getProfileShowParams(id int) (profiles *models.Profile, owner, 
 }
 
 
-func (c Profile) Show(id int) r.Result {
-	profile, isOwner, isFollowing := c.getProfileShowParams(id)
+func (c Profile) Show(username string) r.Result {
+	profile, isOwner, isFollowing := c.getProfileShowParams(username)
 
 	if profile == nil {
 		return c.NotFound("Profile does not exist")
@@ -73,9 +74,9 @@ func (c Profile) Show(id int) r.Result {
 	return c.Render(title, profile, posts, isOwner, isFollowing)
 }
 
-func (c Profile) Settings(id int) r.Result {
+func (c Profile) Settings(username string) r.Result {
 	profile := c.connected();
-	if profile == nil || profile.UserId != id {
+	if profile == nil || profile.UserName != username {
 		c.Flash.Error("You must log in to access your account");
 		return c.Redirect(routes.Account.Logout())
 	}
@@ -83,9 +84,9 @@ func (c Profile) Settings(id int) r.Result {
 	return c.Render(profile)
 }
 
-func (c Profile) UpdateSettings(id int, profile *models.Profile, verifyPassword string) r.Result {
+func (c Profile) UpdateSettings(username string, profile *models.Profile, verifyPassword string) r.Result {
 	existingProfile := c.connected();
-	if existingProfile == nil || existingProfile.UserId != id {
+	if existingProfile == nil || existingProfile.UserName != username {
 		c.Flash.Error("You must log in to access your account");
 		return c.Redirect(routes.Account.Logout())
 	}
@@ -109,6 +110,7 @@ func (c Profile) UpdateSettings(id int, profile *models.Profile, verifyPassword 
 	}
 
 	// Validate profile components
+	models.ValidateProfileUserName(c.Validation, profile.UserName).Key("profile.UserName")
 	models.ValidateProfileName(c.Validation, profile.Name).Key("profile.Name")
 	models.ValidateProfileSummary(c.Validation, profile.Summary).Key("profile.Summary")
 	models.ValidateProfileDescription(c.Validation, profile.Description).Key("profile.Description")
@@ -117,17 +119,17 @@ func (c Profile) UpdateSettings(id int, profile *models.Profile, verifyPassword 
 		c.Validation.Keep()
 		c.FlashParams()
 		c.Flash.Error("Profile could not be updated");
-		return c.Redirect(routes.Profile.Settings(id))
+		return c.Redirect(routes.Profile.Settings(username))
 	}
 
 	// Step 2: Commit data
 
 	if email != existingProfile.User.Email {
-		userExists := c.getProfile(email)
+		userExists := c.getProfileByEmailAddress(email)
 
 		if userExists != nil {
 			c.Flash.Error("Email address is already registered to another account");
-			return c.Redirect(routes.Profile.Settings(id))
+			return c.Redirect(routes.Profile.Settings(username))
 		}
 
 		// Re-send email confirmation
@@ -156,13 +158,28 @@ func (c Profile) UpdateSettings(id int, profile *models.Profile, verifyPassword 
 
 	}
 
+	profile.UserName = strings.ToLower(profile.UserName)
+
+	// Update username?
+	if profile.UserName != existingProfile.UserName {
+		userExists := c.getProfileByUserName(profile.UserName)
+
+		if userExists != nil {
+			c.Flash.Error("User name is already registered to another account");
+			return c.Redirect(routes.Profile.Settings(username))
+		}
+
+		// Change username
+		existingProfile.UserName = profile.UserName
+	}
+
+
 	// Update password?
 	if profile.User.Password != "" || verifyPassword != "" {
 		c.CommitPassword(existingProfile.User, profile.User.Password)
 	}
 
-	// Update profile components
-	existingProfile.UserId = id
+	// Update other profile components
 	existingProfile.Name = profile.Name
 	existingProfile.Summary = profile.Summary
 	existingProfile.Description = profile.Description
@@ -170,16 +187,16 @@ func (c Profile) UpdateSettings(id int, profile *models.Profile, verifyPassword 
 	_, err := c.Txn.Update(existingProfile)
 	if err != nil {
 		c.Flash.Error("Profile could not be updated");
-		return c.Redirect(routes.Profile.Settings(id));
+		return c.Redirect(routes.Profile.Settings(username));
 	}
 
 	c.Flash.Success("Profile has been updated");
-	return c.Redirect(routes.Profile.Show(id))
+	return c.Redirect(routes.Profile.Show(existingProfile.UserName))
 }
 
-func (c Profile) Password(id int) r.Result {
+func (c Profile) Password(username string) r.Result {
 	profile := c.connected();
-	if profile == nil || profile.UserId != id {
+	if profile == nil || profile.UserName != username {
 		c.Flash.Error("You must log in to access your account");
 		return c.Redirect(routes.Account.Logout())
 	}
@@ -199,9 +216,9 @@ func (c Profile) CommitPassword(user *models.User, password string) error {
 }
 
 
-func (c Profile) UpdatePassword(id int, password, verifyPassword string) r.Result {
+func (c Profile) UpdatePassword(username string, password, verifyPassword string) r.Result {
 	profile := c.connected();
-	if profile == nil || profile.UserId != id {
+	if profile == nil || profile.UserName != username {
 		c.Flash.Error("You must log in to access your account");
 		return c.Redirect(routes.Account.Logout())
 	}
@@ -218,21 +235,21 @@ func (c Profile) UpdatePassword(id int, password, verifyPassword string) r.Resul
 		c.Validation.Keep()
 		c.FlashParams()
 		c.Flash.Error("Password could not be updated")
-		return c.Redirect(routes.Profile.Settings(id))
+		return c.Redirect(routes.Profile.Settings(username))
 	}
 
 	err := c.CommitPassword(profile.User, password)
 
 	if err != nil {
 		c.Flash.Error("Password validation failed")
-		return c.Redirect(routes.Profile.Settings(id))
+		return c.Redirect(routes.Profile.Settings(username))
 	}
 
 	c.Flash.Success("Account settings updated")
-	return c.Redirect(routes.Profile.Show(id))
+	return c.Redirect(routes.Profile.Show(username))
 }
 
-func (c Profile) FollowUser(id int) r.Result {
+func (c Profile) FollowUser(username string) r.Result {
 	followResponse := models.SimpleJSONResponse{"fail", ""}
 
 	profile := c.connected();
@@ -241,15 +258,15 @@ func (c Profile) FollowUser(id int) r.Result {
 		return c.RenderJson(followResponse)
 	}
 
-	if profile.User.UserId == id {
+	if profile.UserName == username {
 		followResponse.Message = "You cannot follow yourself"
 		return c.Render(followResponse)
 	}
 
 	// Get followed user profile
-	followProfile := c.getProfileByUserId(id)
+	followProfile := c.loadProfileByUserName(username)
 	if followProfile == nil {
-		followResponse.Message = "User with that id not found"
+		followResponse.Message = "User with that username not found"
 		return c.RenderJson(followResponse)
 	}
 
@@ -323,9 +340,9 @@ func (c Profile) FollowUser(id int) r.Result {
 
 }
 
-func (c Profile) Followers(id, page int) r.Result {
+func (c Profile) Followers(username string, page int) r.Result {
 
-	profile, isOwner, isFollowing := c.getProfileShowParams(id)
+	profile, isOwner, isFollowing := c.getProfileShowParams(username)
 
 	if profile == nil {
 		return c.NotFound("Profile does not exist")
@@ -339,7 +356,7 @@ func (c Profile) Followers(id, page int) r.Result {
 
 	// Retrieve all profiles of followers
 	var followerProfiles []*models.Profile
-	results, err := c.Txn.Select(models.Profile{}, `select * from Profile where UserId in (select UserId from Follower where FollowUserId = ?) limit ?, ?`, id, (page-1)*size, size)
+	results, err := c.Txn.Select(models.Profile{}, `select * from Profile where UserId in (select UserId from Follower where FollowUserId = ?) limit ?, ?`, profile.User.UserId, (page-1)*size, size)
 	if err == nil {
 		for _, r := range results {
 			followerProfiles = append(followerProfiles, r.(*models.Profile))
@@ -347,15 +364,15 @@ func (c Profile) Followers(id, page int) r.Result {
 	}
 
 	if len(followerProfiles) == 0 && page != 1 {
-		return c.Redirect(routes.Profile.Followers(id, 1))
+		return c.Redirect(routes.Profile.Followers(username, 1))
 	}
 
 	return c.Render(profile, isOwner, isFollowing, followerProfiles, page, nextPage)
 }
 
-func (c Profile) Following(id, page int) r.Result {
+func (c Profile) Following(username string, page int) r.Result {
 
-	profile, isOwner, isFollowing := c.getProfileShowParams(id)
+	profile, isOwner, isFollowing := c.getProfileShowParams(username)
 
 	if profile == nil {
 		return c.NotFound("Profile does not exist")
@@ -369,7 +386,7 @@ func (c Profile) Following(id, page int) r.Result {
 
 	// Retrieve all profiles of followers
 	var followingProfiles []*models.Profile
-	results, err := c.Txn.Select(models.Profile{}, `select * from Profile where UserId in (select FollowUserId from Follower where UserId = ?) limit ?, ?`, id, (page-1)*size, size)
+	results, err := c.Txn.Select(models.Profile{}, `select * from Profile where UserId in (select FollowUserId from Follower where UserId = ?) limit ?, ?`, profile.User.UserId, (page-1)*size, size)
 	if err == nil {
 		for _, r := range results {
 			followingProfiles = append(followingProfiles, r.(*models.Profile))
@@ -377,7 +394,7 @@ func (c Profile) Following(id, page int) r.Result {
 	}
 
 	if len(followingProfiles) == 0 && page != 1 {
-		return c.Redirect(routes.Profile.Following(id, 1))
+		return c.Redirect(routes.Profile.Following(username, 1))
 	}
 
 	return c.Render(profile, isOwner, isFollowing, followingProfiles, page, nextPage)

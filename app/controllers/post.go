@@ -47,7 +47,11 @@ func (c Post) Show(id int) r.Result {
 		return c.NotFound("Post does not exist")
 	}
 
-	profile := c.loadProfileById(post.ProfileId)
+	p, err := c.Txn.Get(models.Profile{}, post.ProfileId)
+	if err != nil || p == nil {
+		return c.NotFound("Profile does not exist")
+	}
+	profile := p.(*models.Profile)
 
 	if profile == nil {
 		return c.NotFound("Profile does not exist")
@@ -196,7 +200,7 @@ func (c Post) Delete(id int) r.Result {
 	}
 
 	c.Flash.Success("Post removed")
-	return c.Redirect(routes.Profile.Show(profile.ProfileId))
+	return c.Redirect(routes.Profile.Show(profile.UserName))
 }
 
 func (c Post) Like(id int) r.Result {
