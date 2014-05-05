@@ -5,7 +5,7 @@
 
 <hr>
 
-<form action="{{url "Post.Save"}}" method="POST" class="form-horizontal" role="form">
+<form action="{{url "Post.Save" .user.UserName}}" method="POST" class="form-horizontal" role="form">
   {{with $field := field "post.Title" .}}
   <div class="form-group{{if $field.Error}} has-error{{end}}">
     <label for="{{$field.Name}}" class="col-sm-2 control-label">Title</label>

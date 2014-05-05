@@ -6,7 +6,7 @@
 <hr>
 
 <div class="form-group col-sm-12">
-  <form action="{{url "Post.Delete" .post.PostId}}" method="POST" class="form-horizontal" role="form">
+  <form action="{{url "Post.Delete" .user.UserName .post.PostId}}" method="POST" class="form-horizontal" role="form">
     <p>Are you sure you want to remove this post?</p>
 
     <div class="alert alert-danger">
@@ -17,7 +17,7 @@
       <div class="form-group">
         <div class="col-sm-12">
           <input type="submit" class="btn btn-primary" value="Delete Post">
-          <a href="{{url "Post.Show" .post.PostId}}" type="submit" class="btn btn-default">Cancel</a>
+          <a href="{{url "Post.Show" .user.UserName .post.PostId}}" type="submit" class="btn btn-default">Cancel</a>
         </div>
       </div>
     </div>
@@ -27,11 +27,11 @@
 <hr>
 
 <p>
-  <a href="{{url "Post.Show" .post.PostId}}">View this post</a>
+  <a href="{{url "Post.Show" .user.UserName .post.PostId}}">View this post</a>
 </p>
 
 <p>
-  <a href="{{url "Post.Edit" .post.PostId}}">Edit this post</a>
+  <a href="{{url "Post.Edit" .user.UserName .post.PostId}}">Edit this post</a>
 </p>
 
 {{template "footer.html" .}}

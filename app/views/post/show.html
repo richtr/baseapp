@@ -19,7 +19,7 @@
 </div>
 
 <div>
-	<button type="button" data-href="{{url "Post.Like" .post.PostId}}" class="btn btn-link like">
+	<button type="button" data-href="{{url "Post.Like" .profile.UserName .post.PostId}}" class="btn btn-link like">
 		<b class="glyphicon glyphicon-heart{{ if eq .post.AggregateLikes 0 }}-empty{{end}}"></b>
 		<span class="text"></span>
 		<span class="badge">{{.post.AggregateLikes}}</span>
@@ -31,11 +31,11 @@
 {{if .isOwner}}
 
 <p>
-  <a href="{{url "Post.Edit" .post.PostId}}">Edit this post</a>
+  <a href="{{url "Post.Edit" .user.UserName .post.PostId}}">Edit this post</a>
 </p>
 
 <p>
-  <a href="{{url "Post.Remove" .post.PostId}}">Delete this post</a>
+  <a href="{{url "Post.Remove" .user.UserName .post.PostId}}">Delete this post</a>
 </p>
 
 {{end}}

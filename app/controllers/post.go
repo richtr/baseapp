@@ -23,7 +23,7 @@ func (c Post) loadPostById(id int) *models.Post {
 	return p.(*models.Post)
 }
 
-func (c Post) getConnectedPostOwner(post *models.Post) *models.Profile {
+/*func (c Post) getConnectedPostOwner(post *models.Post) *models.Profile {
 	profile := c.connected();
 	if profile == nil {
 		return nil
@@ -34,13 +34,9 @@ func (c Post) getConnectedPostOwner(post *models.Post) *models.Profile {
 	}
 
 	return profile
-}
+}*/
 
-func (c Post) Index() r.Result {
-	return c.NotFound("Post does not exist", 404)
-}
-
-func (c Post) Show(id int) r.Result {
+func (c Post) Show(username string, id int) r.Result {
 	post := c.loadPostById(id)
 
 	if post == nil {
@@ -57,7 +53,7 @@ func (c Post) Show(id int) r.Result {
 		return c.NotFound("Profile does not exist")
 	}
 
-	if profile.ProfileId != post.ProfileId {
+	if profile.UserName != username {
 		return c.NotFound("Post does not exist")
 	}
 
@@ -77,9 +73,9 @@ func (c Post) Show(id int) r.Result {
 	return c.Render(title, profile, post, postContentHTML, isOwner)
 }
 
-func (c Post) Create() r.Result {
-	profile := c.connected();
-	if profile == nil {
+func (c Post) Create(username string) r.Result {
+	profile := c.connected()
+	if profile == nil || profile.UserName != username {
 		c.Flash.Error("You must log in to access your account")
 		return c.Redirect(routes.Account.Logout())
 	}
@@ -87,9 +83,9 @@ func (c Post) Create() r.Result {
 	return c.Render(profile)
 }
 
-func (c Post) Save(post models.Post) r.Result {
-	profile := c.connected();
-	if profile == nil {
+func (c Post) Save(username string, post models.Post) r.Result {
+	profile := c.connected()
+	if profile == nil || profile.UserName != username {
 		c.Flash.Error("You must log in to access your account")
 		return c.Redirect(routes.Account.Logout())
 	}
@@ -101,7 +97,7 @@ func (c Post) Save(post models.Post) r.Result {
 		c.Validation.Keep()
 		c.FlashParams()
 		c.Flash.Error("Could not create post")
-		return c.Redirect(routes.Post.Create())
+		return c.Redirect(routes.Post.Create(username))
 	}
 
 	post.ProfileId = profile.ProfileId
@@ -114,17 +110,17 @@ func (c Post) Save(post models.Post) r.Result {
 	}
 
 	c.Flash.Success("Post created")
-	return c.Redirect(routes.Post.Show(post.PostId))
+	return c.Redirect(routes.Post.Show(username, post.PostId))
 }
 
-func (c Post) Edit(id int) r.Result {
+func (c Post) Edit(username string, id int) r.Result {
 	post := c.loadPostById(id)
 	if post == nil {
 		return c.NotFound("Post does not exist")
 	}
 
-	profile := c.getConnectedPostOwner(post)
-	if profile == nil {
+	profile := c.connected();
+	if profile == nil || profile.UserName != username {
 		c.Flash.Error("You must log in to access your account");
 		return c.Redirect(routes.Account.Logout())
 	}
@@ -132,14 +128,14 @@ func (c Post) Edit(id int) r.Result {
 	return c.Render(profile, post)
 }
 
-func (c Post) Update(id int, post models.Post) r.Result {
+func (c Post) Update(username string, id int, post models.Post) r.Result {
 	existingPost := c.loadPostById(id)
 	if existingPost == nil {
 		return c.NotFound("Post does not exist")
 	}
 
-	profile := c.getConnectedPostOwner(existingPost)
-	if profile == nil {
+	profile := c.connected()
+	if profile == nil || profile.UserName != username {
 		c.Flash.Error("You must log in to access your account");
 		return c.Redirect(routes.Account.Logout())
 	}
@@ -151,7 +147,7 @@ func (c Post) Update(id int, post models.Post) r.Result {
 		c.Validation.Keep()
 		c.FlashParams()
 		c.Flash.Error("Could not update post")
-		return c.Redirect(routes.Post.Edit(id))
+		return c.Redirect(routes.Post.Edit(username, id))
 	}
 
 	// Update fields
@@ -164,17 +160,17 @@ func (c Post) Update(id int, post models.Post) r.Result {
 	}
 
 	c.Flash.Success("Post updated")
-	return c.Redirect(routes.Post.Show(existingPost.PostId))
+	return c.Redirect(routes.Post.Show(username, existingPost.PostId))
 }
 
-func (c Post) Remove(id int) r.Result {
+func (c Post) Remove(username string, id int) r.Result {
 	post := c.loadPostById(id)
 	if post == nil {
 		return c.NotFound("Post does not exist")
 	}
 
-	profile := c.getConnectedPostOwner(post)
-	if profile == nil {
+	profile := c.connected()
+	if profile == nil || profile.UserName != username {
 		c.Flash.Error("You must log in to access your account");
 		return c.Redirect(routes.Account.Logout())
 	}
@@ -182,14 +178,14 @@ func (c Post) Remove(id int) r.Result {
 	return c.Render(profile, post)
 }
 
-func (c Post) Delete(id int) r.Result {
+func (c Post) Delete(username string, id int) r.Result {
 	existingPost := c.loadPostById(id)
 	if existingPost == nil {
 		return c.NotFound("Post does not exist")
 	}
 
-	profile := c.getConnectedPostOwner(existingPost)
-	if profile == nil {
+	profile := c.connected()
+	if profile == nil || profile.UserName != username {
 		c.Flash.Error("You must log in to access your account");
 		return c.Redirect(routes.Account.Logout())
 	}
@@ -203,7 +199,7 @@ func (c Post) Delete(id int) r.Result {
 	return c.Redirect(routes.Profile.Show(profile.UserName))
 }
 
-func (c Post) Like(id int) r.Result {
+func (c Post) Like(username string, id int) r.Result {
 	likeResponse := models.SimpleJSONResponse{"fail", ""}
 
 	profile := c.connected();

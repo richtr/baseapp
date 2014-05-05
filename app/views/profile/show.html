@@ -15,20 +15,21 @@
 <h3>Posts</h3>
 
 {{$isOwner := .isOwner}}
+{{$userName := .user.UserName}}
 
 {{ if .posts }}
 
 	<ul class="posts">
 	  {{range .posts}}
 	  <li class="post">
-	    <a href="{{url "Post.Show" .PostId}}">{{.Title}}</a>
+	    <a href="{{url "Post.Show" $userName .PostId}}">{{.Title}}</a>
 
 	    {{if $isOwner}}
 
 	      [
-	      <a href="{{url "Post.Edit" .PostId}}">Edit</a>
+	      <a href="{{url "Post.Edit" $userName .PostId}}">Edit</a>
 	      |
-	      <a href="{{url "Post.Remove" .PostId}}">Delete</a>
+	      <a href="{{url "Post.Remove" $userName .PostId}}">Delete</a>
 	      ]
 
 	    {{end}}
@@ -47,7 +48,7 @@
 <hr>
 
 <p>
-  <a href="{{url "Post.Create"}}">Create New Post</a>
+  <a href="{{url "Post.Create" $userName}}">Create New Post</a>
 </p>
 
 {{end}}

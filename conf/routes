@@ -20,15 +20,6 @@ POST    /account/recover                        Account.RetrieveAccount
 GET     /account/reset/:token                   Account.PasswordReset
 GET     /account/logout                         Account.Logout
 
-GET     /post/add                               Post.Create
-POST    /post/add                               Post.Save
-GET     /post/:id                               Post.Show
-GET     /post/:id/edit                          Post.Edit
-POST    /post/:id/edit                          Post.Update
-GET     /post/:id/remove                        Post.Remove
-POST    /post/:id/remove                        Post.Delete
-GET     /post/:id/like                          Post.Like
-
 # Map static resources from the /app/public folder to the /public path
 GET     /public/*filepath                       Static.Serve("public")
 GET     /favicon.ico                            Static.Serve("public/images","favicon.png")
@@ -44,6 +35,15 @@ GET     /:username/followers                    Profile.Followers
 GET     /:username/followers/:page              Profile.Followers
 GET     /:username/following                    Profile.Following
 GET     /:username/following/:page              Profile.Following
+
+GET     /:username/post/add                     Post.Create
+POST    /:username/post/add                     Post.Save
+GET     /:username/post/:id                     Post.Show
+GET     /:username/post/:id/edit                Post.Edit
+POST    /:username/post/:id/edit                Post.Update
+GET     /:username/post/:id/remove              Post.Remove
+POST    /:username/post/:id/remove              Post.Delete
+GET     /:username/post/:id/like                Post.Like
 
 # Catch all
 #*       /:controller/:action                    :controller.:action
