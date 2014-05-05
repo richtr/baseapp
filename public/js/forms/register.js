@@ -19,20 +19,6 @@ $(document).ready(function() {
 				minlength: 6,
 				maxlength: 100
 			},
-			"username": {
-				required: true,
-				maxlength: 64,
-				isUsername: true,
-				remote: {
-					url: "/account/checkusername",
-					type: "post",
-					data: {
-						"username": function() {
-							return $('form input[name="username"]').val();
-						}
-					}
-				}
-			},
 			"user.Email": {
 				required: true,
 				minlength: 6,
@@ -51,7 +37,22 @@ $(document).ready(function() {
 			"user.Password": {
 				required: true,
 				minlength: 6,
-				maxlength: 15
+				maxlength: 15,
+				password: '#user.Password'
+			},
+			"username": {
+				required: true,
+				maxlength: 64,
+				isUsername: true,
+				remote: {
+					url: "/account/checkusername",
+					type: "post",
+					data: {
+						"username": function() {
+							return $('form input[name="username"]').val();
+						}
+					}
+				}
 			}
 		},
 		messages: {
@@ -75,8 +76,8 @@ $(document).ready(function() {
 			},
 			"user.Password": {
 				required: "Password required",
-				minlength: "Password must be at least 6 characters",
-				maxlength: "Password must be at most 15 characters"
+				maxlength: "Password must be at most 15 characters",
+				minlength: "Password must be at least 6 characters"
 			}
 	  },
 		errorPlacement: function(error, element) {
@@ -84,6 +85,12 @@ $(document).ready(function() {
 			$(error).addClass('control-label');
 		},
 		highlight: function(element) {
+			// Clean up password meter (if it is present on current element)
+			var meterBar = $('.password-meter-bar', $(element).parent());
+			if(meterBar) meterBar.removeClass().addClass('password-meter-bar');
+			var meterMessage = $('.password-meter-message', $(element).parent());
+			if(meterMessage) meterMessage.detach();
+
 			$(element).closest('.form-group').removeClass('has-success').addClass('has-error');
 		},
 		unhighlight: function(element) {

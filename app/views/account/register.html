@@ -1,5 +1,8 @@
 {{append . "moreScripts" "/public/js/jquery.validate.min.js"}}
+{{append . "moreScripts" "/public/js/jquery.validate.password.js"}}
 {{append . "moreScripts" "/public/js/forms/register.js"}}
+
+{{append . "moreStyles" "/public/css/password-meter.css"}}
 
 {{set . "title" "Register"}}
 {{template "header.html" .}}
@@ -38,6 +41,11 @@
     <label for="{{$field.Name}}" class="col-sm-3 control-label">Create a password</label>
     <div class="col-sm-9">
       <input type="password" class="form-control" id="{{$field.Name}}" name="{{$field.Name}}" placeholder="Password" value="{{$field.Flash}}">
+			<div class="password-meter">
+				<div class="password-meter-bg">
+					<div class="password-meter-bar"></div>
+				</div>
+			</div>
       {{if $field.Error}}
       <label class="control-label" for="{{$field.Name}}">{{$field.Error}}</label>
       {{end}}
