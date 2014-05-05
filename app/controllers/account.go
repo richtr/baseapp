@@ -89,7 +89,11 @@ func (c Account) Register() r.Result {
 	return c.Render()
 }
 
-func (c Account) SaveUser(user models.User, username, name, verifyPassword string) r.Result {
+func (c Account) SaveUser(user models.User, username, name string) r.Result {
+
+	// Lower case username
+	username = strings.ToLower(username)
+	lcPass := strings.ToLower(user.Password)
 
 	// Validate User components
 	models.ValidateUserEmail(c.Validation, user.Email).Key("user.Email")
@@ -97,11 +101,9 @@ func (c Account) SaveUser(user models.User, username, name, verifyPassword strin
 
 	// Additional user components verification
 	c.Validation.Required(user.Password != user.Email).Message("Password cannot be the same as your email address").Key("user.Password")
-	c.Validation.Required(verifyPassword).Message("Password verification required").Key("verifyPassword")
-	c.Validation.Required(verifyPassword == user.Password).Message("Provided passwords do not match").Key("verifyPassword")
+	c.Validation.Required(lcPass != username).Message("Password cannot be the same as your user name").Key("user.Password")
 
 	// Validate Profile components
-	username = strings.ToLower(username)
 	models.ValidateProfileUserName(c.Validation, username).Key("username")
 	models.ValidateProfileName(c.Validation, name).Key("name")
 

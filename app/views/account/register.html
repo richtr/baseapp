@@ -5,24 +5,12 @@
 
 <hr>
 
-<form action="{{url "Account.SaveUser"}}" method="POST" class="form-horizontal" role="form">
-  {{with $field := field "username" .}}
-  <div class="form-group{{if $field.Error}} has-error{{end}}">
-    <label for="{{$field.Name}}" class="col-sm-2 control-label">User name</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" id="{{$field.Name}}" name="{{$field.Name}}" placeholder="User name" value="{{$field.Flash}}" autofocus>
-      {{if $field.Error}}
-      <label class="control-label" for="{{$field.Name}}">{{$field.Error}}</label>
-      {{end}}
-    </div>
-  </div>
-  {{end}}
-
+<form action="{{url "Account.SaveUser"}}" method="POST" class="form-horizontal" id="register-user" role="form">
   {{with $field := field "name" .}}
   <div class="form-group{{if $field.Error}} has-error{{end}}">
-    <label for="{{$field.Name}}" class="col-sm-2 control-label">Full name</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" id="{{$field.Name}}" name="{{$field.Name}}" placeholder="Full name" value="{{$field.Flash}}">
+    <label for="{{$field.Name}}" class="col-sm-3 control-label">Full name</label>
+    <div class="col-sm-9">
+      <input type="text" class="form-control" id="{{$field.Name}}" name="{{$field.Name}}" placeholder="Full name" value="{{$field.Flash}}" autofocus>
       {{if $field.Error}}
       <label class="control-label" for="{{$field.Name}}">{{$field.Error}}</label>
       {{end}}
@@ -32,9 +20,9 @@
 
   {{with $field := field "user.Email" .}}
   <div class="form-group{{if $field.Error}} has-error{{end}}">
-    <label for="{{$field.Name}}" class="col-sm-2 control-label">Email address</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" id="{{$field.Name}}" name="{{$field.Name}}" placeholder="Email address" value="{{$field.Flash}}" autofocus>
+    <label for="{{$field.Name}}" class="col-sm-3 control-label">Email address</label>
+    <div class="col-sm-9">
+      <input type="text" class="form-control" id="{{$field.Name}}" name="{{$field.Name}}" placeholder="Email address" value="{{$field.Flash}}">
       {{if $field.Error}}
       <label class="control-label" for="{{$field.Name}}">{{$field.Error}}</label>
       {{end}}
@@ -44,9 +32,9 @@
 
   {{with $field := field "user.Password" .}}
   <div class="form-group{{if $field.Error}} has-error{{end}}">
-    <label for="{{$field.Name}}" class="col-sm-2 control-label">Password</label>
-    <div class="col-sm-10">
-      <input type="password" class="form-control" id="{{$field.Name}}" name="{{$field.Name}}" placeholder="Choose Password" value="{{$field.Flash}}">
+    <label for="{{$field.Name}}" class="col-sm-3 control-label">Create a password</label>
+    <div class="col-sm-9">
+      <input type="password" class="form-control" id="{{$field.Name}}" name="{{$field.Name}}" placeholder="Password" value="{{$field.Flash}}">
       {{if $field.Error}}
       <label class="control-label" for="{{$field.Name}}">{{$field.Error}}</label>
       {{end}}
@@ -54,11 +42,11 @@
   </div>
   {{end}}
 
-  {{with $field := field "verifyPassword" .}}
+  {{with $field := field "username" .}}
   <div class="form-group{{if $field.Error}} has-error{{end}}">
-    <label for="{{$field.Name}}" class="col-sm-2 control-label">Verify Password</label>
-    <div class="col-sm-10">
-      <input type="password" class="form-control" id="{{$field.Name}}" name="{{$field.Name}}" placeholder="Confirm Password" value="{{$field.Flash}}">
+    <label for="{{$field.Name}}" class="col-sm-3 control-label">Choose your username</label>
+    <div class="col-sm-9">
+      <input type="text" class="form-control" id="{{$field.Name}}" name="{{$field.Name}}" placeholder="Username" value="{{$field.Flash}}" autofocus>
       {{if $field.Error}}
       <label class="control-label" for="{{$field.Name}}">{{$field.Error}}</label>
       {{end}}
@@ -67,7 +55,7 @@
   {{end}}
 
   <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
+    <div class="col-sm-offset-3 col-sm-9">
       <input type="submit" class="btn btn-primary" value="Register">
       <a href="{{url "Application.Index"}}" type="submit" class="btn btn-default">Cancel</a>
     </div>
