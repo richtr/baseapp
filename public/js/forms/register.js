@@ -3,11 +3,11 @@ $(document).ready(function() {
 	// Registration form live validation
 
 	// Setup rules
-	jQuery.validator.addMethod("emailaddress", function(value, element) {
+	jQuery.validator.addMethod("isEmailaddress", function(value, element) {
 	  return /^[a-z0-9!#$\%&'*+\/=?^_`{|}~.-]+@[a-z0-9-]+(\.[a-z0-9-]+)*$/.test(value);
 	}, "Email address is invalid");
 
-	jQuery.validator.addMethod("username", function(value, element) {
+	jQuery.validator.addMethod("isUsername", function(value, element) {
 	  return /^[a-zA-Z0-9]+$/.test(value);
 	}, "Username is invalid");
 
@@ -22,13 +22,31 @@ $(document).ready(function() {
 			"username": {
 				required: true,
 				maxlength: 64,
-				username: true
+				isUsername: true,
+				remote: {
+					url: "/account/checkusername",
+					type: "post",
+					data: {
+						"username": function() {
+							return $('form input[name="username"]').val();
+						}
+					}
+				}
 			},
 			"user.Email": {
 				required: true,
 				minlength: 6,
 				maxlength: 200,
-				emailaddress: true
+				isEmailaddress: true,
+				remote: {
+					url: "/account/checkemail",
+					type: "post",
+					data: {
+						"email": function() {
+							return $('form input[name="user.Email"]').val();
+						}
+					}
+				}
 			},
 			"user.Password": {
 				required: true,
@@ -45,13 +63,15 @@ $(document).ready(function() {
 			"username": {
 				required: "User name required",
 				maxlength: "User name can not exceed 64 characters",
-				username: "Invalid User name. Alphanumerics allowed only"
+				isUsername: "Invalid User name. Alphanumerics allowed only",
+				remote: "User name is not available"
 			},
 			"user.Email": {
 				required: "Email address required",
-				emailaddress: "You must provide a valid email address",
 				maxlength: "Email address can not exceed 200 characters",
-				minlength: "Email address can not be less than 6 characters"
+				minlength: "Email address can not be less than 6 characters",
+				isEmailaddress: "You must provide a valid email address",
+				remote: "Email address is already registered"
 			},
 			"user.Password": {
 				required: "Password required",

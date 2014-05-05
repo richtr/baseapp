@@ -326,6 +326,46 @@ func (c Account) Logout() r.Result {
 	return c.Redirect(routes.Account.Login())
 }
 
+func (c Account) CheckUserName(username, currentUsername string) r.Result {
+
+	if(username == currentUsername) {
+		return c.RenderText("true");
+	}
+
+	// Validate Profile components
+	models.ValidateProfileUserName(c.Validation, username).Key("username")
+
+	if c.Validation.HasErrors() {
+		c.Validation.Clear()
+		return c.RenderText("false");
+	}
+
+	userExists := c.getProfileByUserName(username)
+
+	if userExists != nil {
+		return c.RenderText("false");
+	}
+
+	// User name is available
+	return c.RenderText("true");
+}
+
+func (c Account) CheckEmail(email, currentEmail string) r.Result {
+
+	if(email == currentEmail) {
+		return c.RenderText("true");
+	}
+
+	userExists := c.getProfileByEmailAddress(email)
+
+	if userExists != nil {
+		return c.RenderText("false");
+	}
+
+	// Email address is new (and therefore valid)
+	return c.RenderText("true");
+}
+
 // VERIFICATION HASH STUFF
 
 func (e Account) generateVerifyHash(n int) []byte {

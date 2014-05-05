@@ -23,6 +23,9 @@ POST    /account/recover                        Account.RetrieveAccount
 GET     /account/reset/:token                   Account.PasswordReset
 GET     /account/logout                         Account.Logout
 
+POST    /account/checkemail                     Account.CheckEmail
+POST    /account/checkusername                  Account.CheckUserName
+
 # Map static resources from the /app/public folder to the /public path
 GET     /public/*filepath                       Static.Serve("public")
 GET     /favicon.ico                            Static.Serve("public/images","favicon.png")
