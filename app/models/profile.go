@@ -25,6 +25,8 @@ type Profile struct {
 
 var UserNameRegex = regexp.MustCompile("^[a-zA-Z0-9]+$")
 
+var UserNameBlacklistRegex = regexp.MustCompile("^(.*)?(account|contact|about|public|log(in|out)|sign(in|up)|home|index|default)$")
+
 func (p *Profile) String() string {
 	return fmt.Sprintf("Profile(%s)", p.Summary)
 }
@@ -48,6 +50,14 @@ func ValidateProfileUserName(v *revel.Validation, username string) *revel.Valida
 	}
 
 	result = v.Match(username, UserNameRegex).Message("Invalid User name. Alphanumerics allowed only")
+	if !result.Ok {
+		return result
+	}
+
+	// Inverse regexp matcher
+	if blacklistMatcher := UserNameBlacklistRegex.FindString(username); blacklistMatcher != "" {
+		result = v.Error("Invalid User name. Reserved keywords not allowed")
+	}
 
 	return result
 }

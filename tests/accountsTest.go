@@ -195,6 +195,19 @@ func (t *AccountsTest) TestSignupFail_TooLongUsername() {
 	t.AssertContains("User name can not exceed 64 characters")
 }
 
+func (t *AccountsTest) TestSignupFail_ReservedUsername() {
+	registerData := url.Values{}
+	registerData.Add("user.Email", "testuser@example.com")
+	registerData.Add("username", "account")
+	registerData.Add("name", "Test User 1")
+	registerData.Add("user.Password", "testuser1")
+
+	t.PostForm("/account/register", registerData)
+
+	t.AssertOk()
+	t.AssertContains("Invalid User name. Reserved keywords not allowed")
+}
+
 func (t *AccountsTest) TestSignupFail_EmptyName() {
 	registerData := url.Values{}
 	registerData.Add("user.Email", "testuser@example.com")
