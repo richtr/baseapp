@@ -25,7 +25,7 @@ type Profile struct {
 
 var UserNameRegex = regexp.MustCompile("^[a-zA-Z0-9]+$")
 
-var UserNameBlacklistRegex = regexp.MustCompile("^(.*)?(account|contact|about|public|log(in|out)|sign(in|up|out)|register|home|index|default|post(s)?|user(name)?(s)?)$")
+var UserNameBlacklistRegex = regexp.MustCompile("^(account|contact|about|public|log(in|out)|sign(in|up|out)|register|home|index|default|post(s)?|user(name)?(s)?)$")
 
 func (p *Profile) String() string {
 	return fmt.Sprintf("Profile(%s)", p.Summary)
