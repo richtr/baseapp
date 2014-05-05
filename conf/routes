@@ -5,6 +5,9 @@
 module:testrunner
 module:jobs
 
+# Important: If new static routes are added below they must also be added
+# to `UserNameBlacklistRegex` in app/models/profile.go.
+
 GET     /                                       Application.Index
 GET     /about                                  Application.About
 GET     /contact                                Application.Contact
