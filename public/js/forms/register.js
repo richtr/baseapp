@@ -64,10 +64,10 @@ $(document).ready(function() {
 			$(error).addClass('control-label');
 		},
 		highlight: function(element) {
-			$(element).closest('.form-group').addClass('has-error');
+			$(element).closest('.form-group').removeClass('has-success').addClass('has-error');
 		},
 		unhighlight: function(element) {
-			$(element).closest('.form-group').removeClass('has-error');
+			$(element).closest('.form-group').removeClass('has-error').addClass('has-success');
 		}
 	});
 
