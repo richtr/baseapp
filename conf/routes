@@ -20,17 +20,6 @@ POST    /account/recover                        Account.RetrieveAccount
 GET     /account/reset/:token                   Account.PasswordReset
 GET     /account/logout                         Account.Logout
 
-GET     /:username                              Profile.Show
-GET     /:username/edit                         Profile.Settings
-POST    /:username/edit                         Profile.UpdateSettings
-GET     /:username/edit/password                Profile.Password
-POST    /:username/edit/password                Profile.UpdatePassword
-GET     /:username/follow                       Profile.FollowUser
-GET     /:username/followers                    Profile.Followers
-GET     /:username/followers/:page              Profile.Followers
-GET     /:username/following                    Profile.Following
-GET     /:username/following/:page              Profile.Following
-
 GET     /post/add                               Post.Create
 POST    /post/add                               Post.Save
 GET     /post/:id                               Post.Show
@@ -43,6 +32,18 @@ GET     /post/:id/like                          Post.Like
 # Map static resources from the /app/public folder to the /public path
 GET     /public/*filepath                       Static.Serve("public")
 GET     /favicon.ico                            Static.Serve("public/images","favicon.png")
+
+# Put catch-all username matchers last in routing list (lowest priority)
+GET     /:username                              Profile.Show
+GET     /:username/edit                         Profile.Settings
+POST    /:username/edit                         Profile.UpdateSettings
+GET     /:username/edit/password                Profile.Password
+POST    /:username/edit/password                Profile.UpdatePassword
+GET     /:username/follow                       Profile.FollowUser
+GET     /:username/followers                    Profile.Followers
+GET     /:username/followers/:page              Profile.Followers
+GET     /:username/following                    Profile.Following
+GET     /:username/following/:page              Profile.Following
 
 # Catch all
 #*       /:controller/:action                    :controller.:action
