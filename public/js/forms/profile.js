@@ -55,7 +55,6 @@ $(document).ready(function() {
 				}
 			},
 			"profile.User.Password": {
-				required: true,
 				minlength: 6,
 				maxlength: 15
 			}
@@ -80,7 +79,6 @@ $(document).ready(function() {
 				remote: "Email address is already registered"
 			},
 			"profile.User.Password": {
-				required: "Password required",
 				minlength: "Password must be at least 6 characters",
 				maxlength: "Password must be at most 15 characters"
 			}
