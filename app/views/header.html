@@ -11,11 +11,12 @@
 		{{range .moreStyles}}
 			<link rel="stylesheet" type="text/css" href="/public/{{.}}">
 		{{end}}
-		{{range .moreScripts}}
-			<script src="/public/{{.}}" type="text/javascript" charset="utf-8"></script>
-		{{end}}
+
 		<script src="/public/js/jquery-1.11.0.min.js"></script>
 		<script src="/public/js/main.js"></script>
+		{{range .moreScripts}}
+			<script src="{{.}}" type="text/javascript" charset="utf-8"></script>
+		{{end}}
 	</head>
 	<body>
 
