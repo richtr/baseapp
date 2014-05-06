@@ -17,6 +17,7 @@ BaseApp is a bootstrap Revel web application that provides a baseline web applic
 * Auto-provisioned backend data store (SQLite3, MySQL, PostgreSQL)
 * Full live client-side and static server-side form validation
 * Full non-interactive and interactive testing framework (Test-driven development process)
+* Responsive front-end design (looks good on mobile, tablet and desktop screen sizes)
 
 ### Contents ###
 
