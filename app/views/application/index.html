@@ -4,8 +4,29 @@
 
 {{template "header.html" .}}
 
-<h1>Home Page</h1>
+<article>
+	<h2>Welcome to {{.AppName}}</h2>
 
- <h3>{{msg . "homeMessage"}}</h3>
+	<p>BaseApp is a bootstrap Revel web application that provides a baseline web application starter kit with the following features:</p>
+
+	<ul>
+	<li>Basic pages (Home, About Us, Contact Us, etc)</li>
+	<li>Account registration (including password strength meter and safe storage of passwords with <a href="https://en.wikipedia.org/wiki/Bcrypt">bcrypt</a>)</li>
+	<li>Account confirmation via email (via configurable e-mail settings)</li>
+	<li>Account recovery via email (via configurable e-mail settings)</li>
+	<li>Account log in (by username or email address)</li>
+	<li>Public user profiles (with Gravatar integration for profile photos and profile edit functionality)</li>
+	<li>Public user posts (with full Markdown support and edit + delete functionality)</li>
+	<li>Social Features (Profile Follower and Following Counts and Post Likes)</li>
+	<li>People finder search (by username or full name)</li>
+	<li>Auto-provisioned backend data store (SQLite3, MySQL, PostgreSQL)</li>
+	<li>Full live client-side and static server-side form validation</li>
+	<li>Full non-interactive and interactive testing framework (Test-driven development process)</li>
+	<li>Responsive front-end design (looks good on mobile, tablet and desktop screen sizes)</li>
+	</ul>
+
+	<p>BaseApp is open-source and avaiable on Github at <a href="https://github.com/richtr/baseapp">https://github.com/richtr/baseapp</a>.
+
+</article>
 
 {{template "footer.html" .}}
