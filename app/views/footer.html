@@ -1,5 +1,16 @@
 		</div>
 
+		{{if not .isDesktopMode}}
+		<div class="viewswitch_contentspacer_bottom">&nbsp;</div>
+		<div id="viewswitch_desktop" class="visible-xs">
+			<div class="container">
+				<small>
+					<a href="{{url "Application.SwitchToDesktop"}}" class="pull-right text-muted">DESKTOP VERSION</a>
+				</small>
+			</div>
+		</div>
+		{{end}}
+
 		<div id="footer">
 			<div class="container">
 				<p>Copyright &copy; {{.AppName}} Inc. All rights reserved.</p>

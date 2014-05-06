@@ -65,3 +65,21 @@ func (c Application) Search(query string, page int) r.Result {
 
 	return c.Render(query, matchedProfiles, page, nextPage)
 }
+
+func (c Application) SwitchToDesktop() r.Result {
+	// Add desktop mode cookie
+	c.Session["desktopmode"] = "1"
+
+
+	// TODO: redirect back to referrer
+	return c.Redirect(routes.Application.Index())
+}
+
+func (c Application) SwitchToMobile() r.Result {
+	// Remove desktop mode cookie
+	delete(c.Session, "desktopmode")
+
+
+	// TODO: redirect back to referrer
+	return c.Redirect(routes.Application.Index())
+}

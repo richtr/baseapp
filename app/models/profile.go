@@ -27,7 +27,7 @@ var NameRegex = regexp.MustCompile("^[^#@]+$")
 
 var UserNameRegex = regexp.MustCompile("^[a-zA-Z0-9]+$")
 
-var UserNameBlacklistRegex = regexp.MustCompile("^(account|contact|about|find|search|public|log(in|out)|sign(in|up|out)|register|home|index|default|post(s)?|user(name)?(s)?|i)$")
+var UserNameBlacklistRegex = regexp.MustCompile("^(account|contact|about|find|search|public|to(desktop|mobile)|log(in|out)|sign(in|up|out)|register|home|index|default|post(s)?|user(name)?(s)?|i)$")
 
 func (p *Profile) String() string {
 	return fmt.Sprintf("Profile(%s)", p.Summary)

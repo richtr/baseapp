@@ -32,6 +32,14 @@ func (c Account) AddAppName() r.Result {
 	return nil
 }
 
+// Add .isDesktopMode to RenderArgs
+func (c Account) AddRenderMode() r.Result {
+	if _, ok := c.Session["desktopmode"]; ok {
+			c.RenderArgs["isDesktopMode"] = true
+	}
+	return nil
+}
+
 func (c Account) connected() *models.Profile {
 	if c.RenderArgs["user"] != nil {
 		return c.RenderArgs["user"].(*models.Profile)
