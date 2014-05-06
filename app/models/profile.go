@@ -23,9 +23,11 @@ type Profile struct {
 	User               *User
 }
 
+var NameRegex = regexp.MustCompile("^[^#@]+$")
+
 var UserNameRegex = regexp.MustCompile("^[a-zA-Z0-9]+$")
 
-var UserNameBlacklistRegex = regexp.MustCompile("^(account|contact|about|public|log(in|out)|sign(in|up|out)|register|home|index|default|post(s)?|user(name)?(s)?|i)$")
+var UserNameBlacklistRegex = regexp.MustCompile("^(account|contact|about|find|search|public|log(in|out)|sign(in|up|out)|register|home|index|default|post(s)?|user(name)?(s)?|i)$")
 
 func (p *Profile) String() string {
 	return fmt.Sprintf("Profile(%s)", p.Summary)
@@ -54,7 +56,7 @@ func ValidateProfileUserName(v *revel.Validation, username string) *revel.Valida
 		return result
 	}
 
-	// Inverse regexp matcher
+	// Inverse regexp matcher (username cannot be the same as any blacklisted usernames)
 	if blacklistMatcher := UserNameBlacklistRegex.FindString(username); blacklistMatcher != "" {
 		result = v.Error("Invalid User name. Reserved keywords not allowed")
 	}
@@ -74,6 +76,14 @@ func ValidateProfileName(v *revel.Validation, name string) *revel.ValidationResu
 	}
 
 	result = v.MaxSize(name, 100).Message("Name must be at most 100 characters")
+	if !result.Ok {
+		return result
+	}
+
+	// Inverse regexp matcher (name cannot contain reserved # or @ symbols)
+	if invalidNameMatcher := NameRegex.FindString(name); invalidNameMatcher != "" {
+		result = v.Error("Invalid Name. Reserved characters ('#' and '@') are not allowed")
+	}
 
 	return result
 }

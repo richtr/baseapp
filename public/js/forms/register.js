@@ -11,13 +11,18 @@ $(document).ready(function() {
 	  return /^[a-zA-Z0-9]+$/.test(value);
 	}, "Username is invalid");
 
+	jQuery.validator.addMethod("isName", function(value, element) {
+	  return /^[^#@]+$/.test(value);
+	}, "Name is invalid");
+
 	// Perform validation
 	$('#register-user').validate({
 		rules: {
 			"name": {
 				required: true,
 				minlength: 6,
-				maxlength: 100
+				maxlength: 100,
+				isName: true
 			},
 			"user.Email": {
 				required: true,
@@ -59,7 +64,8 @@ $(document).ready(function() {
 			"name": {
 				required: "Name required",
 				minlength: "Name must be at least 6 characters",
-				maxlength: "Name must be at most 100 characters"
+				maxlength: "Name must be at most 100 characters",
+				isName: "Invalid Name. Reserved characters ('#' and '@') are not allowed"
 			},
 			"username": {
 				required: "User name required",
