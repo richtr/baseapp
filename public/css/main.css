@@ -59,3 +59,18 @@ body {
 	width:100%;
 	height: 40px;
 }
+
+@media (max-width: 580px) {
+	.baseapp-actions {
+		display:block;
+		clear: both;
+	}
+	.baseapp-actions ul li {
+		padding-top: 10px;
+	}
+}
+@media (max-width: 430px) {
+	.baseapp-action-right {
+		float: left !important;
+	}
+}
