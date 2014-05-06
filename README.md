@@ -191,6 +191,6 @@ If you would like to contribute to this project please consider [forking this re
 
 ### License ###
 
-MIT. Copyright (c) Rich Tibbett.
+MIT. Copyright (c) [Rich Tibbett](https://twitter.com/richtibbett).
 
 See the [LICENSE](https://github.com/richtr/baseapp/blob/master/LICENSE) file.
