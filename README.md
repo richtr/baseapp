@@ -6,7 +6,7 @@ BaseApp
 BaseApp is a bootstrap Revel web application that provides a baseline web application starter kit with the following features:
 
 * Basic pages (Home, About Us, Contact Us, etc)
-* Account registration (including safe storage of passwords with [bcrypt](https://en.wikipedia.org/wiki/Bcrypt))
+* Account registration (including password strength meter and safe storage of passwords with [bcrypt](https://en.wikipedia.org/wiki/Bcrypt))
 * Account confirmation via email (via configurable e-mail settings)
 * Account recovery via email (via configurable e-mail settings)
 * Account log in (by username or email address)
