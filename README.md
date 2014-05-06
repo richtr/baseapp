@@ -70,6 +70,10 @@ Post Display:
 
 <img src="https://github.com/richtr/baseapp/raw/master/screenshots/10.Post.png" style="max-width: 100%"/>
 
+User Search:
+
+<img src="https://github.com/richtr/baseapp/raw/master/screenshots/13.Search.png" style="max-width: 100%"/>
+
 Reset Password Form (if email settings are provided in `conf/app.conf`):
 
 <img src="https://github.com/richtr/baseapp/raw/master/screenshots/07.ResetPwd.png" style="max-width: 100%"/>
