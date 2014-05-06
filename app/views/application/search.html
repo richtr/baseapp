@@ -9,7 +9,9 @@
 <form action="{{url "Application.Search"}}" method="GET" class="form" role="form" style="margin-bottom:60px">
 	<div class="form-group">
 		<label for="query" class="control-label">Search by username or full name</label>
-
+		{{if eq .RunMode "test"}}
+		<p>(Try 'otheruser' or 'Other User' in test mode)</p>
+		{{end}}
   </div>
 
 	<br/>
