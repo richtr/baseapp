@@ -81,7 +81,7 @@ func ValidateProfileName(v *revel.Validation, name string) *revel.ValidationResu
 	}
 
 	// Inverse regexp matcher (name cannot contain reserved # or @ symbols)
-	if invalidNameMatcher := NameRegex.FindString(name); invalidNameMatcher != "" {
+	if invalidNameMatcher := NameRegex.FindString(name); invalidNameMatcher == "" {
 		result = v.Error("Invalid Name. Reserved characters ('#' and '@') are not allowed")
 	}
 
