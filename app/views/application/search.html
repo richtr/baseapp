@@ -1,0 +1,59 @@
+{{set . "title" "Find People: Results"}}
+
+{{set . "action" "search"}}
+
+{{template "header.html" .}}
+
+<h1>Find People</h1>
+
+<form action="{{url "Application.Search"}}" method="GET" class="form" role="form" style="margin-bottom:60px">
+	<div class="form-group">
+		<label for="query" class="control-label">Search by username or full name</label>
+
+  </div>
+
+	<br/>
+
+	<div class="form-group">
+		<div class="col-sm-10">
+			<input type="input" class="form-control" id="query" name="query" placeholder="Search by username or full name" value="{{.query}}" autofocus>
+		</div>
+		<div class="col-sm-2">
+			<input type="submit" class="btn btn-primary" value="Find People">
+		</div>
+	</div>
+</form>
+
+<hr/>
+
+<div>
+
+{{ if .query }}
+
+	{{ if .matchedProfiles }}
+
+		{{range .matchedProfiles}}
+
+			{{template "profile/summary.html" .}}
+
+		{{end}}
+
+		{{if eq (len .matchedProfiles) 50}}
+
+		<p>
+		  <a id="nextPage" href="{{url "Application.Search" .query .nextPage}}">Next Page &raquo;</a>
+		</p>
+
+		{{end}}
+
+	{{ else }}
+
+	<p><em>No people found</em></p>
+
+	{{ end }}
+
+{{ end }}
+
+</div>
+
+{{template "footer.html" .}}

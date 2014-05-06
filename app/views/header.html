@@ -50,6 +50,7 @@
 				</div>
 				<div class="collapse navbar-collapse" id="header-user-content">
 					<ul class="nav navbar-nav navbar-right">
+						<li{{if eq .action "search"}} class="active"{{end}}><a href="{{url "Application.Search"}}">+ Find People</a></li>
 					{{if .user}}
 						<li class="active" class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding-bottom: 10px;">

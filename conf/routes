@@ -11,6 +11,7 @@ module:jobs
 GET     /                                       Application.Index
 GET     /about                                  Application.About
 GET     /contact                                Application.Contact
+GET     /search                                 Application.Search
 
 GET     /account                                Account.Index
 GET     /account/register                       Account.Register
