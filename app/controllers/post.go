@@ -58,8 +58,7 @@ func (c Post) Show(username string, id int) r.Result {
 	}
 
 	// Convert Content-field Markdown for rendering
-	contentByteArray := markdown.MarkdownCommon(post.Content)
-	contentStr := string(contentByteArray)
+	contentStr := markdown.MarkdownCommon(post.Content)
 	contentStr = models.FormatContentMentions(contentStr);
 	postContentHTML := template.HTML(contentStr)
 

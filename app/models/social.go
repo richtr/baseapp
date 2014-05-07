@@ -28,17 +28,21 @@ type SimpleJSONResponse struct {
 }
 
 
-func FormatContentMentions(content string) string {
+func FormatContentMentions(content []byte) []byte {
 
-	formattedContent := MentionRegex.ReplaceAllStringFunc(content, func(m string) string {
-		parts := MentionRegex.FindStringSubmatch(m)
+	formattedContent := MentionRegex.ReplaceAllFunc(content, func(m []byte) []byte {
+		match := string(m)
+		parts := MentionRegex.FindSubmatch(m)
 
-		if parts[1] == "@" {
+		mentionType := string(parts[1])
+		mentionValue := string(parts[2])
+
+		if mentionType == "@" {
 			// '@' mention
-			return "<a href=\"/" + parts[2] + "\">" + m + "</a>"
+			return []byte("<a href=\"/" + mentionValue + "\">" + match + "</a>")
 		}
 		// '#' hashtag
-		return "<a href=\"/search?hashtag=" + parts[2] + "\">" + m + "</a>"
+		return []byte("<a href=\"/search?hashtag=" + mentionValue + "\">" + match + "</a>")
 	})
 
 	return formattedContent
