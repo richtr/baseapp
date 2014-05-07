@@ -58,7 +58,9 @@ func (c Post) Show(username string, id int) r.Result {
 	}
 
 	// Convert Content-field Markdown for rendering
-	contentStr := markdown.MarkdownCommon(post.Content)
+	contentByteArray := markdown.MarkdownCommon(post.Content)
+	contentStr := string(contentByteArray)
+	contentStr = models.FormatContentMentions(contentStr);
 	postContentHTML := template.HTML(contentStr)
 
 	appName := r.Config.StringDefault("app.name", "BaseApp")
