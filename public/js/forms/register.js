@@ -42,7 +42,7 @@ $(document).ready(function() {
 			"user.Password": {
 				required: true,
 				minlength: 6,
-				maxlength: 15,
+				maxlength: 200,
 				password: '#user.Password'
 			},
 			"username": {

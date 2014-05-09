@@ -69,7 +69,7 @@ func ValidateUserPassword(v *revel.Validation, password string) *revel.Validatio
 		return result
 	}
 
-	result = v.MaxSize(password, 15).Message("Password must be at most 15 characters")
+	result = v.MaxSize(password, 200).Message("Password must be at most 200 characters")
 
 	return result
 }

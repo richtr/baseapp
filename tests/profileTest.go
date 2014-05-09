@@ -240,13 +240,13 @@ func (t *ProfileTest) TestProfileSettings_TooShortPassword() {
 func (t *ProfileTest) TestProfileSettings_TooLongPassword() {
 	demoProfileUpdate := demoProfile
 	user := *demoProfileUpdate.User
-	user.Password = "testuser1testuser1testuser1testuser1"
+	user.Password = "testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1"
 	demoProfileUpdate.User = &user
 
 	t.DoUpdateSettings(demoProfile.UserName, demoProfileUpdate, user.Password)
 
 	t.AssertOk()
-	t.AssertContains("Password must be at most 15 characters")
+	t.AssertContains("Password must be at most 200 characters")
 }
 
 func (t *ProfileTest) TestProfileSettings_PasswordMismatch() {

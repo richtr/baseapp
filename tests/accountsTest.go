@@ -279,12 +279,12 @@ func (t *AccountsTest) TestSignupFail_TooLongPassword() {
 	registerData.Add("user.Email", "testuser@example.com")
 	registerData.Add("username", "testuser1")
 	registerData.Add("name", "Test User 1")
-	registerData.Add("user.Password", "testuser1testuser1testuser1testuser1")
+	registerData.Add("user.Password", "testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1testuser1")
 
 	t.PostForm("/account/register", registerData)
 
 	t.AssertOk()
-	t.AssertContains("Password must be at most 15 characters")
+	t.AssertContains("Password must be at most 200 characters")
 }
 
 func (t *AccountsTest) TestSignupFail_PasswordSameAsEmail() {

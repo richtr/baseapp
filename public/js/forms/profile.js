@@ -61,7 +61,7 @@ $(document).ready(function() {
 			},
 			"profile.User.Password": {
 				minlength: 6,
-				maxlength: 15
+				maxlength: 200
 			}
 		},
 		messages: {
