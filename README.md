@@ -1,23 +1,23 @@
 BaseApp
 =======
 
-#### A bootstrap web application built in [Go](http://golang.org) on top of the [Revel Web Framework](https://revel.github.io) ####
+#### A [Bootstrap](http://getbootstrap.com)-based web application built in [Go](http://golang.org) on top of the [Revel Web Framework](https://revel.github.io) ####
 
-BaseApp is a bootstrap Revel web application that provides a baseline web application starter kit with the following features:
+BaseApp is a web application that provides web application scaffolding with the following features out of the box:
 
 * Basic pages (Home, About Us, Contact Us, etc)
 * Account registration (including password strength meter and safe storage of passwords with [bcrypt](https://en.wikipedia.org/wiki/Bcrypt))
 * Account confirmation via email (via configurable e-mail settings)
 * Account recovery via email (via configurable e-mail settings)
 * Account log in (by username or email address)
-* Public user profiles (with Gravatar integration for profile photos and profile edit functionality)
-* Public user posts (with full Markdown support and edit + delete functionality)
+* Public user profiles (with [Gravatar](http://gravatar.com/) integration for profile photos and profile edit functionality)
+* Public user posts (with full [Markdown](http://daringfireball.net/projects/markdown/) support and edit + delete functionality)
 * Social Features (Profile Follower and Following Counts and Post Likes)
 * People finder search (by username or full name)
 * Auto-provisioned backend data store (SQLite3, MySQL, PostgreSQL)
 * Full live client-side and static server-side form validation
 * Full non-interactive and interactive testing framework (Test-driven development process)
-* Responsive front-end design (looks good on mobile, tablet and desktop screen sizes)
+* Responsive front-end design with [Bootstrap](http://getbootstrap.com) (looks good on mobile, tablet and desktop screen sizes)
 
 ### Contents ###
 
