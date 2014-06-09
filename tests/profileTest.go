@@ -1,11 +1,11 @@
 package tests
 
 import (
-	"github.com/revel/revel"
-	"github.com/richtr/baseapp/app/routes"
-	"github.com/richtr/baseapp/app/models"
-	"net/url"
 	"fmt"
+	"github.com/revel/revel"
+	"github.com/richtr/baseapp/app/models"
+	"github.com/richtr/baseapp/app/routes"
+	"net/url"
 )
 
 type ProfileTest struct {
@@ -23,20 +23,20 @@ func (t *ProfileTest) After() {
 }
 
 var demoUser = models.User{
-	UserId: 1,
-	Email: "demo@demo.com",
+	UserId:   1,
+	Email:    "demo@demo.com",
 	Password: "demouser",
 }
 
 var demoProfile = models.Profile{
-	ProfileId: 1,
-	UserId: demoUser.UserId,
-	UserName: "demouser",
-	Name: "Demo User",
-	Summary: "Just a regular guy",
+	ProfileId:   1,
+	UserId:      demoUser.UserId,
+	UserName:    "demouser",
+	Name:        "Demo User",
+	Summary:     "Just a regular guy",
 	Description: "...",
-	PhotoUrl: "http://www.gravatar.com/avatar/53444f91e698c0c7caa2dbc3bdbf93fc?s=128&d=identicon",
-	User: &demoUser,
+	PhotoUrl:    "http://www.gravatar.com/avatar/53444f91e698c0c7caa2dbc3bdbf93fc?s=128&d=identicon",
+	User:        &demoUser,
 }
 
 func (t *ProfileTest) DoLogin(user models.User) {
@@ -189,7 +189,6 @@ func (t *ProfileTest) TestProfileSettings_TooShortName() {
 	t.AssertOk()
 	t.AssertContains("Name must be at least 6 characters")
 }
-
 
 func (t *ProfileTest) TestProfileSettings_TooLongName() {
 	demoProfileUpdate := demoProfile

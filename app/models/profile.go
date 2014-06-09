@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/coopernurse/gorp"
 	"github.com/revel/revel"
-	"strings"
 	"regexp"
+	"strings"
 )
 
 type Profile struct {
@@ -20,7 +20,7 @@ type Profile struct {
 	AggregateFollowing int
 
 	// Transient
-	User               *User
+	User *User
 }
 
 var NameRegex = regexp.MustCompile("^[^#@]+$")

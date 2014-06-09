@@ -4,9 +4,9 @@ import (
 	r "github.com/revel/revel"
 	"github.com/richtr/baseapp/app/models"
 	"github.com/richtr/baseapp/app/routes"
-	"time"
 	markdown "github.com/russross/blackfriday"
 	"html/template"
+	"time"
 )
 
 type Post struct {
@@ -59,7 +59,7 @@ func (c Post) Show(username string, id int) r.Result {
 
 	// Convert Content-field Markdown for rendering
 	contentStr := markdown.MarkdownCommon(post.Content)
-	contentStr = models.FormatContentMentions(contentStr);
+	contentStr = models.FormatContentMentions(contentStr)
 	postContentHTML := template.HTML(contentStr)
 
 	appName := r.Config.StringDefault("app.name", "BaseApp")
@@ -120,9 +120,9 @@ func (c Post) Edit(username string, id int) r.Result {
 		return c.NotFound("Post does not exist")
 	}
 
-	profile := c.connected();
+	profile := c.connected()
 	if profile == nil || profile.UserName != username {
-		c.Flash.Error("You must log in to access your account");
+		c.Flash.Error("You must log in to access your account")
 		return c.Redirect(routes.Account.Logout())
 	}
 
@@ -137,7 +137,7 @@ func (c Post) Update(username string, id int, post models.Post) r.Result {
 
 	profile := c.connected()
 	if profile == nil || profile.UserName != username {
-		c.Flash.Error("You must log in to access your account");
+		c.Flash.Error("You must log in to access your account")
 		return c.Redirect(routes.Account.Logout())
 	}
 
@@ -152,8 +152,8 @@ func (c Post) Update(username string, id int, post models.Post) r.Result {
 	}
 
 	// Update fields
-	existingPost.Title = post.Title;
-	existingPost.ContentStr = post.ContentStr;
+	existingPost.Title = post.Title
+	existingPost.ContentStr = post.ContentStr
 
 	_, err := c.Txn.Update(existingPost)
 	if err != nil {
@@ -172,7 +172,7 @@ func (c Post) Remove(username string, id int) r.Result {
 
 	profile := c.connected()
 	if profile == nil || profile.UserName != username {
-		c.Flash.Error("You must log in to access your account");
+		c.Flash.Error("You must log in to access your account")
 		return c.Redirect(routes.Account.Logout())
 	}
 
@@ -187,7 +187,7 @@ func (c Post) Delete(username string, id int) r.Result {
 
 	profile := c.connected()
 	if profile == nil || profile.UserName != username {
-		c.Flash.Error("You must log in to access your account");
+		c.Flash.Error("You must log in to access your account")
 		return c.Redirect(routes.Account.Logout())
 	}
 
@@ -203,13 +203,13 @@ func (c Post) Delete(username string, id int) r.Result {
 func (c Post) Like(username string, id int) r.Result {
 	likeResponse := models.SimpleJSONResponse{"fail", ""}
 
-	profile := c.connected();
+	profile := c.connected()
 	if profile == nil {
 		likeResponse.Message = "You must log in to like a post"
 		return c.RenderJson(likeResponse)
 	}
 
-  post := c.loadPostById(id)
+	post := c.loadPostById(id)
 	if post == nil {
 		likeResponse.Message = "Post does not exist"
 		return c.Render(likeResponse)

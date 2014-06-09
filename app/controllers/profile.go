@@ -3,8 +3,8 @@ package controllers
 import (
 	"code.google.com/p/go.crypto/bcrypt"
 	r "github.com/revel/revel"
-	"github.com/richtr/baseapp/app/routes"
 	"github.com/richtr/baseapp/app/models"
+	"github.com/richtr/baseapp/app/routes"
 	"strings"
 )
 
@@ -36,7 +36,7 @@ func (c Profile) getProfileShowParams(username string) (profiles *models.Profile
 	isFollowing := false
 	if user != nil {
 		if user.UserId == profile.User.UserId { // Check if logged in user owns the current profile
-				isOwner = true
+			isOwner = true
 		} else { // Check if logged in user is following the current profile
 			fErr := c.Txn.SelectOne(&models.Follower{}, `select * from Follower where UserId = ? and FollowUserId = ?`, user.UserId, profile.User.UserId)
 			if fErr == nil {
@@ -47,9 +47,7 @@ func (c Profile) getProfileShowParams(username string) (profiles *models.Profile
 
 	return profile, isOwner, isFollowing
 
-
 }
-
 
 func (c Profile) Show(username string) r.Result {
 	profile, isOwner, isFollowing := c.getProfileShowParams(username)
@@ -75,9 +73,9 @@ func (c Profile) Show(username string) r.Result {
 }
 
 func (c Profile) Settings(username string) r.Result {
-	profile := c.connected();
+	profile := c.connected()
 	if profile == nil || profile.UserName != username {
-		c.Flash.Error("You must log in to access your account");
+		c.Flash.Error("You must log in to access your account")
 		return c.Redirect(routes.Account.Logout())
 	}
 
@@ -85,9 +83,9 @@ func (c Profile) Settings(username string) r.Result {
 }
 
 func (c Profile) UpdateSettings(username string, profile *models.Profile, verifyPassword string) r.Result {
-	existingProfile := c.connected();
+	existingProfile := c.connected()
 	if existingProfile == nil || existingProfile.UserName != username {
-		c.Flash.Error("You must log in to access your account");
+		c.Flash.Error("You must log in to access your account")
 		return c.Redirect(routes.Account.Logout())
 	}
 
@@ -118,7 +116,7 @@ func (c Profile) UpdateSettings(username string, profile *models.Profile, verify
 	if c.Validation.HasErrors() {
 		c.Validation.Keep()
 		c.FlashParams()
-		c.Flash.Error("Profile could not be updated");
+		c.Flash.Error("Profile could not be updated")
 		return c.Redirect(routes.Profile.Settings(username))
 	}
 
@@ -128,7 +126,7 @@ func (c Profile) UpdateSettings(username string, profile *models.Profile, verify
 		userExists := c.getProfileByEmailAddress(email)
 
 		if userExists != nil {
-			c.Flash.Error("Email address is already registered to another account");
+			c.Flash.Error("Email address is already registered to another account")
 			return c.Redirect(routes.Profile.Settings(username))
 		}
 
@@ -144,15 +142,15 @@ func (c Profile) UpdateSettings(username string, profile *models.Profile, verify
 			c.Flash.Error("Could not send confirmation email")
 		} else {*/
 
-			// Update email address in database
-			_, err := c.Txn.Exec("update User set Email = ?, Confirmed = ? where UserId = ?",
-			  email, 0, existingProfile.User.UserId)
-			if err != nil {
-			  panic(err)
-			}
+		// Update email address in database
+		_, err := c.Txn.Exec("update User set Email = ?, Confirmed = ? where UserId = ?",
+			email, 0, existingProfile.User.UserId)
+		if err != nil {
+			panic(err)
+		}
 
-			// Update session value
-			c.Session["userEmail"] = email
+		// Update session value
+		c.Session["userEmail"] = email
 
 		//}
 
@@ -165,14 +163,13 @@ func (c Profile) UpdateSettings(username string, profile *models.Profile, verify
 		userExists := c.getProfileByUserName(profile.UserName)
 
 		if userExists != nil {
-			c.Flash.Error("User name is already registered to another account");
+			c.Flash.Error("User name is already registered to another account")
 			return c.Redirect(routes.Profile.Settings(username))
 		}
 
 		// Change username
 		existingProfile.UserName = profile.UserName
 	}
-
 
 	// Update password?
 	if profile.User.Password != "" || verifyPassword != "" {
@@ -186,18 +183,18 @@ func (c Profile) UpdateSettings(username string, profile *models.Profile, verify
 
 	_, err := c.Txn.Update(existingProfile)
 	if err != nil {
-		c.Flash.Error("Profile could not be updated");
-		return c.Redirect(routes.Profile.Settings(username));
+		c.Flash.Error("Profile could not be updated")
+		return c.Redirect(routes.Profile.Settings(username))
 	}
 
-	c.Flash.Success("Profile has been updated");
+	c.Flash.Success("Profile has been updated")
 	return c.Redirect(routes.Profile.Show(existingProfile.UserName))
 }
 
 func (c Profile) Password(username string) r.Result {
-	profile := c.connected();
+	profile := c.connected()
 	if profile == nil || profile.UserName != username {
-		c.Flash.Error("You must log in to access your account");
+		c.Flash.Error("You must log in to access your account")
 		return c.Redirect(routes.Account.Logout())
 	}
 
@@ -215,11 +212,10 @@ func (c Profile) CommitPassword(user *models.User, password string) error {
 	return nil
 }
 
-
 func (c Profile) UpdatePassword(username string, password, verifyPassword string) r.Result {
-	profile := c.connected();
+	profile := c.connected()
 	if profile == nil || profile.UserName != username {
-		c.Flash.Error("You must log in to access your account");
+		c.Flash.Error("You must log in to access your account")
 		return c.Redirect(routes.Account.Logout())
 	}
 
@@ -252,7 +248,7 @@ func (c Profile) UpdatePassword(username string, password, verifyPassword string
 func (c Profile) FollowUser(username string) r.Result {
 	followResponse := models.SimpleJSONResponse{"fail", ""}
 
-	profile := c.connected();
+	profile := c.connected()
 	if profile == nil {
 		followResponse.Message = "You must log in to follow another user"
 		return c.RenderJson(followResponse)
@@ -278,7 +274,7 @@ func (c Profile) FollowUser(username string) r.Result {
 		// Add new follower
 
 		followerObj = models.Follower{
-			UserId: profile.User.UserId,
+			UserId:       profile.User.UserId,
 			FollowUserId: followProfile.User.UserId,
 		}
 
@@ -352,7 +348,7 @@ func (c Profile) Followers(username string, page int) r.Result {
 		page = 1
 	}
 	nextPage := page + 1
-	size := 50; // results per page
+	size := 50 // results per page
 
 	// Retrieve all profiles of followers
 	var followerProfiles []*models.Profile
@@ -382,7 +378,7 @@ func (c Profile) Following(username string, page int) r.Result {
 		page = 1
 	}
 	nextPage := page + 1
-	size := 50; // results per page
+	size := 50 // results per page
 
 	// Retrieve all profiles of followers
 	var followingProfiles []*models.Profile

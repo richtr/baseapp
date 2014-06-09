@@ -2,15 +2,15 @@ package controllers
 
 import (
 	"code.google.com/p/go.crypto/bcrypt"
+	"crypto/rand"
+	"fmt"
+	gr "github.com/ftrvxmtrx/gravatar"
 	r "github.com/revel/revel"
 	m "github.com/revel/revel/mail"
-	gr "github.com/ftrvxmtrx/gravatar"
 	"github.com/richtr/baseapp/app/models"
 	"github.com/richtr/baseapp/app/routes"
-	"fmt"
-	"crypto/rand"
-	"time"
 	"strings"
+	"time"
 )
 
 type Account struct {
@@ -35,7 +35,7 @@ func (c Account) AddAppName() r.Result {
 // Add .isDesktopMode to RenderArgs
 func (c Account) AddRenderMode() r.Result {
 	if _, ok := c.Session["desktopmode"]; ok {
-			c.RenderArgs["isDesktopMode"] = true
+		c.RenderArgs["isDesktopMode"] = true
 	}
 	return nil
 }
@@ -84,9 +84,9 @@ func (c Account) getProfileByUserId(userId int) *models.Profile {
 }
 
 func (c Account) Index() r.Result {
-	profile := c.connected();
+	profile := c.connected()
 	if profile == nil {
-		c.Flash.Error("You must log in to access your account");
+		c.Flash.Error("You must log in to access your account")
 		return c.Redirect(routes.Account.Logout())
 	}
 
@@ -266,20 +266,19 @@ func (c Account) RetrieveAccount(email string) r.Result {
 	return c.Redirect(routes.Account.Login())
 }
 
-
 func (c Account) ConfirmEmail(token string) r.Result {
 
 	existingToken := c.getVerifyHashRecord("confirm", token)
 
 	if existingToken == nil {
-		c.Flash.Error("Token invalid or used");
+		c.Flash.Error("Token invalid or used")
 		return c.Redirect(routes.Application.Index())
 	}
 
 	existingProfile := c.getProfileByEmailAddress(existingToken.Email)
 
 	if existingProfile == nil {
-		c.Flash.Error("Token invalid or used");
+		c.Flash.Error("Token invalid or used")
 		return c.Redirect(routes.Application.Index())
 	}
 
@@ -302,14 +301,14 @@ func (c Account) PasswordReset(token string) r.Result {
 	existingToken := c.getVerifyHashRecord("reset", token)
 
 	if existingToken == nil {
-		c.Flash.Error("Token invalid or used");
+		c.Flash.Error("Token invalid or used")
 		return c.Redirect(routes.Application.Index())
 	}
 
 	existingProfile := c.getProfileByEmailAddress(existingToken.Email)
 
 	if existingProfile == nil {
-		c.Flash.Error("Token invalid or used");
+		c.Flash.Error("Token invalid or used")
 		return c.Redirect(routes.Application.Index())
 	}
 
@@ -336,8 +335,8 @@ func (c Account) Logout() r.Result {
 
 func (c Account) CheckUserName(username, currentUsername string) r.Result {
 
-	if(username == currentUsername) {
-		return c.RenderText("true");
+	if username == currentUsername {
+		return c.RenderText("true")
 	}
 
 	// Validate Profile components
@@ -345,33 +344,33 @@ func (c Account) CheckUserName(username, currentUsername string) r.Result {
 
 	if c.Validation.HasErrors() {
 		c.Validation.Clear()
-		return c.RenderText("false");
+		return c.RenderText("false")
 	}
 
 	userExists := c.getProfileByUserName(username)
 
 	if userExists != nil {
-		return c.RenderText("false");
+		return c.RenderText("false")
 	}
 
 	// User name is available
-	return c.RenderText("true");
+	return c.RenderText("true")
 }
 
 func (c Account) CheckEmail(email, currentEmail string) r.Result {
 
-	if(email == currentEmail) {
-		return c.RenderText("true");
+	if email == currentEmail {
+		return c.RenderText("true")
 	}
 
 	userExists := c.getProfileByEmailAddress(email)
 
 	if userExists != nil {
-		return c.RenderText("false");
+		return c.RenderText("false")
 	}
 
 	// Email address is new (and therefore valid)
-	return c.RenderText("true");
+	return c.RenderText("true")
 }
 
 // VERIFICATION HASH STUFF
@@ -380,13 +379,13 @@ func (e Account) generateVerifyHash(n int) []byte {
 	bytes := make([]byte, n)
 	rand.Read(bytes)
 	for i, b := range bytes {
-		bytes[i] = alphanum[b % byte(len(alphanum))]
+		bytes[i] = alphanum[b%byte(len(alphanum))]
 	}
 	return bytes
 }
 
 func (e Account) storeVerifyHashRecord(email string, tokenType string, hash []byte) error {
-	err := e.Txn.Insert( &models.Token{0, email, tokenType, string(hash)} )
+	err := e.Txn.Insert(&models.Token{0, email, tokenType, string(hash)})
 	return err
 }
 
@@ -422,12 +421,12 @@ func hasEmailCapability() bool {
 
 func (e Account) sendAccountRecoverEmail(user *models.User) error {
 	host := r.Config.StringDefault("http.addr", "localhost")
-	return e.sendEmail(user, "reset", "Reset your password at " + host)
+	return e.sendEmail(user, "reset", "Reset your password at "+host)
 }
 
 func (e Account) sendAccountConfirmEmail(user *models.User) error {
 	host := r.Config.StringDefault("http.addr", "localhost")
-	return e.sendEmail(user, "confirm", "Welcome to " + host)
+	return e.sendEmail(user, "confirm", "Welcome to "+host)
 }
 
 func (e Account) sendEmail(user *models.User, verifyType, subject string) error {
@@ -439,7 +438,7 @@ func (e Account) sendEmail(user *models.User, verifyType, subject string) error 
 		mailerPassword  = r.Config.StringDefault("mailer.password", "<password>")
 		mailerFromAddr  = r.Config.StringDefault("mailer.fromaddress", "no-reply@example.org")
 		mailerReplyAddr = r.Config.StringDefault("mailer.replyaddress", "support@example.org")
-		callbackHost = r.Config.StringDefault("http.host", "http://localhost:9000")
+		callbackHost    = r.Config.StringDefault("http.host", "http://localhost:9000")
 	)
 
 	// If mail has not been configured, don't try to send a confirmation email
@@ -451,9 +450,9 @@ func (e Account) sendEmail(user *models.User, verifyType, subject string) error 
 	mailer.Sender = &m.Sender{From: mailerFromAddr, ReplyTo: mailerReplyAddr}
 
 	// Generate a new token and store against the user's id
-	verifyEmailToken := e.generateVerifyHash(16);
+	verifyEmailToken := e.generateVerifyHash(16)
 
-	e.storeVerifyHashRecord(user.Email, verifyType, verifyEmailToken);
+	e.storeVerifyHashRecord(user.Email, verifyType, verifyEmailToken)
 
 	// arguments used for template rendering
 	var args = make(map[string]interface{})
@@ -464,7 +463,7 @@ func (e Account) sendEmail(user *models.User, verifyType, subject string) error 
 
 	message := &m.Message{To: []string{user.Email}, Subject: subject}
 
-	rErr := message.RenderTemplate("email/" + verifyType, args)
+	rErr := message.RenderTemplate("email/"+verifyType, args)
 	if rErr != nil {
 		return rErr
 	}

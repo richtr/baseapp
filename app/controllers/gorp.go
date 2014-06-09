@@ -1,13 +1,13 @@
 package controllers
 
 import (
+	"code.google.com/p/go.crypto/bcrypt"
 	"database/sql"
 	"github.com/coopernurse/gorp"
 	r "github.com/revel/revel"
 	"github.com/revel/revel/modules/db/app"
-  "code.google.com/p/go.crypto/bcrypt"
 	"github.com/richtr/baseapp/app/models"
-  "time"
+	"time"
 )
 
 var (
@@ -38,20 +38,20 @@ func InitDB() {
 	t.ColMap("Created").Transient = true
 	t.ColMap("Profile").Transient = true
 	setColumnSizes(t, map[string]int{
-		"Email":    200,
+		"Email": 200,
 	})
 
 	t = Dbm.AddTable(models.Token{}).SetKeys(true, "TokenId")
 	setColumnSizes(t, map[string]int{
-		"Email":       200,
-		"Type":        20,
-		"Hash":        16,
+		"Email": 200,
+		"Type":  20,
+		"Hash":  16,
 	})
 
 	t = Dbm.AddTable(models.Profile{}).SetKeys(true, "ProfileId")
 	t.ColMap("User").Transient = true
 	setColumnSizes(t, map[string]int{
-		"UserName":     64,
+		"UserName":    64,
 		"Name":        100,
 		"Summary":     140,
 		"Description": 400,
@@ -62,8 +62,8 @@ func InitDB() {
 	t.ColMap("DateObj").Transient = true
 	t.ColMap("ContentStr").Transient = true
 	setColumnSizes(t, map[string]int{
-		"Title":       400,
-		"Content":     16777212, // mediumblob storage capacity
+		"Title":   400,
+		"Content": 16777212, // mediumblob storage capacity
 	})
 
 	// Social components
@@ -82,37 +82,37 @@ func InitDB() {
 		bcryptPassword, _ := bcrypt.GenerateFromPassword(
 			[]byte("demouser"), bcrypt.DefaultCost)
 		demoUser := &models.User{
-			Email: "demo@demo.com",
+			Email:          "demo@demo.com",
 			HashedPassword: bcryptPassword,
-			Confirmed: false,
+			Confirmed:      false,
 		}
 		otherUser := &models.User{
-			Email: "demo1@demo1.com",
+			Email:          "demo1@demo1.com",
 			HashedPassword: bcryptPassword,
-			Confirmed: false,
+			Confirmed:      false,
 		}
 		if err := Dbm.Insert(demoUser, otherUser); err != nil {
 			panic(err)
 		}
 
 		demoProfile := &models.Profile{
-			UserId: demoUser.UserId,
-			UserName: "demouser",
-			Name: "Demo User",
-			Summary: "Just a regular guy",
-			Description: "...",
-			PhotoUrl: "http://www.gravatar.com/avatar/53444f91e698c0c7caa2dbc3bdbf93fc?s=128&d=identicon",
-			User: demoUser,
+			UserId:             demoUser.UserId,
+			UserName:           "demouser",
+			Name:               "Demo User",
+			Summary:            "Just a regular guy",
+			Description:        "...",
+			PhotoUrl:           "http://www.gravatar.com/avatar/53444f91e698c0c7caa2dbc3bdbf93fc?s=128&d=identicon",
+			User:               demoUser,
 			AggregateFollowing: 1,
 		}
 		otherProfile := &models.Profile{
-			UserId: otherUser.UserId,
-			UserName: "otheruser",
-			Name: "Other User",
-			Summary: "Just another regular guy",
-			Description: "...",
-			PhotoUrl: "http://www.gravatar.com/avatar/740fcda1a2304bd073b46f405b3622ce?s=128&d=identicon",
-			User: otherUser,
+			UserId:             otherUser.UserId,
+			UserName:           "otheruser",
+			Name:               "Other User",
+			Summary:            "Just another regular guy",
+			Description:        "...",
+			PhotoUrl:           "http://www.gravatar.com/avatar/740fcda1a2304bd073b46f405b3622ce?s=128&d=identicon",
+			User:               otherUser,
 			AggregateFollowers: 1,
 		}
 		if err := Dbm.Insert(demoProfile, otherProfile); err != nil {
@@ -120,18 +120,18 @@ func InitDB() {
 		}
 
 		demoPost := &models.Post{
-			ProfileId: demoProfile.ProfileId,
-			Title: "Hello World",
+			ProfileId:  demoProfile.ProfileId,
+			Title:      "Hello World",
 			ContentStr: "Full markdown support with things like [links](http://example.org)!",
-			Status: "public",
-			DateObj: time.Now(),
+			Status:     "public",
+			DateObj:    time.Now(),
 		}
 		otherPost := &models.Post{
-			ProfileId: otherProfile.ProfileId,
-			Title: "Hello World 1",
-			ContentStr: "This post does not belong to demo@demo.com account",
-			Status: "public",
-			DateObj: time.Now(),
+			ProfileId:      otherProfile.ProfileId,
+			Title:          "Hello World 1",
+			ContentStr:     "This post does not belong to demo@demo.com account",
+			Status:         "public",
+			DateObj:        time.Now(),
 			AggregateLikes: 8,
 		}
 		if err := Dbm.Insert(demoPost, otherPost); err != nil {
@@ -139,14 +139,14 @@ func InitDB() {
 		}
 
 		demoFollow := &models.Follower{
-			UserId: demoUser.UserId,
+			UserId:       demoUser.UserId,
 			FollowUserId: otherUser.UserId,
 		}
 		if err := Dbm.Insert(demoFollow); err != nil {
 			panic(err)
 		}
 
-  }
+	}
 
 }
 

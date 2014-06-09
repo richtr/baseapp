@@ -5,9 +5,9 @@ import (
 )
 
 type Token struct {
-	TokenId                int
-	Email                  string
-	Type, Hash             string
+	TokenId    int
+	Email      string
+	Type, Hash string
 }
 
 func (t *Token) String() string {

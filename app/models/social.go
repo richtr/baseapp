@@ -9,24 +9,23 @@ var MentionRegex = regexp.MustCompile(`([\#\@])([A-Za-z0-9]+)`)
 // Datastore objects
 
 type Like struct {
-	LikeId          int
-	PostId	        int
-	UserId          int
+	LikeId int
+	PostId int
+	UserId int
 }
 
 type Follower struct {
-	FollowerId      int
-	UserId	        int
-	FollowUserId    int
+	FollowerId   int
+	UserId       int
+	FollowUserId int
 }
 
 // JSON response objects
 
 type SimpleJSONResponse struct {
-  Status      string
-  Message     string
+	Status  string
+	Message string
 }
-
 
 func FormatContentMentions(content []byte) []byte {
 

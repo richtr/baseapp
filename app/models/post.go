@@ -1,24 +1,24 @@
 package models
 
 import (
+	"fmt"
 	"github.com/coopernurse/gorp"
 	"github.com/revel/revel"
 	"time"
-	"fmt"
 )
 
 type Post struct {
-	PostId          int
-	ProfileId       int
-	Title           string
-	Content         []byte // mediumblob
-	Status          string
-	Date            string
-	AggregateLikes  int // to keep things quick in our app
+	PostId         int
+	ProfileId      int
+	Title          string
+	Content        []byte // mediumblob
+	Status         string
+	Date           string
+	AggregateLikes int // to keep things quick in our app
 
 	// Transient
-	ContentStr      string
-	DateObj         time.Time
+	ContentStr string
+	DateObj    time.Time
 }
 
 func (post *Post) Validate(v *revel.Validation) {
@@ -47,12 +47,12 @@ func ValidatePostTitle(v *revel.Validation, title string) *revel.ValidationResul
 
 func (post *Post) PreInsert(_ gorp.SqlExecutor) error {
 	post.Date = post.DateObj.Format(SQL_DATE_FORMAT)
-	post.Content = []byte(post.ContentStr);
+	post.Content = []byte(post.ContentStr)
 	return nil
 }
 
 func (post *Post) PreUpdate(_ gorp.SqlExecutor) error {
-	post.Content = []byte(post.ContentStr);
+	post.Content = []byte(post.ContentStr)
 	return nil
 }
 
@@ -65,7 +65,7 @@ func (post *Post) PostGet(_ gorp.SqlExecutor) error {
 		return fmt.Errorf("Error parsing post created date '%s':", post.DateObj, err)
 	}
 
-	post.ContentStr = string(post.Content);
+	post.ContentStr = string(post.Content)
 
 	return nil
 }

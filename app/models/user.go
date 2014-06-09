@@ -14,16 +14,16 @@ const (
 )
 
 type User struct {
-	UserId             int
-	Email              string
-	HashedPassword     []byte
-	CreatedStr         string
-	Confirmed          bool
+	UserId         int
+	Email          string
+	HashedPassword []byte
+	CreatedStr     string
+	Confirmed      bool
 
 	// Transient
-	Password           string
-	Created            time.Time
-	Profile            *Profile
+	Password string
+	Created  time.Time
+	Profile  *Profile
 }
 
 func (u *User) String() string {

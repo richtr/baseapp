@@ -33,12 +33,12 @@ func (c Application) Search(query string, page int) r.Result {
 		page = 1
 	}
 	nextPage := page + 1
-	size := 50; // results per page
+	size := 50 // results per page
 
-	if(query != "") {
+	if query != "" {
 
 		// Format query value
-		sql_query_value, _ := url.QueryUnescape(query);
+		sql_query_value, _ := url.QueryUnescape(query)
 		sql_query_value = strings.Trim(sql_query_value, " @#")
 		sql_query_value = strings.ToLower(sql_query_value)
 
@@ -70,7 +70,7 @@ func (c Application) SwitchToDesktop() r.Result {
 	// Add desktop mode cookie
 	c.Session["desktopmode"] = "1"
 
-	referer, err := url.Parse( c.Request.Request.Header.Get("Referer") )
+	referer, err := url.Parse(c.Request.Request.Header.Get("Referer"))
 	if err != nil || referer.String() == "" {
 		return c.Redirect(routes.Application.Index())
 	}
@@ -82,7 +82,7 @@ func (c Application) SwitchToMobile() r.Result {
 	// Remove desktop mode cookie
 	delete(c.Session, "desktopmode")
 
-	referer, err := url.Parse( c.Request.Request.Header.Get("Referer") )
+	referer, err := url.Parse(c.Request.Request.Header.Get("Referer"))
 	if err != nil || referer.String() == "" {
 		return c.Redirect(routes.Application.Index())
 	}
