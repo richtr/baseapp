@@ -5,6 +5,7 @@ import "github.com/revel/revel"
 func init() {
 	// Filters is the default set of global filters.
 	revel.Filters = []revel.Filter{
+		SecureOriginProdFilter,        // Enforce access only via TLS/SSL in production mode
 		revel.PanicFilter,             // Recover from panics and display an error page instead.
 		revel.RouterFilter,            // Use the routing table to select the right Action
 		revel.FilterConfiguringFilter, // A hook for adding or removing per-Action filters.
@@ -18,6 +19,20 @@ func init() {
 		revel.CompressFilter,          // Compress the result.
 		revel.ActionInvoker,           // Invoke the action.
 	}
+}
+
+var SecureOriginProdFilter = func(c *revel.Controller, fc []revel.Filter) {
+	// Reject the request if is not served on a non-HTTPS origin.
+	//
+	// This is *important* because BaseApp deals with usernames and passwords
+	// that could be man-in-the-middled without proper transport-level security
+	if revel.RunMode == "prod" && c.Request.TLS == nil {
+		c.Response.Out.WriteHeader(500)
+		c.Response.Out.Write([]byte("BaseApp must be deployed to production on a secure HTTP origin!"))
+		return
+	}
+
+	fc[0](c, fc[1:]) // Execute the next filter stage.
 }
 
 var HeaderFilter = func(c *revel.Controller, fc []revel.Filter) {
