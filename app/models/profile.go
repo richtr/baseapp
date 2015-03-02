@@ -70,7 +70,7 @@ func ValidateProfileName(v *revel.Validation, name string) *revel.ValidationResu
 		return result
 	}
 
-	result = v.MinSize(name, 6).Message("Name must be at least 6 characters")
+	result = v.MinSize(name, 2).Message("Name must be at least 2 characters")
 	if !result.Ok {
 		return result
 	}

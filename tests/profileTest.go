@@ -182,12 +182,12 @@ func (t *ProfileTest) TestProfileSettings_EmptyName() {
 
 func (t *ProfileTest) TestProfileSettings_TooShortName() {
 	demoProfileUpdate := demoProfile
-	demoProfileUpdate.Name = "User1"
+	demoProfileUpdate.Name = "U"
 
 	t.DoUpdateSettings(demoProfile.UserName, demoProfileUpdate, demoUser.Password)
 
 	t.AssertOk()
-	t.AssertContains("Name must be at least 6 characters")
+	t.AssertContains("Name must be at least 2 characters")
 }
 
 func (t *ProfileTest) TestProfileSettings_TooLongName() {

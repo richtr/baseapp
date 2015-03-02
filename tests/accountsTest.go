@@ -225,13 +225,13 @@ func (t *AccountsTest) TestSignupFail_TooShortName() {
 	registerData := url.Values{}
 	registerData.Add("user.Email", "testuser@example.com")
 	registerData.Add("username", "testuser1")
-	registerData.Add("name", "User1")
+	registerData.Add("name", "1")
 	registerData.Add("user.Password", "testuser1")
 
 	t.PostForm("/account/register", registerData)
 
 	t.AssertOk()
-	t.AssertContains("Name must be at least 6 characters")
+	t.AssertContains("Name must be at least 2 characters")
 }
 
 func (t *AccountsTest) TestSignupFail_TooLongName() {
