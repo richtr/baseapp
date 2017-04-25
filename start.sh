@@ -15,6 +15,9 @@ if [ ! -f /baseapp-configured ]; then
 	# Ensure app secret is set
 	sed -i "s/<app_secret_please_change_me>/`pwgen -c -n -1 65`/g" $BASEAPP_CONF_FILE
 
+	# Expose on all available network interfaces exposed to Docker container
+	sed -i "s/http.addr\s*=\s*localhost/http.addr=/g" $BASEAPP_CONF_FILE
+
 	if [ $BASEAPP_CONF_FILE == $BASEAPP_PATH/conf/app.conf.default ]; then
 		mv $BASEAPP_CONF_FILE $BASEAPP_PATH/conf/app.conf
 	fi
@@ -25,8 +28,11 @@ fi
 
 # Install Revel
 echo "Installing Revel..."
-cd $GOPATH/src && go get github.com/revel/revel && go get github.com/revel/cmd/revel
+go get -v github.com/revel/revel github.com/revel/cmd/revel
 
 # Install and start Baseapp (in test mode)
 echo "Installing and running BaseApp..."
-cd $BASEAPP_PATH && go get ./... && cd $GOPATH/src && revel run $BASEAPP_DIR test
+cd $BASEAPP_PATH && \
+   go get -v ./... && \
+   cd $GOPATH/src && \
+   revel run $BASEAPP_DIR test
