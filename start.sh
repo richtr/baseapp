@@ -24,7 +24,9 @@ if [ ! -f /baseapp-configured ]; then
 fi
 
 # Install Revel
+echo "Installing Revel..."
 cd $GOPATH/src && go get github.com/revel/revel && go get github.com/revel/cmd/revel
 
 # Install and start Baseapp (in test mode)
+echo "Installing and running BaseApp..."
 cd $BASEAPP_PATH && go get ./... && cd $GOPATH/src && revel run $BASEAPP_DIR test
