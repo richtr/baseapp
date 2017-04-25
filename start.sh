@@ -1,29 +1,33 @@
 #!/bin/bash
 
-# Configure BaseApp
-if [ ! -f /baseapp-configured ]; then
+# Configure BaseApp execution paths
+BASEAPP_DIR=github.com/richtr/baseapp
+BASEAPP_PATH=$GOPATH/src/$BASEAPP_DIR
 
-	BASEAPP_DIR=github.com/richtr/baseapp
-	BASEAPP_PATH=$GOPATH/src/$BASEAPP_DIR
-	BASEAPP_CONF_FILE=$BASEAPP_PATH/conf/app.conf
+# Configure BaseApp configuration path
+BASEAPP_CONF_FILE=$BASEAPP_PATH/conf/app.conf
 
-	# Grab the best app.conf file
-	if [ ! -f $BASEAPP_PATH/conf/app.conf ]; then
-		BASEAPP_CONF_FILE=$BASEAPP_PATH/conf/app.conf.default
-	fi
+# Grab the best app.conf file
+if [ ! -f $BASEAPP_CONF_FILE ]; then
+	cp $BASEAPP_CONF_FILE.default $BASEAPP_CONF_FILE
+fi
 
-	# Ensure app secret is set
-	sed -i "s/<app_secret_please_change_me>/`pwgen -c -n -1 65`/g" $BASEAPP_CONF_FILE
+# Generate app secret (better than pwgen as this works cross-platform)
+APP_SECRET=`env LC_CTYPE=C tr -dc "a-zA-Z0-9-_\$\?" < /dev/urandom | head -c 65`
 
-	# Expose on all available network interfaces exposed to Docker container
-	sed -i "s/http.addr\s*=\s*localhost/http.addr=/g" $BASEAPP_CONF_FILE
+# Ensure app secret is set
+sed -i .original \
+    -e "s/app\.secret *= *<app_secret_please_change_me>/app.secret = ${APP_SECRET}/g" \
+    $BASEAPP_CONF_FILE
 
-	if [ $BASEAPP_CONF_FILE == $BASEAPP_PATH/conf/app.conf.default ]; then
-		mv $BASEAPP_CONF_FILE $BASEAPP_PATH/conf/app.conf
-	fi
+# Expose on all available network interfaces exposed to Docker container
+sed -i .original \
+    -e "s/http\.addr *= *localhost/http.addr =/g" \
+    $BASEAPP_CONF_FILE
 
-	touch /baseapp-configured
-
+# Remove sed back-up files
+if [ -f $BASEAPP_CONF_FILE.original ]; then
+	rm -f $BASEAPP_CONF_FILE.original
 fi
 
 # Install Revel

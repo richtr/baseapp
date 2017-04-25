@@ -113,6 +113,8 @@ Once you have setup an `app.conf` file you can start BaseApp [_in test mode_](#b
 
 Point your browser to your BaseApp installation at `http://localhost:9000` (or the path you specified in your `app.conf` file) and away you go.
 
+_INFO: You can also run `./start.sh` to run the above steps automatically._
+
 ### BaseApp Run Modes ###
 
 BaseApp can be run in three different modes that are each useful for different stages of application development:
