@@ -1,13 +1,13 @@
 package tests
 
 import (
-	"github.com/revel/revel"
+	"github.com/revel/revel/testing"
 	"github.com/richtr/baseapp/app/routes"
 	"net/url"
 )
 
 type AccountsTest struct {
-	revel.TestSuite
+	testing.TestSuite
 }
 
 func (t *AccountsTest) Before() {

@@ -1,8 +1,8 @@
 {{append . "moreScripts" "/public/js/social/follow.js"}}
 
-{{template "header.html" .}}
+{{set . "action" "profile/following"}}
 
-{{set . "action" "following"}}
+{{template "header.html" .}}
 
 {{template "profile/header.html" .}}
 

@@ -1,11 +1,11 @@
 package tests
 
 import (
-	"github.com/revel/revel"
+	"github.com/revel/revel/testing"
 )
 
 type ApplicationTest struct {
-	revel.TestSuite
+	testing.TestSuite
 }
 
 func (t *ApplicationTest) Before() {

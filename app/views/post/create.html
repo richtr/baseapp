@@ -2,6 +2,9 @@
 {{append . "moreScripts" "/public/js/forms/post.js"}}
 
 {{set . "title" "New Post"}}
+
+{{set . "action" "post/create"}}
+
 {{template "header.html" .}}
 
 <h2>New Post</h2>

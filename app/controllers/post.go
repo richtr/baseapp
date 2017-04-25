@@ -206,7 +206,7 @@ func (c Post) Like(username string, id int) r.Result {
 	profile := c.connected()
 	if profile == nil {
 		likeResponse.Message = "You must log in to like a post"
-		return c.RenderJson(likeResponse)
+		return c.RenderJSON(likeResponse)
 	}
 
 	post := c.loadPostById(id)
@@ -246,6 +246,6 @@ func (c Post) Like(username string, id int) r.Result {
 		likeResponse.Status = "success"
 	}
 
-	return c.RenderJson(likeResponse)
+	return c.RenderJSON(likeResponse)
 
 }

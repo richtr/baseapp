@@ -1,12 +1,14 @@
 package controllers
 
 import (
-	"code.google.com/p/go.crypto/bcrypt"
+	"golang.org/x/crypto/bcrypt"
 	"crypto/rand"
 	"fmt"
 	gr "github.com/ftrvxmtrx/gravatar"
 	r "github.com/revel/revel"
-	m "github.com/revel/revel/mail"
+	"bytes"
+	"html/template"
+	"net/smtp"
 	"github.com/richtr/baseapp/app/models"
 	"github.com/richtr/baseapp/app/routes"
 	"strings"
@@ -21,28 +23,28 @@ const alphanum = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz
 
 func (c Account) AddUser() r.Result {
 	if profile := c.connected(); profile != nil {
-		c.RenderArgs["user"] = profile
+		c.ViewArgs["user"] = profile
 	}
 	return nil
 }
 
-// Add .AppName to RenderArgs
+// Add .AppName to ViewArgs
 func (c Account) AddAppName() r.Result {
-	c.RenderArgs["AppName"] = r.Config.StringDefault("app.name", "BaseApp")
+	c.ViewArgs["AppName"] = r.Config.StringDefault("app.name", "BaseApp")
 	return nil
 }
 
-// Add .isDesktopMode to RenderArgs
+// Add .isDesktopMode to ViewArgs
 func (c Account) AddRenderMode() r.Result {
 	if _, ok := c.Session["desktopmode"]; ok {
-		c.RenderArgs["isDesktopMode"] = true
+		c.ViewArgs["isDesktopMode"] = true
 	}
 	return nil
 }
 
 func (c Account) connected() *models.Profile {
-	if c.RenderArgs["user"] != nil {
-		return c.RenderArgs["user"].(*models.Profile)
+	if c.ViewArgs["user"] != nil {
+		return c.ViewArgs["user"].(*models.Profile)
 	}
 	if email, ok := c.Session["userEmail"]; ok {
 		profile := c.getProfileByEmailAddress(email)
@@ -437,7 +439,6 @@ func (e Account) sendEmail(user *models.User, verifyType, subject string) error 
 		mailerUsername  = r.Config.StringDefault("mailer.username", "<username>")
 		mailerPassword  = r.Config.StringDefault("mailer.password", "<password>")
 		mailerFromAddr  = r.Config.StringDefault("mailer.fromaddress", "no-reply@example.org")
-		mailerReplyAddr = r.Config.StringDefault("mailer.replyaddress", "support@example.org")
 		callbackHost    = r.Config.StringDefault("http.host", "http://localhost:9000")
 	)
 
@@ -445,9 +446,6 @@ func (e Account) sendEmail(user *models.User, verifyType, subject string) error 
 	if mailerServer == "smtp.example.org" {
 		return nil
 	}
-
-	mailer := m.Mailer{Server: mailerServer, Port: mailerPort, UserName: mailerUsername, Password: mailerPassword}
-	mailer.Sender = &m.Sender{From: mailerFromAddr, ReplyTo: mailerReplyAddr}
 
 	// Generate a new token and store against the user's id
 	verifyEmailToken := e.generateVerifyHash(16)
@@ -461,15 +459,27 @@ func (e Account) sendEmail(user *models.User, verifyType, subject string) error 
 
 	args["Link"] = callbackHost + "/account/" + verifyType + "/" + string(verifyEmailToken)
 
-	message := &m.Message{To: []string{user.Email}, Subject: subject}
+	// send mail
 
-	rErr := message.RenderTemplate("email/"+verifyType, args)
-	if rErr != nil {
-		return rErr
+	t, tErr := template.ParseFiles("email/" + verifyType)
+	if tErr != nil {
+		return tErr
 	}
 
-	sErr := mailer.SendMessage(message)
-	if sErr != nil {
+	buf := new(bytes.Buffer)
+	if bErr := t.Execute(buf, args); bErr != nil {
+		return bErr
+	}
+
+	mailerBody := buf.String()
+
+	mailerMime := "MIME-version: 1.0;\nContent-Type: text/plain; charset=\"UTF-8\";\n\n"
+	mailerSubject := "Subject: " + subject + "\n"
+	mailerMessage := []byte(mailerSubject + mailerMime + "\n" + mailerBody)
+
+	mailerAuth := smtp.PlainAuth("", mailerUsername, mailerPassword, mailerServer)
+
+	if sErr := smtp.SendMail(mailerServer + fmt.Sprintf("%v", mailerPort), mailerAuth, mailerFromAddr, []string{user.Email}, mailerMessage); sErr != nil {
 		return sErr
 	}
 

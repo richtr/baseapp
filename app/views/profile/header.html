@@ -13,8 +13,8 @@
 	<div class="baseapp-actions">
 
 		<ul class="nav nav-pills">
-			<li{{if eq .action "followers"}} class="active"{{end}}><a href="{{url "Profile.Followers" .profile.UserName}}">Followers <span id="followers" class="badge">{{.profile.AggregateFollowers}}</span></a></li>
-			<li{{if eq .action "following"}} class="active"{{end}}><a href="{{url "Profile.Following" .profile.UserName}}">Following <span id="following" class="badge">{{.profile.AggregateFollowing}}</span></a></li>
+			<li{{if eq .action "profile/followers"}} class="active"{{end}}><a href="{{url "Profile.Followers" .profile.UserName}}">Followers <span id="followers" class="badge">{{.profile.AggregateFollowers}}</span></a></li>
+			<li{{if eq .action "profile/following"}} class="active"{{end}}><a href="{{url "Profile.Following" .profile.UserName}}">Following <span id="following" class="badge">{{.profile.AggregateFollowing}}</span></a></li>
 			<li class="pull-right baseapp-action-right">
 			{{if and (not .isOwner) .user}}
 				<button type="button" data-href="{{url "Profile.FollowUser" .profile.UserName}}" class="btn {{if .isFollowing}}btn-danger{{else}}btn-primary{{end}} follow">

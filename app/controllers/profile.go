@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"code.google.com/p/go.crypto/bcrypt"
+	"golang.org/x/crypto/bcrypt"
 	r "github.com/revel/revel"
 	"github.com/richtr/baseapp/app/models"
 	"github.com/richtr/baseapp/app/routes"
@@ -251,7 +251,7 @@ func (c Profile) FollowUser(username string) r.Result {
 	profile := c.connected()
 	if profile == nil {
 		followResponse.Message = "You must log in to follow another user"
-		return c.RenderJson(followResponse)
+		return c.RenderJSON(followResponse)
 	}
 
 	if profile.UserName == username {
@@ -263,7 +263,7 @@ func (c Profile) FollowUser(username string) r.Result {
 	followProfile := c.loadProfileByUserName(username)
 	if followProfile == nil {
 		followResponse.Message = "User with that username not found"
-		return c.RenderJson(followResponse)
+		return c.RenderJSON(followResponse)
 	}
 
 	var followerObj models.Follower
@@ -332,7 +332,7 @@ func (c Profile) FollowUser(username string) r.Result {
 
 	}
 
-	return c.RenderJson(followResponse)
+	return c.RenderJSON(followResponse)
 
 }
 

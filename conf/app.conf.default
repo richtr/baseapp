@@ -19,7 +19,6 @@ mailer.port           = 25
 mailer.username       = <username>
 mailer.password       = <password>
 mailer.fromaddress    = no-reply@example.org
-mailer.replyaddress   = support@example.org
 
 ### Logging
 log.trace.output      = stderr
@@ -40,8 +39,8 @@ i18n.default_language = en
 build.tags            = gorp
 
 ### Additional app paths
-module.jobs           = github.com/revel/revel/modules/jobs
-module.static         = github.com/revel/revel/modules/static
+module.jobs           = github.com/revel/modules/jobs
+module.static         = github.com/revel/modules/static
 
 # TEST mode
 # `$> revel [run|test] baseapp/ test`
@@ -49,7 +48,7 @@ module.static         = github.com/revel/revel/modules/static
 mode.dev              = true
 watch                 = true
 # Testing enabled in testing mode (only!).
-module.testrunner     = github.com/revel/revel/modules/testrunner
+module.testrunner     = github.com/revel/modules/testrunner
 
 # Use in-memory SQLITE 3 DB
 # Available drivers: sqlite3, mysql, postgres

@@ -2,14 +2,14 @@ package tests
 
 import (
 	"fmt"
-	"github.com/revel/revel"
+	"github.com/revel/revel/testing"
 	"github.com/richtr/baseapp/app/models"
 	"github.com/richtr/baseapp/app/routes"
 	"net/url"
 )
 
 type ProfileTest struct {
-	revel.TestSuite
+	testing.TestSuite
 }
 
 func (t *ProfileTest) Before() {

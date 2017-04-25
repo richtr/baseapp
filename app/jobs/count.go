@@ -3,7 +3,7 @@ package jobs
 import (
 	"fmt"
 	"github.com/revel/revel"
-	"github.com/revel/revel/modules/jobs/app/jobs"
+	"github.com/revel/modules/jobs/app/jobs"
 	"github.com/richtr/baseapp/app/controllers"
 	"github.com/richtr/baseapp/app/models"
 )

@@ -1,11 +1,11 @@
 package controllers
 
 import (
-	"code.google.com/p/go.crypto/bcrypt"
+	"golang.org/x/crypto/bcrypt"
 	"database/sql"
 	"github.com/coopernurse/gorp"
 	r "github.com/revel/revel"
-	"github.com/revel/revel/modules/db/app"
+	"github.com/revel/modules/db/app"
 	"github.com/richtr/baseapp/app/models"
 	"time"
 )
