@@ -160,31 +160,19 @@ To build your own BaseApp LXC container via Docker is easy:
 ```
 $ git clone https://github.com/richtr/baseapp.git
 $ cd baseapp
-$ sudo docker build -t="richtr/baseapp" .
+$ docker build -t="richtr/baseapp" .
 ```
 
 To spawn a new instance of BaseApp:
 
 ```bash
-$ sudo docker run -p 80 -d richtr/baseapp
-```
-
-This will return an ID output on the command-line like:
-
-```
-d404cc2fa27b
-```
-
-This is your newly created container ID. You can use this to find the external port you can use to access BaseApp from your host machine:
-
-```bash
-$ sudo docker port d404cc2fa27b 80 # Make sure to change the ID to yours!
+$ docker run -p 9000:9000 -d richtr/baseapp
 ```
 
 Then you can the visit the following URL in a browser on your host machine to get started:
 
 ```
-http://127.0.0.1:<port>
+http://127.0.0.1:9000
 ```
 
 ### Feedback ###
