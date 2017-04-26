@@ -10,6 +10,9 @@ FROM golang:alpine
 
 MAINTAINER Rich Tibbett
 
+# Set default BaseApp run level
+ENV BASEAPP_RUN_LEVEL test
+
 ENV BASEAPP_PATH $GOPATH/src/github.com/richtr/baseapp
 
 # Stage BaseApp

@@ -34,9 +34,12 @@ fi
 echo "Installing Revel..."
 go get -v github.com/revel/revel github.com/revel/cmd/revel
 
+# Set default BASEAPP_RUN_LEVEL if not set as an environment variable
+[ -z "$BASEAPP_RUN_LEVEL" ] && BASEAPP_RUN_LEVEL=test
+
 # Install and start Baseapp (in test mode)
 echo "Installing and running BaseApp..."
 cd $BASEAPP_PATH && \
    go get -v ./... && \
    cd $GOPATH/src && \
-   revel run $BASEAPP_DIR test
+   revel run $BASEAPP_DIR $BASEAPP_RUN_LEVEL
