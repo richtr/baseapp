@@ -24,7 +24,7 @@ ADD ./start.sh /start.sh
 # Install baseapp golang dependencies and set start script permissions
 RUN apk add --no-cache gcc g++ git pwgen bash && \
 		cd $BASEAPP_PATH && \
-		go get -v ./... github.com/revel/revel github.com/revel/cmd/revel && \
+		go get -v ./... github.com/revel/revel github.com/revel/cmd/revel github.com/go-sql-driver/mysql && \
 		chmod 755 /start.sh
 
 # Expose BaseApp port

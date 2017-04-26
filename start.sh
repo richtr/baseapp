@@ -25,6 +25,20 @@ sed -i .original \
     -e "s/http\.addr *= *localhost/http.addr =/g" \
     $BASEAPP_CONF_FILE
 
+# Setup environment variable app.conf database overrides
+
+[ -n "$BASEAPP_DATABASE_DRIVER" ] && sed -i .original \
+    -e "s/db\.driver *=.*/db.driver = ${BASEAPP_DATABASE_DRIVER}/g" \
+    $BASEAPP_CONF_FILE
+
+[ -n "$BASEAPP_DB_IMPORT" ] && sed -i .original \
+    -e "s/db\.import *=.*/db.import = ${BASEAPP_DB_IMPORT}/g" \
+    $BASEAPP_CONF_FILE
+
+[ -n "$BASEAPP_DB_SPEC" ] && sed -i .original \
+    -e "s/db\.spec *=.*/db.spec = ${BASEAPP_DB_SPEC}/g" \
+    $BASEAPP_CONF_FILE
+
 # Remove sed back-up files
 if [ -f $BASEAPP_CONF_FILE.original ]; then
 	rm -f $BASEAPP_CONF_FILE.original
@@ -32,13 +46,13 @@ fi
 
 # Install Revel
 echo "Installing Revel..."
-go get -v github.com/revel/revel github.com/revel/cmd/revel
+go get -v github.com/revel/revel github.com/revel/cmd/revel github.com/go-sql-driver/mysql
 
 # Set default BASEAPP_RUN_LEVEL if not set as an environment variable
 [ -z "$BASEAPP_RUN_LEVEL" ] && BASEAPP_RUN_LEVEL=test
 
 # Install and start Baseapp (in test mode)
-echo "Installing and running BaseApp..."
+echo "Running BaseApp at BASEAPP_RUN_LEVEL[${BASEAPP_RUN_LEVEL}]..."
 cd $BASEAPP_PATH && \
    go get -v ./... && \
    cd $GOPATH/src && \
