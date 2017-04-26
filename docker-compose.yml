@@ -1,0 +1,71 @@
+version: '2.1'
+
+services:
+
+    traefik:
+      image: traefik:1.2.3
+      restart: always
+      command: -c /dev/null --web --docker --docker.domain=docker.localhost --docker.exposedbydefault=false --entrypoints="Name:http Address::80" --defaultentrypoints="http" --logLevel=WARN
+      networks:
+        - web-gateway
+      ports:
+        - "80:80"
+        - "8080:8080"
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+      depends_on:
+        - baseapp
+
+    # !!! You must add '127.0.0.1 baseapp.docker.localhost' to your /etc/hosts directory !!! #
+
+    baseapp:
+      build:
+        context: .
+        dockerfile: Dockerfile
+      restart: always
+      networks:
+        - web-gateway
+        - service-network
+      environment:
+        BASEAPP_RUN_LEVEL: prod
+        BASEAPP_DATABASE_DRIVER: mysql
+        BASEAPP_DATABASE_IMPORT: github.com/go-sql-driver/mysql
+        BASEAPP_DATABASE_SPEC: dev:dev@tcp(mysqldb:3306)/baseapp?charset=utf8
+      labels:
+        - "traefik.enable=true"
+        - "traefik.backend=baseapp"
+        - "traefik.frontend.rule=Host:baseapp.docker.localhost"
+        - "traefik.protocol=http"
+        - "traefik.port=9000"
+        - "traefik.docker.network=baseapp_web-gateway"
+      depends_on:
+        mysqldb:
+          condition: service_healthy
+
+    mysqldb:
+      image: mariadb:10.1.22
+      restart: always
+      networks:
+        - service-network
+      environment:
+        MYSQL_DATABASE: baseapp
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_USER: dev
+        MYSQL_PASSWORD: dev
+      volumes:
+        - mysql_data:/var/lib/mysql
+      healthcheck:
+        test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+        timeout: 10s
+        retries: 10
+
+networks:
+
+  web-gateway:
+
+  service-network:
+    internal: true
+
+volumes:
+
+  mysql_data:
