@@ -185,6 +185,8 @@ An example `docker-compose` configuration is provided with this repo. To build a
 $ docker-compose up
 ```
 
+It can take a while to bring this architecture up but once BaseApp has been built in its docker container, you can navigate to `http://dockerhost:80` (or `http://localhost:80`) to see everything running.
+
 ### Feedback ###
 
 If you find any bugs or issues please report them on the [BaseApp Issue Tracker](https://github.com/richtr/baseapp/issues).
