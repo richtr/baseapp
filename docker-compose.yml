@@ -26,7 +26,7 @@ services:
         BASEAPP_RUN_LEVEL: prod
         BASEAPP_DATABASE_DRIVER: mymysql
         BASEAPP_DATABASE_IMPORT: github.com/ziutek/mymysql/mysql
-        BASEAPP_DATABASE_SPEC: "tcp:mysqldb:3306*baseapp/dev/dev"
+        BASEAPP_DATABASE_SPEC: tcp:mysqldb:3306*baseapp/dev/dev
       depends_on:
         mysqldb:
           condition: service_healthy
