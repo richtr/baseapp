@@ -91,6 +91,16 @@
 			"Rev": "209cc8b2b7ed93a55067bc0db97707b1432e49c4"
 		},
 		{
+			"ImportPath": "github.com/revel/modules/testrunner/app",
+			"Comment": "v0.14.0",
+			"Rev": "209cc8b2b7ed93a55067bc0db97707b1432e49c4"
+		},
+		{
+			"ImportPath": "github.com/revel/modules/testrunner/app/controllers",
+			"Comment": "v0.14.0",
+			"Rev": "209cc8b2b7ed93a55067bc0db97707b1432e49c4"
+		},
+		{
 			"ImportPath": "github.com/revel/revel",
 			"Comment": "v0.14.0",
 			"Rev": "75d66c3c990f01deb5ff2045c04da7eea5be39b2"
