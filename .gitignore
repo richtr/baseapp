@@ -1,5 +1,4 @@
 tmp/
-routes/
 test-results/
 
 # Ignore generated or configured app.conf but not default conf file
