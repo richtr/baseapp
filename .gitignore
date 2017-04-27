@@ -1,7 +1,24 @@
 tmp/
 routes/
 test-results/
-revel/revel
 
+# Ignore generated or configured app.conf but not default conf file
 conf/app.conf
 !conf/app.conf.default
+
+# Ignore non-BaseApp packages from GoDep vendoring
+# (generated from https://github.com/cespare/deplist with `deplist github.com/revel/cmd/revel`)
+vendor/github.com/agtorre/gocolorize
+vendor/github.com/klauspost/compress/flate
+vendor/github.com/klauspost/compress/gzip
+vendor/github.com/klauspost/compress/zlib
+vendor/github.com/klauspost/cpuid
+vendor/github.com/revel/cmd/harness
+vendor/github.com/revel/config
+vendor/github.com/revel/modules/testrunner/app/controllers
+vendor/github.com/revel/revel
+vendor/github.com/revel/revel/testing
+vendor/github.com/robfig/pathtree
+vendor/golang.org/x/net/websocket
+vendor/golang.org/x/sys/unix
+vendor/gopkg.in/fsnotify.v1
