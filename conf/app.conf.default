@@ -67,9 +67,9 @@ module.testrunner     =
 
 # Use development MySQL DB
 # Available drivers: sqlite3, mysql, postgres
-db.driver             = mysql
-db.import             = github.com/go-sql-driver/mysql
-db.spec               = user:pass@tcp(localhost:3306)/baseapp_dev?charset=utf8
+db.driver             = mymysql
+db.import             = github.com/ziutek/mymysql/mysql
+db.spec               = "tcp:localhost:3306*baseapp/user/pass"
 
 # PROD mode
 # `$> revel run baseapp/ prod`
@@ -82,9 +82,9 @@ module.testrunner     =
 
 # Use production MySQL DB
 # Available drivers: sqlite3, mysql, postgres
-db.driver             = mysql
-db.import             = github.com/go-sql-driver/mysql
-db.spec               = user:pass@tcp(localhost:3306)/baseapp?charset=utf8
+db.driver             = mymysql
+db.import             = github.com/ziutek/mymysql/mysql
+db.spec               = "tcp:localhost:3306*baseapp/user/pass"
 
 log.trace.output      = off
 log.info.output       = off

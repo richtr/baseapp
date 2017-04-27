@@ -4,6 +4,11 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"database/sql"
 	"github.com/coopernurse/gorp"
+	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/ziutek/mymysql/godrv"
+	_ "github.com/ziutek/mymysql/mysql"
+	_ "github.com/ziutek/mymysql/native" // Native engine
+	_ "github.com/lib/pq"
 	r "github.com/revel/revel"
 	"github.com/revel/modules/db/app"
 	"github.com/richtr/baseapp/app/models"
@@ -19,7 +24,7 @@ func InitDB() {
 
 	dbDriver := r.Config.StringDefault("db.driver", "sqlite3")
 
-	if dbDriver == "mysql" {
+	if (dbDriver == "mysql" || dbDriver == "mymysql") {
 		Dbm = &gorp.DbMap{Db: db.Db, Dialect: gorp.MySQLDialect{"InnoDB", "UTF8"}}
 	} else if dbDriver == "postgres" {
 		Dbm = &gorp.DbMap{Db: db.Db, Dialect: gorp.PostgresDialect{}}
