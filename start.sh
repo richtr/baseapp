@@ -1,12 +1,11 @@
 #!/bin/bash
 
-PACKAGE_NAME=github.com/richtr/baseapp
-
 # Configure BaseApp execution paths
-BASEAPP_PATH=/baseapp
+[ -z "$BASEAPP_PATH" ] && BASEAPP_PATH=github.com/richtr/baseapp
+[ -z "$BASEAPP_DIR" ] && BASEAPP_DIR=$GOPATH/src/$BASEAPP_PATH
 
 # Configure BaseApp configuration path
-BASEAPP_CONF_FILE=$BASEAPP_PATH/conf/app.conf
+BASEAPP_CONF_FILE=$BASEAPP_DIR/conf/app.conf
 
 # Grab the best app.conf file
 if [ ! -f $BASEAPP_CONF_FILE ]; then
@@ -52,7 +51,5 @@ fi
 [ -z "$BASEAPP_RUN_PORT" ] && BASEAPP_RUN_PORT=9000
 
 # Start Baseapp
-echo "Running BaseApp at BASEAPP_RUN_LEVEL[${BASEAPP_RUN_LEVEL}]..."
-mkdir -p $GOPATH/src/github.com/richtr && \
-  cp -R $BASEAPP_PATH $GOPATH/src/$PACKAGE_NAME && \
-  revel run $PACKAGE_NAME $BASEAPP_RUN_LEVEL $BASEAPP_RUN_PORT
+echo "Running BaseApp in ${BASEAPP_RUN_LEVEL} mode..."
+revel run $BASEAPP_PATH $BASEAPP_RUN_LEVEL $BASEAPP_RUN_PORT

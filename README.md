@@ -92,7 +92,7 @@ You will need a [functioning Revel installation](https://revel.github.io/tutoria
 
 To get [BaseApp](https://github.com/richtr/baseapp), run
 
-    go get github.com/richtr/baseapp
+    go get github.com/richtr/baseapp/...
 
 This command does a couple things:
 

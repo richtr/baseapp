@@ -19,13 +19,15 @@ RUN go get github.com/revel/revel && \
 # Set default BaseApp environment variables
 ENV BASEAPP_RUN_LEVEL test
 ENV BASEAPP_RUN_PORT 9000
-ENV BASEAPP_PATH /baseapp
+ENV BASEAPP_PATH github.com/richtr/baseapp
+ENV BASEAPP_DIR $GOPATH/src/$BASEAPP_PATH
 
 # Add BaseApp
-ADD . $BASEAPP_PATH
+ADD . $BASEAPP_DIR
 
 # Expose BaseApp port
 EXPOSE 9000
 
 # Configure and start BaseApp on load
-ENTRYPOINT ["/bin/bash", "/baseapp/start.sh"]
+WORKDIR $BASEAPP_DIR
+ENTRYPOINT ["/bin/bash", "start.sh"]
