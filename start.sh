@@ -1,15 +1,16 @@
 #!/bin/bash
 
+PACKAGE_NAME=github.com/richtr/baseapp
+
 # Configure BaseApp execution paths
-BASEAPP_DIR=github.com/richtr/baseapp
-BASEAPP_PATH=$GOPATH/src/$BASEAPP_DIR
+BASEAPP_PATH=/baseapp
 
 # Configure BaseApp configuration path
 BASEAPP_CONF_FILE=$BASEAPP_PATH/conf/app.conf
 
 # Grab the best app.conf file
 if [ ! -f $BASEAPP_CONF_FILE ]; then
-	cp $BASEAPP_CONF_FILE.default $BASEAPP_CONF_FILE
+	cp "${BASEAPP_CONF_FILE}.default" "$BASEAPP_CONF_FILE"
 fi
 
 # Generate app secret (better than pwgen as this works cross-platform)
@@ -44,16 +45,14 @@ if [ -f $BASEAPP_CONF_FILE.original ]; then
 	rm -f $BASEAPP_CONF_FILE.original
 fi
 
-# Install Revel
-echo "Installing Revel..."
-go get -v github.com/revel/revel github.com/revel/cmd/revel github.com/go-sql-driver/mysql
-
 # Set default BASEAPP_RUN_LEVEL if not set as an environment variable
 [ -z "$BASEAPP_RUN_LEVEL" ] && BASEAPP_RUN_LEVEL=test
 
-# Install and start Baseapp (in test mode)
+# Set default BASEAPP_RUN_PORT if not set as an environment variable
+[ -z "$BASEAPP_RUN_PORT" ] && BASEAPP_RUN_PORT=9000
+
+# Start Baseapp
 echo "Running BaseApp at BASEAPP_RUN_LEVEL[${BASEAPP_RUN_LEVEL}]..."
-cd $BASEAPP_PATH && \
-   go get -v ./... && \
-   cd $GOPATH/src && \
-   revel run $BASEAPP_DIR $BASEAPP_RUN_LEVEL
+mkdir -p $GOPATH/src/github.com/richtr && \
+  cp -R $BASEAPP_PATH $GOPATH/src/$PACKAGE_NAME && \
+  revel run $PACKAGE_NAME $BASEAPP_RUN_LEVEL $BASEAPP_RUN_PORT
