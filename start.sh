@@ -17,26 +17,26 @@ APP_SECRET=`env LC_CTYPE=C tr -dc "a-zA-Z0-9-_\$\?" < /dev/urandom | head -c 65`
 
 # Ensure app secret is set
 sed -i .original \
-    -e "s/app\.secret *= *<app_secret_please_change_me>/app.secret = ${APP_SECRET}/g" \
+    -e 's/^app\.secret *= *<app_secret_please_change_me>/app.secret = '"${APP_SECRET}"'/g" \
     $BASEAPP_CONF_FILE
 
 # Expose on all available network interfaces exposed to Docker container
 sed -i .original \
-    -e "s/http\.addr *= *localhost/http.addr =/g" \
+    -e 's#^http\.addr *= *localhost$#http.addr =#g' \
     $BASEAPP_CONF_FILE
 
 # Setup environment variable app.conf database overrides
 
 [ -n "$BASEAPP_DATABASE_DRIVER" ] && sed -i .original \
-    -e "s/db\.driver *=.*/db.driver = ${BASEAPP_DATABASE_DRIVER}/g" \
+		-e 's#^db\.driver *=.*$#db.driver = "'"${BASEAPP_DATABASE_DRIVER}"'"#g' \
     $BASEAPP_CONF_FILE
 
 [ -n "$BASEAPP_DB_IMPORT" ] && sed -i .original \
-    -e "s/db\.import *=.*/db.import = ${BASEAPP_DB_IMPORT}/g" \
+		-e 's#^db\.import *=.*$#db.import = "'"${BASEAPP_DB_IMPORT}"'"#g' \
     $BASEAPP_CONF_FILE
 
 [ -n "$BASEAPP_DB_SPEC" ] && sed -i .original \
-    -e "s/db\.spec *=.*/db.spec = ${BASEAPP_DB_SPEC}/g" \
+		-e 's#^db\.spec *=.*$#db.spec = "'"${BASEAPP_DB_SPEC}"'"#g' \
     $BASEAPP_CONF_FILE
 
 # Remove sed back-up files
