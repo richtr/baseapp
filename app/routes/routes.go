@@ -4,32 +4,6 @@ package routes
 import "github.com/revel/revel"
 
 
-type tGorpController struct {}
-var GorpController tGorpController
-
-
-func (_ tGorpController) Begin(
-		) string {
-	args := make(map[string]string)
-	
-	return revel.MainRouter.Reverse("GorpController.Begin", args).URL
-}
-
-func (_ tGorpController) Commit(
-		) string {
-	args := make(map[string]string)
-	
-	return revel.MainRouter.Reverse("GorpController.Commit", args).URL
-}
-
-func (_ tGorpController) Rollback(
-		) string {
-	args := make(map[string]string)
-	
-	return revel.MainRouter.Reverse("GorpController.Rollback", args).URL
-}
-
-
 type tApplication struct {}
 var Application tApplication
 
@@ -81,15 +55,29 @@ func (_ tApplication) SwitchToMobile(
 }
 
 
-type tJobs struct {}
-var Jobs tJobs
+type tGorpController struct {}
+var GorpController tGorpController
 
 
-func (_ tJobs) Status(
+func (_ tGorpController) Begin(
 		) string {
 	args := make(map[string]string)
 	
-	return revel.MainRouter.Reverse("Jobs.Status", args).URL
+	return revel.MainRouter.Reverse("GorpController.Begin", args).URL
+}
+
+func (_ tGorpController) Commit(
+		) string {
+	args := make(map[string]string)
+	
+	return revel.MainRouter.Reverse("GorpController.Commit", args).URL
+}
+
+func (_ tGorpController) Rollback(
+		) string {
+	args := make(map[string]string)
+	
+	return revel.MainRouter.Reverse("GorpController.Rollback", args).URL
 }
 
 
@@ -158,6 +146,18 @@ func (_ tStatic) ServeModule(
 	revel.Unbind(args, "prefix", prefix)
 	revel.Unbind(args, "filepath", filepath)
 	return revel.MainRouter.Reverse("Static.ServeModule", args).URL
+}
+
+
+type tJobs struct {}
+var Jobs tJobs
+
+
+func (_ tJobs) Status(
+		) string {
+	args := make(map[string]string)
+	
+	return revel.MainRouter.Reverse("Jobs.Status", args).URL
 }
 
 

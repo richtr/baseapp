@@ -12,13 +12,13 @@
 			"Rev": "99fea4bc9517f07eea8194702cb7076f4845b7de"
 		},
 		{
-			"ImportPath": "github.com/coopernurse/gorp",
-			"Comment": "1.2-90-g9cd2b5e",
-			"Rev": "9cd2b5ef5b82fde4e7c51776ac3f94398b8af076"
-		},
-		{
 			"ImportPath": "github.com/ftrvxmtrx/gravatar",
 			"Rev": "5aaa334f4e974f251f8049520e0decd9b50ae53f"
+		},
+		{
+			"ImportPath": "github.com/go-gorp/gorp",
+			"Comment": "v2.0.0-3-g3909563",
+			"Rev": "390956328094c74d7c75a7e71a4d17e9297ed90e"
 		},
 		{
 			"ImportPath": "github.com/go-sql-driver/mysql",

@@ -3,7 +3,7 @@ package controllers
 import (
 	"golang.org/x/crypto/bcrypt"
 	"database/sql"
-	"github.com/coopernurse/gorp"
+	"github.com/go-gorp/gorp"
 	_ "github.com/mattn/go-sqlite3"
 	_ "github.com/ziutek/mymysql/godrv"
 	_ "github.com/ziutek/mymysql/mysql"
