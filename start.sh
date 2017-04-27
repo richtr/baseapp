@@ -17,7 +17,7 @@ APP_SECRET=`env LC_CTYPE=C tr -dc "a-zA-Z0-9-_\$\?" < /dev/urandom | head -c 65`
 
 # Ensure app secret is set
 sed -i .original \
-    -e 's/^app\.secret *= *<app_secret_please_change_me>/app.secret = '"${APP_SECRET}"'/g" \
+    -e 's/^app\.secret *= *<app_secret_please_change_me>/app.secret = '"${APP_SECRET}"'/g' \
     $BASEAPP_CONF_FILE
 
 # Expose on all available network interfaces exposed to Docker container
