@@ -65,6 +65,20 @@ if [ -n "$BASEAPP_SERVER_SSLCERT" && -n "$BASEAPP_SERVER_SSLKEY" ]; then
 
 fi
 
+# DATABASE OVERRIDES
+
+[ -n "$BASEAPP_DATABASE_DRIVER" ] && perl -i -0777 -0pe \
+    's#['"${BASEAPP_RUN_LEVEL}"'](.*)db\.driver( *)=[^\r\n]*(.*)#['"${BASEAPP_RUN_LEVEL}"']$1db.driver$2= "'"${BASEAPP_DATABASE_DRIVER}"'"$3#s' \
+    $BASEAPP_CONF_FILE
+
+[ -n "$BASEAPP_DATABASE_IMPORT" ] && perl -i -0777 -0pe \
+    's#['"${BASEAPP_RUN_LEVEL}"'](.*)db\.import( *)=[^\r\n]*(.*)#['"${BASEAPP_RUN_LEVEL}"']$1db.import$2= "'"${BASEAPP_DATABASE_IMPORT}"'"$3#s' \
+    $BASEAPP_CONF_FILE
+
+[ -n "$BASEAPP_DATABASE_SPEC" ] && perl -i -0777 -0pe \
+    's#['"${BASEAPP_RUN_LEVEL}"'](.*)db\.spec( *)=[^\r\n]*(.*)#['"${BASEAPP_RUN_LEVEL}"']$1db.spec$2= "'"${BASEAPP_DATABASE_SPEC}"'"$3#s' \
+    $BASEAPP_CONF_FILE
+
 # EMAIL OVERRIDES
 
 [ -n "$BASEAPP_MAILER_SERVER" ] && perl -i -0777 -0pe \
@@ -85,20 +99,6 @@ fi
 
 [ -n "$BASEAPP_MAILER_FROMADDRESS" ] && perl -i -0777 -0pe \
     's#['"${BASEAPP_RUN_LEVEL}"'](.*)mailer\.fromaddress( *)=[^\r\n]*(.*)#['"${BASEAPP_RUN_LEVEL}"']$1mailer.fromaddress$2= '"${BASEAPP_MAILER_FROMADDRESS}"'$3#s' \
-    $BASEAPP_CONF_FILE
-
-# DATABASE OVERRIDES
-
-[ -n "$BASEAPP_DATABASE_DRIVER" ] && perl -i -0777 -0pe \
-    's#['"${BASEAPP_RUN_LEVEL}"'](.*)db\.driver( *)=[^\r\n]*(.*)#['"${BASEAPP_RUN_LEVEL}"']$1db.driver$2= "'"${BASEAPP_DATABASE_DRIVER}"'"$3#s' \
-    $BASEAPP_CONF_FILE
-
-[ -n "$BASEAPP_DATABASE_IMPORT" ] && perl -i -0777 -0pe \
-    's#['"${BASEAPP_RUN_LEVEL}"'](.*)db\.import( *)=[^\r\n]*(.*)#['"${BASEAPP_RUN_LEVEL}"']$1db.import$2= "'"${BASEAPP_DATABASE_IMPORT}"'"$3#s' \
-    $BASEAPP_CONF_FILE
-
-[ -n "$BASEAPP_DATABASE_SPEC" ] && perl -i -0777 -0pe \
-    's#['"${BASEAPP_RUN_LEVEL}"'](.*)db\.spec( *)=[^\r\n]*(.*)#['"${BASEAPP_RUN_LEVEL}"']$1db.spec$2= "'"${BASEAPP_DATABASE_SPEC}"'"$3#s' \
     $BASEAPP_CONF_FILE
 
 #### START BASEAPP ####
