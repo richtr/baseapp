@@ -9,6 +9,7 @@ services:
         - "80:80"
       networks:
         - web-gateway
+        - service-network
       volumes:
         - ./site.conf:/etc/nginx/conf.d/default.conf
       depends_on:
@@ -20,7 +21,6 @@ services:
         dockerfile: Dockerfile
       restart: unless-stopped
       networks:
-        - web-gateway
         - service-network
       environment:
         BASEAPP_RUN_LEVEL: prod
