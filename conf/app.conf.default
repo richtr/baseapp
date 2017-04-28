@@ -1,26 +1,7 @@
-### Application
-app.name              = BaseApp
+# Application
 app.secret            = <app_secret_please_change_me>
 
-### Server
-http.host             = http://localhost:9000
-http.addr             = localhost
-http.port             = 9000
-http.ssl              = false
-http.sslcert          =
-http.sslkey           =
-
-### Cookies
-cookie.prefix         = REVEL
-
-### Email
-mailer.server         = smtp.example.org
-mailer.port           = 25
-mailer.username       = <username>
-mailer.password       = <password>
-mailer.fromaddress    = no-reply@example.org
-
-### Logging
+# Logging
 log.trace.output      = stderr
 log.info.output       = stderr
 log.warn.output       = stderr
@@ -31,23 +12,37 @@ log.info.prefix       = "INFO  "
 log.warn.prefix       = "WARN  "
 log.error.prefix      = "ERROR "
 
-### i18n
+# Cookies
+cookie.prefix         = BASEAPP
+
+# i18n
 i18n.cookie           = %(cookie.prefix)s_LANG
 i18n.default_language = en
 
-### Build Tags
+# Build Tags
 build.tags            = gorp
 
-### Additional app paths
+# Additional app paths
 module.jobs           = github.com/revel/modules/jobs
 module.static         = github.com/revel/modules/static
 
 # TEST mode
-# `$> revel [run|test] baseapp/ test`
+# `$> revel [run|test] github.com/richtr/baseapp test 9000`
 [test]
+# Application
+app.name              = BaseApp
+
+# Server
+http.host             = http://localhost:9000
+http.addr             = localhost
+http.port             = 9000
+http.ssl              = false
+http.sslcert          =
+http.sslkey           =
+
 mode.dev              = true
 watch                 = true
-# Testing enabled in testing mode (only!).
+# Testing enabled in testing mode (only!)
 module.testrunner     = github.com/revel/modules/testrunner
 
 # Use in-memory SQLITE 3 DB
@@ -56,9 +51,27 @@ db.driver             = sqlite3
 db.import             = github.com/mattn/go-sqlite3
 db.spec               = :memory:
 
+# Email settings
+mailer.server         = smtp.example.org
+mailer.port           = 25
+mailer.username       = <username>
+mailer.password       = <password>
+mailer.fromaddress    = no-reply@example.org
+
 # DEV mode
-# `$> revel run baseapp`
+# `$> revel run github.com/richtr/baseapp dev 9000`
 [dev]
+# Application
+app.name              = BaseApp
+
+# Server
+http.host             = http://localhost:9000
+http.addr             = localhost
+http.port             = 9000
+http.ssl              = false
+http.sslcert          =
+http.sslkey           =
+
 mode.dev              = true
 watch                 = true
 # Testing not enabled in development mode.
@@ -71,9 +84,27 @@ db.driver             = mymysql
 db.import             = github.com/ziutek/mymysql/mysql
 db.spec               = "tcp:localhost:3306*baseapp/user/pass"
 
+# Email settings
+mailer.server         = smtp.example.org
+mailer.port           = 25
+mailer.username       = <username>
+mailer.password       = <password>
+mailer.fromaddress    = no-reply@example.org
+
 # PROD mode
-# `$> revel run baseapp/ prod`
+# `$> revel run github.com/richtr/baseapp prod 9000`
 [prod]
+# Application
+app.name              = BaseApp
+
+# Server
+http.host             = http://localhost:9000
+http.addr             = localhost
+http.port             = 9000
+http.ssl              = false
+http.sslcert          =
+http.sslkey           =
+
 mode.dev              = false
 watch                 = false
 # Testing not enabled in production mode.
@@ -85,6 +116,13 @@ module.testrunner     =
 db.driver             = mymysql
 db.import             = github.com/ziutek/mymysql/mysql
 db.spec               = "tcp:localhost:3306*baseapp/user/pass"
+
+# Email settings
+mailer.server         = smtp.example.org
+mailer.port           = 25
+mailer.username       = <username>
+mailer.password       = <password>
+mailer.fromaddress    = no-reply@example.org
 
 log.trace.output      = off
 log.info.output       = off

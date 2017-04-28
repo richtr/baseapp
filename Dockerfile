@@ -10,15 +10,15 @@ FROM golang:1.8-alpine
 
 MAINTAINER Rich Tibbett
 
-# Install baseapp golang dependencies and set start script permissions
-RUN apk add --no-cache gcc g++ git bash
+# Install baseapp dependencies
+RUN apk add --no-cache gcc g++ git bash perl
 
 RUN go get github.com/revel/revel && \
     go get github.com/revel/cmd/revel
 
 # Set default BaseApp environment variables
 ENV BASEAPP_RUN_LEVEL test
-ENV BASEAPP_RUN_PORT 9000
+ENV BASEAPP_SERVER_PORT 9000
 ENV BASEAPP_PATH github.com/richtr/baseapp
 ENV BASEAPP_DIR $GOPATH/src/$BASEAPP_PATH
 
