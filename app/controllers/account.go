@@ -461,7 +461,7 @@ func (e Account) sendEmail(user *models.User, verifyType, subject string) error 
 
 	// send mail
 
-	t, tErr := template.ParseFiles("email/" + verifyType)
+	t, tErr := template.ParseFiles("views/email/" + verifyType + ".txt")
 	if tErr != nil {
 		return tErr
 	}
@@ -479,7 +479,7 @@ func (e Account) sendEmail(user *models.User, verifyType, subject string) error 
 
 	mailerAuth := smtp.PlainAuth("", mailerUsername, mailerPassword, mailerServer)
 
-	if sErr := smtp.SendMail(mailerServer + fmt.Sprintf("%v", mailerPort), mailerAuth, mailerFromAddr, []string{user.Email}, mailerMessage); sErr != nil {
+    if sErr := smtp.SendMail(mailerServer + fmt.Sprintf(":%v", mailerPort), mailerAuth, mailerFromAddr, []string{user.Email}, mailerMessage); sErr != nil {
 		return sErr
 	}
 
