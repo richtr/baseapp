@@ -320,7 +320,7 @@ func (c Account) PasswordReset(token string) r.Result {
 	// Log user in, flash message and redirect to change password page
 	c.DoLogin(existingProfile.User, false)
 	c.Flash.Success("Please now enter a new password")
-	return c.Redirect(routes.Profile.Password(existingProfile.UserName))
+	return c.Redirect(routes.Profile.Password())
 }
 
 func (c Account) Logout() r.Result {
@@ -461,7 +461,7 @@ func (e Account) sendEmail(user *models.User, verifyType, subject string) error 
 
 	// send mail
 
-	t, tErr := template.ParseFiles("email/" + verifyType)
+	t, tErr := template.ParseFiles("views/email/" + verifyType + ".txt")
 	if tErr != nil {
 		return tErr
 	}
@@ -479,7 +479,7 @@ func (e Account) sendEmail(user *models.User, verifyType, subject string) error 
 
 	mailerAuth := smtp.PlainAuth("", mailerUsername, mailerPassword, mailerServer)
 
-	if sErr := smtp.SendMail(mailerServer + fmt.Sprintf("%v", mailerPort), mailerAuth, mailerFromAddr, []string{user.Email}, mailerMessage); sErr != nil {
+    if sErr := smtp.SendMail(mailerServer + fmt.Sprintf(":%v", mailerPort), mailerAuth, mailerFromAddr, []string{user.Email}, mailerMessage); sErr != nil {
 		return sErr
 	}
 

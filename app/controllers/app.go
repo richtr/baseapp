@@ -70,7 +70,7 @@ func (c Application) SwitchToDesktop() r.Result {
 	// Add desktop mode cookie
 	c.Session["desktopmode"] = "1"
 
-	referer, err := url.Parse(c.Request.Request.Header.Get("Referer"))
+	referer, err := url.Parse(c.Request.Header.Get("Referer"))
 	if err != nil || referer.String() == "" {
 		return c.Redirect(routes.Application.Index())
 	}
@@ -82,7 +82,7 @@ func (c Application) SwitchToMobile() r.Result {
 	// Remove desktop mode cookie
 	delete(c.Session, "desktopmode")
 
-	referer, err := url.Parse(c.Request.Request.Header.Get("Referer"))
+	referer, err := url.Parse(c.Request.Header.Get("Referer"))
 	if err != nil || referer.String() == "" {
 		return c.Redirect(routes.Application.Index())
 	}
