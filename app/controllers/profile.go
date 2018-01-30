@@ -191,14 +191,17 @@ func (c Profile) UpdateSettings(username string, profile *models.Profile, verify
 	return c.Redirect(routes.Profile.Show(existingProfile.UserName))
 }
 
-func (c Profile) Password(username string) r.Result {
+// FIXME This is broken. The password is not actually reset.
+//func (c Profile) Password(username string) r.Result {
+func (c Profile) Password() r.Result {
+	//profile := c.getProfileByUserName(username)
+    //user := profile.User
 	profile := c.connected()
-	if profile == nil || profile.UserName != username {
+	if profile == nil {
 		c.Flash.Error("You must log in to access your account")
 		return c.Redirect(routes.Account.Logout())
 	}
-
-	return c.Render()
+	return c.Render(profile)
 }
 
 func (c Profile) CommitPassword(user *models.User, password string) error {

@@ -320,7 +320,7 @@ func (c Account) PasswordReset(token string) r.Result {
 	// Log user in, flash message and redirect to change password page
 	c.DoLogin(existingProfile.User, false)
 	c.Flash.Success("Please now enter a new password")
-	return c.Redirect(routes.Profile.Password(existingProfile.UserName))
+	return c.Redirect(routes.Profile.Password())
 }
 
 func (c Account) Logout() r.Result {

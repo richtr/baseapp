@@ -1,5 +1,3 @@
-Hello {{.user.Name}},
-
 Please click the link below to reset your password:
 
 {{.Link}}

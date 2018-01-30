@@ -78,8 +78,8 @@
 								<div class="media">
 									<div class="media-body">
 										<div class="media-heading">
-											<img class="img-rounded" src="{{.user.PhotoUrl}}" alt="Profile Photo" width="20" height="20" style="border: 1px solid #666; margin-top: -4px; margin-right: 4px;">
-											{{.user.Name}}
+											<img class="img-rounded" src="{{.profile.PhotoUrl}}" alt="Profile Photo" width="20" height="20" style="border: 1px solid #666; margin-top: -4px; margin-right: 4px;">
+											{{.profile.Name}}
 											<span class="caret"></span>
 										</div>
 									</div>
@@ -87,8 +87,8 @@
 							</a>
 
 							<ul class="dropdown-menu">
-								<li><a href="{{url "Profile.Show" .user.UserName}}">View Profile</a></li>
-								<li><a href="{{url "Profile.Settings" .user.UserName}}">Edit Profile</a></li>
+								<li><a href="{{url "Profile.Show" .profile.UserName}}">View Profile</a></li>
+								<li><a href="{{url "Profile.Settings" .profile.UserName}}">Edit Profile</a></li>
 								<li class="divider"></li>
 								<li><a href="{{url "Account.Logout"}}">Logout</a></li>
 							</ul>
